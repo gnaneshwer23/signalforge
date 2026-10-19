@@ -100,7 +100,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     useState<PersistenceStatus>("loading");
   const skipNextPersistRef = useRef(true);
   const stateRef = useRef(state);
-  stateRef.current = state;
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   const persistToServer = useCallback(async (payload: StoreState) => {
     try {

@@ -13,7 +13,7 @@ afterEach(() => {
 describe("session secret posture", () => {
   it("fails closed on shared deploy without SESSION_SECRET", () => {
     process.env.VERCEL = "1";
-    process.env.NODE_ENV = "production";
+    Object.assign(process.env, { NODE_ENV: "production" });
     delete process.env.SESSION_SECRET;
     const r = resolveSessionSecret();
     expect(r.ok).toBe(false);
@@ -38,7 +38,7 @@ describe("session secret posture", () => {
 
   it("allows local fallback when not on shared deploy", () => {
     delete process.env.VERCEL;
-    process.env.NODE_ENV = "test";
+    Object.assign(process.env, { NODE_ENV: "test" });
     delete process.env.SESSION_SECRET;
     const r = resolveSessionSecret();
     expect(r.ok).toBe(true);

@@ -46,195 +46,187 @@ async function clearAll() {
 
 export async function seedDatabase(state: StoreState = createInitialState()) {
   await clearAll();
-  // Sequential writes avoid Prisma interactive transactions, which fail on
-  // Neon pooled (PgBouncer transaction-mode) connections.
-  for (const u of DEMO_USERS) {
-    await prisma.user.create({
-      data: {
-        id: u.id,
-        email: u.email,
-        name: u.name,
-        role: u.role,
-        createdAt: new Date().toISOString(),
-      },
-    });
-  }
-  for (const s of state.sources) {
-    await prisma.source.create({
-      data: {
-        id: s.id,
-        type: s.type,
-        title: s.title,
-        url: s.url ?? null,
-        identifier: s.identifier ?? null,
-        publisher: s.publisher ?? null,
-        publicationDate: s.publicationDate ?? null,
-        retrievalDate: s.retrievalDate,
-        verification: s.verification,
-        provenanceKind: s.provenanceKind,
-      },
-    });
-  }
-  for (const a of state.assets) {
-    await prisma.asset.create({
-      data: {
-        id: a.id,
-        name: a.name,
-        organization: a.organization,
-        mechanismOfAction: a.mechanismOfAction,
-        indication: a.indication,
-        therapeuticArea: a.therapeuticArea,
-        phase: a.phase,
-        sourceDate: a.sourceDate,
-        verification: a.verification,
-        notes: a.notes,
-        linkedEvidenceIds: j(a.linkedEvidenceIds),
-        isPipelineFictional: !!a.isPipelineFictional,
-      },
-    });
-  }
-  for (const e of state.evidence) {
-    await prisma.evidenceRecord.create({
-      data: {
-        id: e.id,
-        sourceId: e.sourceId,
-        assetIds: j(e.assetIds),
-        title: e.title,
-        summary: e.summary,
-        studyCharacteristics: e.studyCharacteristics,
-        limitations: e.limitations,
-        supports: e.supports,
-        doesNotEstablish: e.doesNotEstablish,
-        reviewState: e.reviewState,
-        therapeuticArea: e.therapeuticArea,
-        tags: j(e.tags),
-        excerpt: e.excerpt,
-        keywords: j(e.keywords),
-      },
-    });
-  }
-  for (const s of state.signals) {
-    await prisma.signal.create({
-      data: {
-        id: s.id,
-        title: s.title,
-        summary: s.summary,
-        assetIds: j(s.assetIds),
-        evidenceIds: j(s.evidenceIds),
-        therapeuticArea: s.therapeuticArea,
-        urgency: s.urgency,
-        reviewNeeded: s.reviewNeeded,
-        emerging: s.emerging,
-        updatedAt: s.updatedAt,
-        implications: s.implications,
-        uncertainty: s.uncertainty,
-        gaps: j(s.gaps),
-        followUpQuestions: j(s.followUpQuestions),
-      },
-    });
-  }
-  for (const b of state.briefs) {
-    await prisma.brief.create({
-      data: {
-        id: b.id,
-        title: b.title,
-        signalId: b.signalId,
-        state: b.state,
-        evidenceIds: j(b.evidenceIds),
-        claimIds: j(b.claimIds),
-        signalSummary: b.signalSummary,
-        evidenceSummary: b.evidenceSummary,
-        implications: b.implications,
-        uncertainty: b.uncertainty,
-        gaps: j(b.gaps),
-        followUpQuestions: j(b.followUpQuestions),
-        contradictions: j(b.contradictions),
-        limitations: j(b.limitations),
-        createdAt: b.createdAt,
-        updatedAt: b.updatedAt,
-        approvedAt: b.approvedAt ?? null,
-        approvedBy: b.approvedBy ?? null,
-      },
-    });
-  }
-  for (const c of state.claims) {
-    await prisma.claim.create({
-      data: {
-        id: c.id,
-        briefId: c.briefId,
-        text: c.text,
-        kind: c.kind,
-        supported: c.supported,
-        confidence: c.confidence,
-        quality: c.confidenceRationale.quality,
-        relevance: c.confidenceRationale.relevance,
-        consistency: c.confidenceRationale.consistency,
-        completeness: c.confidenceRationale.completeness,
-        evidenceLinkIds: j(c.evidenceLinkIds),
-        unsupportedReason: c.unsupportedReason ?? null,
-      },
-    });
-  }
-  for (const l of state.claimEvidenceLinks) {
-    await prisma.claimEvidenceLink.create({
-      data: {
-        id: l.id,
-        claimId: l.claimId,
-        evidenceId: l.evidenceId,
-        citationNote: l.citationNote,
-        excerpt: l.excerpt,
-      },
-    });
-  }
-  for (const e of state.evaluationCases) {
-    await prisma.evaluationCase.create({
-      data: {
-        id: e.id,
-        category: e.category,
-        title: e.title,
-        description: e.description,
-        expected: e.expected,
-        observed: e.observed,
-        result: e.result,
-        severity: e.severity,
-        nextAction: e.nextAction,
-        failureReason: e.failureReason ?? null,
-        remediation: e.remediation ?? null,
-        lastRunAt: e.lastRunAt ?? null,
-      },
-    });
-  }
-  for (const r of state.evaluationRuns) {
-    await prisma.evaluationRun.create({
-      data: {
-        id: r.id,
-        startedAt: r.startedAt,
-        completedAt: r.completedAt,
-        caseResults: j({
-          items: r.caseResults,
-          measuredLabel: r.measuredLabel,
-        }),
-        actor: r.actor,
-        illustrative: r.illustrative,
-      },
-    });
-  }
-  for (const r of state.briefReviews) {
-    await prisma.briefReview.create({
-      data: {
-        id: r.id,
-        briefId: r.briefId,
-        actor: r.actor,
-        fromState: r.fromState,
-        toState: r.toState,
-        notes: r.notes,
-        createdAt: r.createdAt,
-      },
-    });
-  }
-  for (const a of state.auditEvents) {
-    await prisma.auditEvent.create({
-      data: {
+  // Batched createMany (ordered for FKs). Avoids interactive transactions so
+  // Neon pooler / PgBouncer transaction mode works; far fewer round-trips.
+  const now = new Date().toISOString();
+  const skip = { skipDuplicates: true } as const;
+  await prisma.user.createMany({
+    ...skip,
+    data: DEMO_USERS.map((u) => ({
+      id: u.id,
+      email: u.email,
+      name: u.name,
+      role: u.role,
+      createdAt: now,
+    })),
+  });
+  await prisma.source.createMany({
+    ...skip,
+    data: state.sources.map((s) => ({
+      id: s.id,
+      type: s.type,
+      title: s.title,
+      url: s.url ?? null,
+      identifier: s.identifier ?? null,
+      publisher: s.publisher ?? null,
+      publicationDate: s.publicationDate ?? null,
+      retrievalDate: s.retrievalDate,
+      verification: s.verification,
+      provenanceKind: s.provenanceKind,
+    })),
+  });
+  await prisma.asset.createMany({
+    ...skip,
+    data: state.assets.map((a) => ({
+      id: a.id,
+      name: a.name,
+      organization: a.organization,
+      mechanismOfAction: a.mechanismOfAction,
+      indication: a.indication,
+      therapeuticArea: a.therapeuticArea,
+      phase: a.phase,
+      sourceDate: a.sourceDate,
+      verification: a.verification,
+      notes: a.notes,
+      linkedEvidenceIds: j(a.linkedEvidenceIds),
+      isPipelineFictional: !!a.isPipelineFictional,
+    })),
+  });
+  await prisma.evidenceRecord.createMany({
+    ...skip,
+    data: state.evidence.map((e) => ({
+      id: e.id,
+      sourceId: e.sourceId,
+      assetIds: j(e.assetIds),
+      title: e.title,
+      summary: e.summary,
+      studyCharacteristics: e.studyCharacteristics,
+      limitations: e.limitations,
+      supports: e.supports,
+      doesNotEstablish: e.doesNotEstablish,
+      reviewState: e.reviewState,
+      therapeuticArea: e.therapeuticArea,
+      tags: j(e.tags),
+      excerpt: e.excerpt,
+      keywords: j(e.keywords),
+    })),
+  });
+  await prisma.signal.createMany({
+    ...skip,
+    data: state.signals.map((s) => ({
+      id: s.id,
+      title: s.title,
+      summary: s.summary,
+      assetIds: j(s.assetIds),
+      evidenceIds: j(s.evidenceIds),
+      therapeuticArea: s.therapeuticArea,
+      urgency: s.urgency,
+      reviewNeeded: s.reviewNeeded,
+      emerging: s.emerging,
+      updatedAt: s.updatedAt,
+      implications: s.implications,
+      uncertainty: s.uncertainty,
+      gaps: j(s.gaps),
+      followUpQuestions: j(s.followUpQuestions),
+    })),
+  });
+  await prisma.brief.createMany({
+    ...skip,
+    data: state.briefs.map((b) => ({
+      id: b.id,
+      title: b.title,
+      signalId: b.signalId,
+      state: b.state,
+      evidenceIds: j(b.evidenceIds),
+      claimIds: j(b.claimIds),
+      signalSummary: b.signalSummary,
+      evidenceSummary: b.evidenceSummary,
+      implications: b.implications,
+      uncertainty: b.uncertainty,
+      gaps: j(b.gaps),
+      followUpQuestions: j(b.followUpQuestions),
+      contradictions: j(b.contradictions),
+      limitations: j(b.limitations),
+      createdAt: b.createdAt,
+      updatedAt: b.updatedAt,
+      approvedAt: b.approvedAt ?? null,
+      approvedBy: b.approvedBy ?? null,
+    })),
+  });
+  await prisma.claim.createMany({
+    ...skip,
+    data: state.claims.map((c) => ({
+      id: c.id,
+      briefId: c.briefId,
+      text: c.text,
+      kind: c.kind,
+      supported: c.supported,
+      confidence: c.confidence,
+      quality: c.confidenceRationale.quality,
+      relevance: c.confidenceRationale.relevance,
+      consistency: c.confidenceRationale.consistency,
+      completeness: c.confidenceRationale.completeness,
+      evidenceLinkIds: j(c.evidenceLinkIds),
+      unsupportedReason: c.unsupportedReason ?? null,
+    })),
+  });
+  await prisma.claimEvidenceLink.createMany({
+    ...skip,
+    data: state.claimEvidenceLinks.map((l) => ({
+      id: l.id,
+      claimId: l.claimId,
+      evidenceId: l.evidenceId,
+      citationNote: l.citationNote,
+      excerpt: l.excerpt,
+    })),
+  });
+  await prisma.evaluationCase.createMany({
+    ...skip,
+    data: state.evaluationCases.map((e) => ({
+      id: e.id,
+      category: e.category,
+      title: e.title,
+      description: e.description,
+      expected: e.expected,
+      observed: e.observed,
+      result: e.result,
+      severity: e.severity,
+      nextAction: e.nextAction,
+      failureReason: e.failureReason ?? null,
+      remediation: e.remediation ?? null,
+      lastRunAt: e.lastRunAt ?? null,
+    })),
+  });
+  await prisma.evaluationRun.createMany({
+    ...skip,
+    data: state.evaluationRuns.map((r) => ({
+      id: r.id,
+      startedAt: r.startedAt,
+      completedAt: r.completedAt,
+      caseResults: j({
+        items: r.caseResults,
+        measuredLabel: r.measuredLabel,
+      }),
+      actor: r.actor,
+      illustrative: r.illustrative,
+    })),
+  });
+  await prisma.briefReview.createMany({
+    ...skip,
+    data: state.briefReviews.map((r) => ({
+      id: r.id,
+      briefId: r.briefId,
+      actor: r.actor,
+      fromState: r.fromState,
+      toState: r.toState,
+      notes: r.notes,
+      createdAt: r.createdAt,
+    })),
+  });
+  if (state.auditEvents.length) {
+    await prisma.auditEvent.createMany({
+      ...skip,
+      data: state.auditEvents.map((a) => ({
         id: a.id,
         timestamp: a.timestamp,
         actor: a.actor,
@@ -242,23 +234,25 @@ export async function seedDatabase(state: StoreState = createInitialState()) {
         entityType: a.entityType,
         entityId: a.entityId,
         detail: a.detail,
-      },
+      })),
     });
   }
-  for (const u of state.usageEvents) {
-    await prisma.usageEvent.create({
-      data: {
+  if (state.usageEvents.length) {
+    await prisma.usageEvent.createMany({
+      ...skip,
+      data: state.usageEvents.map((u) => ({
         id: u.id,
         type: u.type,
         timestamp: u.timestamp,
         detail: u.detail,
         entityId: u.entityId ?? null,
-      },
+      })),
     });
   }
-  for (const b of state.backlog) {
-    await prisma.backlogItem.create({
-      data: {
+  if (state.backlog.length) {
+    await prisma.backlogItem.createMany({
+      ...skip,
+      data: state.backlog.map((b) => ({
         id: b.id,
         storyId: b.storyId,
         description: b.description,
@@ -269,12 +263,13 @@ export async function seedDatabase(state: StoreState = createInitialState()) {
         owner: b.owner,
         status: b.status,
         createdAt: b.createdAt,
-      },
+      })),
     });
   }
-  for (const m of state.milestones) {
-    await prisma.milestone.create({
-      data: {
+  if (state.milestones.length) {
+    await prisma.milestone.createMany({
+      ...skip,
+      data: state.milestones.map((m) => ({
         id: m.id,
         name: m.name,
         description: m.description,
@@ -282,12 +277,13 @@ export async function seedDatabase(state: StoreState = createInitialState()) {
         status: m.status,
         dependencies: j(m.dependencies),
         notes: m.notes,
-      },
+      })),
     });
   }
-  for (const c of state.changeRequests) {
-    await prisma.changeRequest.create({
-      data: {
+  if (state.changeRequests.length) {
+    await prisma.changeRequest.createMany({
+      ...skip,
+      data: state.changeRequests.map((c) => ({
         id: c.id,
         title: c.title,
         scope: c.scope,
@@ -299,12 +295,13 @@ export async function seedDatabase(state: StoreState = createInitialState()) {
         decisionNotes: c.decisionNotes ?? null,
         createdAt: c.createdAt,
         decidedAt: c.decidedAt ?? null,
-      },
+      })),
     });
   }
-  for (const s of state.safetyFlags) {
-    await prisma.safetyFlag.create({
-      data: {
+  if (state.safetyFlags.length) {
+    await prisma.safetyFlag.createMany({
+      ...skip,
+      data: state.safetyFlags.map((s) => ({
         id: s.id,
         label: s.label,
         fictional: true,
@@ -315,25 +312,47 @@ export async function seedDatabase(state: StoreState = createInitialState()) {
         routedToQueue: s.routedToQueue,
         queueStatus: s.queueStatus,
         createdAt: s.createdAt,
-      },
+      })),
     });
   }
-  await prisma.appMeta.create({
-    data: {
+  await prisma.appMeta.upsert({
+    where: { id: "default" },
+    create: {
       id: "default",
       draftBriefEvidenceIds: j(state.draftBriefEvidenceIds),
       activeDraftBriefId: state.activeDraftBriefId,
       evaluationTargets: j(state.evaluationTargets),
       lastEvaluationRunAt: state.lastEvaluationRunAt,
       walkthroughDismissed: state.walkthroughDismissed,
-      seededAt: new Date().toISOString(),
+      seededAt: now,
+    },
+    update: {
+      draftBriefEvidenceIds: j(state.draftBriefEvidenceIds),
+      activeDraftBriefId: state.activeDraftBriefId,
+      evaluationTargets: j(state.evaluationTargets),
+      lastEvaluationRunAt: state.lastEvaluationRunAt,
+      walkthroughDismissed: state.walkthroughDismissed,
+      seededAt: now,
     },
   });
 }
 
 export async function ensureSeeded(): Promise<void> {
-  const meta = await prisma.appMeta.findUnique({ where: { id: "default" } });
-  if (!meta) await seedDatabase();
+  const [meta, assets] = await Promise.all([
+    prisma.appMeta.findUnique({ where: { id: "default" } }),
+    prisma.asset.count(),
+  ]);
+  // Repair empty/incomplete Neon DBs (e.g. interrupted clear+seed) without
+  // wiping a healthy populated corpus.
+  if (!meta || assets === 0) {
+    try {
+      await seedDatabase();
+    } catch (error) {
+      // Concurrent seeders may race; re-check before surfacing the error.
+      const assetCount = await prisma.asset.count();
+      if (assetCount === 0) throw error;
+    }
+  }
 }
 
 const defaultTargets = {

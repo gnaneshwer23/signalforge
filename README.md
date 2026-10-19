@@ -104,7 +104,7 @@ npm run lint
 | --- | --- | --- |
 | `DATABASE_URL` | Yes | Neon Postgres pooled URL (`…-pooler…`, with `pgbouncer=true`) |
 | `DATABASE_URL_UNPOOLED` | Yes | Neon direct (non-pooler) URL for migrations (Vercel Neon integration name) |
-| `SESSION_SECRET` | Recommended | HMAC secret for demo session cookies |
+| `SESSION_SECRET` | Required on shared deploy | HMAC secret for demo session cookies (≥32 chars; no weak defaults) |
 
 Copy `.env.example` → `.env` and fill in Neon credentials from the Neon console. Do not put connection strings in the client bundle, README, or other tracked files. No LLM API keys.
 
@@ -120,6 +120,10 @@ Production PV systems, live proprietary data feeds, claiming regulatory/complian
 
 ## Live deploy
 
-Portfolio demo URL (may lag `main`): https://signalforge-4gob.vercel.app/
+Production: https://signalforge-4gob.vercel.app/
 
-**Readiness:** portfolio demo-ready — **not** pilot-ready or production-ready (see [AUDIT.md](./AUDIT.md)).
+- Persistence: **Neon PostgreSQL** (Vercel env: `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `SESSION_SECRET`)
+- Health: `GET /api/health` · State: `GET /api/state`
+- UI shows **Connected** when the API + DB are healthy (not demo/unavailable)
+
+**Readiness:** portfolio demo-ready — **not** pilot-ready or production-ready (see [AUDIT.md](./AUDIT.md)). If a Neon password was ever pasted into chat, rotate it in the Neon console.

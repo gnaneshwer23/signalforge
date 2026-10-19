@@ -4,25 +4,25 @@
 implemented, mocked, and remaining. It does **not** claim regulatory compliance
 or production readiness.
 
-Last updated: 2026-10-19 (end-to-end mission pass on `main`).
+Last updated: 2026-10-19 (Neon deploy sync on `main`).
 
 ## Phase status
 
 | Phase | Status | Evidence |
 | --- | --- | --- |
-| 1. Stabilisation | **Met** for local build | `npm run build` green; `npm run lint` green; `npm test` 17/17 |
-| 2. Frontend completion | **Met** (demo scope) | Nine areas + About; breadcrumbs; global search; demo-data indicator; Bionil-inspired tokens |
-| 3. Backend | **Partial** | Prisma 6 + Neon PostgreSQL (`DATABASE_URL` / `DATABASE_URL_UNPOOLED`); demo session auth; PUT `/api/state` + reset authz; brief transition API with actor/time; audit append-merge |
+| 1. Stabilisation | **Met** for local build | `npm run build` green; `npm run lint` green; `npm test` 41/41 |
+| 2. Frontend completion | **Met** (demo scope) | Nine areas + About; breadcrumbs; global search; Connected / demo / auth / error persistence UI |
+| 3. Backend | **Partial** | Prisma 6 + Neon PostgreSQL; `/api/health`; CSRF + rate limits on mutations; SESSION_SECRET fail-closed on shared deploys; PUT `/api/state` + reset authz; audit append-merge |
 | 4. Evidence & AI quality | **Partial** | Six provenance statuses; claim–evidence links; Ask `/api/ask` retrieve-then-cite with abstention + rate limit; labelled deterministic demo (no live LLM) |
-| 5. Audit & QA | **Partial** | Unit tests: matcher, permissions, provenance, rate-limit, audit-merge; no Playwright e2e CI |
-| 6. Controlled release prep | **Not ready to publish** | Gates A–G below; live URL exists as portfolio demo only |
+| 5. Audit & QA | **Partial** | Unit tests: matcher, permissions, provenance, rate-limit, audit-merge, CSRF, session-secret, payload, persistence probes; no Playwright e2e CI |
+| 6. Controlled release prep | **Not ready to publish** | Gates A–G below; live URL is portfolio demo only |
 
 ## Controlled release gates A–G
 
 | Gate | Intent | Status | Notes |
 | --- | --- | --- | --- |
-| A | Build & typecheck green | **Pass (local)** | `npm run build` + lint |
-| B | Seeded corpus + migrations | **Pass (Neon Postgres)** | `prisma/migrations` (postgresql), seed against Neon |
+| A | Build & typecheck green | **Pass (local)** | `npm run build` + lint + 41 tests |
+| B | Seeded corpus + migrations | **Pass (Neon Postgres)** | `prisma/migrations` (postgresql); Neon integration on Vercel (`DATABASE_URL` / `DATABASE_URL_UNPOOLED`) |
 | C | Authz on mutations | **Partial** | Session + role checks on state PUT/reset and brief transitions; full-document sync remains primary write path |
 | D | Provenance & unsupported claims | **Pass (demo)** | Six statuses defined; unsupported claim gating on approve |
 | E | Ask Signal honesty & abstention | **Pass (demo)** | Deterministic matcher + `/api/ask`; injection abstention tests; never claims live LLM |
@@ -50,7 +50,7 @@ Covers:
 
 1. Full-document state sync remains a primary write path (auth-gated) — finer mutation APIs exist for brief transitions only.
 2. Demo passwords are public by design — replace with real IdP before any shared environment.
-3. Durable store is Neon Postgres — Vercel project already has Neon `DATABASE_URL` / `DATABASE_URL_UNPOOLED` (prod+dev); rotate credentials if ever pasted into chat.
+3. Durable store is Neon Postgres — Vercel has Neon `DATABASE_URL` / `DATABASE_URL_UNPOOLED` (prod+dev) and `SESSION_SECRET`. **Rotate the Neon DB password if it was ever pasted into chat.**
 4. Evaluation **targets** are illustrative; **run results** are measured against the seeded corpus with deterministic fixtures — still not production SLAs.
 5. In-memory Ask rate limiter is per-process only.
 6. No GitHub Actions CI wired in this repo snapshot.
@@ -73,4 +73,13 @@ Covers:
 | Pilot-ready (shared team) | **No** | Demo credentials, incomplete authz matrix, no ops |
 | Production-ready | **No** | Gate G fail; no IdP; no pen-test |
 
-Live portfolio deploy (verify independently): https://signalforge-4gob.vercel.app/
+## Live deploy (verified)
+
+| Item | Value |
+| --- | --- |
+| Production URL | https://signalforge-4gob.vercel.app/ |
+| Persistence | Neon PostgreSQL (Prisma) |
+| Probes | `GET /api/health`, `GET /api/state` |
+| Verdict | Portfolio demo-ready when health reports `ok` and UI shows **Connected** after demo login |
+
+*Deploy SHA / Vercel READY status filled after production redeploy from `main`.*
