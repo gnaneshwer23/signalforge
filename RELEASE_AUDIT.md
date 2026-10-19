@@ -81,20 +81,22 @@ Steps: set in Vercel Project → Settings → Environment Variables → redeploy
 
 ## 10. Commit / PR link
 
-- Origin `main`: `9dd4055` — *Finish Neon deploy sync: batched seed, safer tests, docs.*
-- Feature branch: `cursor/neon-postgres-f207` (pushed to Origin; includes Neon migration + harden + sync commits)
-- GitHub `gnaneshwer23/signalforge` `main` still at `2b1d840` (no GitHub token in this environment — push blocked)
-- Origin `pr` CLI unavailable for this forge path (`Repository … was not found on Origin`)
+- Origin `main`: `7ba90c2` (includes Neon Postgres + persistence hardening through `9dd4055`)
+- Feature branch: `cursor/neon-postgres-f207` (merged into Origin `main`)
+- GitHub `gnaneshwer23/signalforge` `main` still at `2b1d840` — **push blocked** (`gh` not logged in; credential helper empty; SSH denied; Cursor OIDC JWT not accepted by GitHub)
+- GitHub SHA URL once synced: `https://github.com/gnaneshwer23/signalforge/commit/<sha>`
 
 ## 11. Whether new deployment was performed
 
-**No new production deployment.** Vercel project `signalforge-4gob` remains on deployment `dpl_4oFjdqWWwZuJKsKKdjqXj2DtioB3` (GitHub SHA `2b1d840`, SQLite-era). Live `GET /api/state` still returns 500 SQLite error. Env vars (`SESSION_SECRET`, preview `DATABASE_URL` / `DATABASE_URL_UNPOOLED`) were configured via Vercel MCP; Neon migrate/seed completed against the shared Neon DB.
+**Vercel MCP production redeploy from GitHub `main` was triggered** (`dpl_Fm5m9vcD7ULBWxsBHjNxNNLfEVGg`, READY) but still builds GitHub SHA `2b1d840` (SQLite-era). File-based deploy smoke test (`dpl_CzVDehx85iATZYh2jp831NbEXHZB`) ERROR’d (incomplete file set). Live `GET /api/state` remains **500** SQLite error; `/api/health` **404**.
 
-Redeploy requires pushing `9dd4055` (or later) to GitHub `main` (Vercel is GitHub-linked) or a CLI/token deploy from this workspace.
+Env vars confirmed via Vercel MCP: `DATABASE_URL` + `DATABASE_URL_UNPOOLED` (prod+dev via Neon integration), `SESSION_SECRET` (prod/preview/dev). Neon migrate/seed verified locally.
+
+**To finish:** push Origin `main` (`7ba90c2` or later) to GitHub `main` with contents:write, wait for Vercel production READY, re-check `/api/state` + `/api/health` + demo login PUT round-trip.
 
 ## 12. Blockers + readiness verdict
 
-- **Blockers:** (1) **Rotate Neon DB password** — pasted in chat again. (2) GitHub push/auth missing → cannot refresh Vercel production from this agent. (3) Concurrent agents sharing Neon can race full-document `saveState`/seed.
-- **Code readiness (local):** build/lint/test green; Neon persistence implemented on Origin `main`
-- **Live portfolio URL readiness:** **Not yet** — still serving pre-Neon build until GitHub/Vercel redeploy
+- **Blockers:** (1) **Rotate Neon DB password** — pasted in chat; treat as compromised until rotated. (2) GitHub write credentials missing in this agent VM → cannot land Neon code on GitHub → Vercel production stays stale. (3) Vercel CLI has no local token (device login not completed).
+- **Code readiness (local / Origin):** build/lint/**41 tests** green; Neon persistence on Origin `main`
+- **Live portfolio URL readiness:** **Not yet** — still serving pre-Neon build
 - **Pilot / production-ready:** No (demo auth, Gate G ops/compliance still fail)
