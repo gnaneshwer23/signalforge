@@ -5,6 +5,7 @@ import { use, useEffect } from "react";
 import { useStore } from "@/lib/store";
 import {
   ProvenanceBadge,
+  ProvenanceStatusBadge,
   ReviewBadge,
   VerificationBadge,
 } from "@/components/shared/status-badges";
@@ -12,6 +13,10 @@ import { ErrorState, LoadingState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 import type { ReviewState } from "@/lib/types";
+import {
+  deriveProvenanceStatus,
+  PROVENANCE_STATUS_DEFINITIONS,
+} from "@/lib/provenance/status";
 
 export default function EvidenceDetailPage({
   params,
@@ -48,6 +53,13 @@ export default function EvidenceDetailPage({
   }
 
   const inDraft = state.draftBriefEvidenceIds.includes(evidence.id);
+  const provenanceStatus = deriveProvenanceStatus({
+    evidence,
+    source,
+    claims: state.claims,
+    links: state.claimEvidenceLinks,
+    briefs: state.briefs,
+  });
 
   return (
     <div className="space-y-6 animate-rise">
@@ -58,8 +70,12 @@ export default function EvidenceDetailPage({
         <div className="mt-2 flex flex-wrap gap-2">
           <VerificationBadge status={source.verification} />
           <ProvenanceBadge kind={source.provenanceKind} />
+          <ProvenanceStatusBadge status={provenanceStatus} />
           <ReviewBadge state={evidence.reviewState} />
         </div>
+        <p className="mt-2 text-xs text-muted-foreground">
+          {PROVENANCE_STATUS_DEFINITIONS[provenanceStatus].definition}
+        </p>
         <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
           {evidence.title}
         </h1>

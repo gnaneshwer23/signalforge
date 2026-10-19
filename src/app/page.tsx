@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useStore } from "@/lib/store";
 import { DemoMetric } from "@/components/shared/status-badges";
@@ -11,6 +12,7 @@ import { formatDate } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 
 export default function OverviewPage() {
+  const router = useRouter();
   const { state, hydrated, assembleBriefFromSignal } = useStore();
   const [query, setQuery] = useState("");
   const [area, setArea] = useState("Moderate-to-severe atopic dermatitis");
@@ -162,7 +164,7 @@ export default function OverviewPage() {
                       variant="outline"
                       onClick={() => {
                         const id = assembleBriefFromSignal(signal.id);
-                        window.location.href = `/briefs/${id}`;
+                        router.push(`/briefs/${id}`);
                       }}
                     >
                       Assemble brief

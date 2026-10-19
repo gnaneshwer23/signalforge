@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -92,7 +93,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
   const [persistReady, setPersistReady] = useState(false);
   const [persistError, setPersistError] = useState<string | null>(null);
-  const skipNextPersist = useState({ current: true })[0];
+  const skipNextPersistRef = useRef(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -128,19 +129,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         if (!cancelled) {
           setHydrated(true);
           setPersistReady(true);
-          skipNextPersist.current = true;
+          skipNextPersistRef.current = true;
         }
       }
     })();
     return () => {
       cancelled = true;
     };
-  }, [skipNextPersist]);
+  }, []);
 
   useEffect(() => {
     if (!hydrated || !persistReady) return;
-    if (skipNextPersist.current) {
-      skipNextPersist.current = false;
+    if (skipNextPersistRef.current) {
+      skipNextPersistRef.current = false;
       return;
     }
     if (state.persistenceMode === "local_demonstration") return;
@@ -189,7 +190,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       })();
     }, 400);
     return () => window.clearTimeout(timer);
-  }, [state, hydrated, persistReady, skipNextPersist]);
+  }, [state, hydrated, persistReady]);
 
   const appendAudit = useCallback(
     (
@@ -253,7 +254,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const res = await fetch("/api/state/reset", { method: "POST" });
       if (res.ok) {
         const fresh = (await res.json()) as StoreState;
-        skipNextPersist.current = true;
+        skipNextPersistRef.current = true;
         setState({ ...fresh, persistenceMode: "server" });
         setPersistError(null);
         return { ok: true };
@@ -272,7 +273,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } catch {
       // fall through
     }
-    skipNextPersist.current = true;
+    skipNextPersistRef.current = true;
     setState({
       ...createInitialState(),
       persistenceMode: "local_demonstration",
@@ -281,7 +282,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       "Reset applied locally only — server reset unavailable.",
     );
     return { ok: true, reason: "Local reset only." };
-  }, [skipNextPersist]);
+  }, []);
 
   const dismissWalkthrough = useCallback(() => {
     setState((prev) => ({ ...prev, walkthroughDismissed: true }));
@@ -778,7 +779,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             result: c.result,
           })),
           actor: "demo.reviewer",
-          illustrative: true as const,
+          // Measured against current seeded corpus via deterministic fixtures.
+          // Distinct from evaluationTargets, which remain illustrative.
+          illustrative: false,
+          measuredLabel:
+            "Measured against current seeded corpus (deterministic fixtures). Pass rates are not production SLAs. Targets below remain illustrative.",
         },
         ...draft.evaluationRuns,
       ];
@@ -788,12 +793,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         "evaluation_run_completed",
         "evaluation",
         "evaluation-centre",
-        "Deterministic mock evaluation run completed. Results are illustrative, not production benchmarks.",
+        "Deterministic fixture evaluation run completed against current corpus. Measured results are separate from illustrative targets; not production benchmarks.",
       );
       appendUsage(
         draft,
         "evaluation_run_completed",
-        "Mock evaluation run completed",
+        "Measured fixture evaluation run completed",
         "evaluation-centre",
       );
       return draft;

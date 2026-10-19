@@ -3,10 +3,21 @@ import { cn } from "@/lib/utils";
 import type {
   BriefState,
   ProvenanceKind,
+  ProvenanceStatus,
   ReviewState,
   VerificationStatus,
 } from "@/lib/types";
-import { BadgeCheck, CircleAlert, CircleHelp, Link2, Sparkles } from "lucide-react";
+import {
+  PROVENANCE_STATUS_DEFINITIONS,
+} from "@/lib/provenance/status";
+import {
+  BadgeCheck,
+  CircleAlert,
+  CircleHelp,
+  Link2,
+  Scale,
+  Sparkles,
+} from "lucide-react";
 
 export function VerificationBadge({
   status,
@@ -140,6 +151,42 @@ export function ProvenanceBadge({
     >
       <Sparkles className="size-3.5" />
       Fictional demo record
+    </Badge>
+  );
+}
+
+export function ProvenanceStatusBadge({
+  status,
+  className,
+}: {
+  status: ProvenanceStatus;
+  className?: string;
+}) {
+  const meta = PROVENANCE_STATUS_DEFINITIONS[status];
+  const tone =
+    status === "supported"
+      ? "border-[color-mix(in_oklab,var(--verified)_40%,var(--border))] bg-verified text-verified"
+      : status === "conflicting" || status === "insufficient"
+        ? "border-amber-review bg-amber-review text-amber-review"
+        : status === "unverified"
+          ? "border-border bg-muted text-muted-foreground"
+          : "border-border bg-secondary text-foreground";
+
+  return (
+    <Badge
+      variant="secondary"
+      title={meta.definition}
+      className={cn("gap-1 rounded-md", tone, className)}
+    >
+      {status === "supported" && <BadgeCheck className="size-3.5" />}
+      {status === "conflicting" && <Scale className="size-3.5" />}
+      {(status === "unverified" || status === "insufficient") && (
+        <CircleHelp className="size-3.5" />
+      )}
+      {(status === "source_located" || status === "evidence_reviewed") && (
+        <Link2 className="size-3.5" />
+      )}
+      {meta.label}
     </Badge>
   );
 }

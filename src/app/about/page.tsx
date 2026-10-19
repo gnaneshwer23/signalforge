@@ -66,6 +66,40 @@ export default function AboutPage() {
       </section>
 
       <section className="surface-panel space-y-3 p-5">
+        <h2 className="font-display text-2xl text-ink">
+          Provenance statuses (precise)
+        </h2>
+        <ul className="space-y-2 text-sm text-muted-foreground">
+          <li>
+            <strong className="text-ink">Unverified</strong> — no usable source
+            locator, or fictional demo only. Not claim support.
+          </li>
+          <li>
+            <strong className="text-ink">Source located</strong> — URL or
+            identifier found; human evidence review incomplete. Discovery URLs ≠
+            verified claim support.
+          </li>
+          <li>
+            <strong className="text-ink">Evidence reviewed</strong> — human
+            review recorded; support not yet established.
+          </li>
+          <li>
+            <strong className="text-ink">Supported</strong> — linked to ≥1
+            supported fact/interpretation via a verified_source.
+          </li>
+          <li>
+            <strong className="text-ink">Conflicting</strong> — contradictions on
+            the brief, or mixed supported/unsupported material claim links.
+          </li>
+          <li>
+            <strong className="text-ink">Insufficient</strong> — located/reviewed
+            but discovery-only, fictional, or otherwise cannot establish
+            verified claim support.
+          </li>
+        </ul>
+      </section>
+
+      <section className="surface-panel space-y-3 p-5">
         <h2 className="font-display text-2xl text-ink">Demo walkthrough</h2>
         <ol className="list-decimal space-y-2 pl-5 text-sm text-muted-foreground">
           <li>

@@ -61,6 +61,10 @@ export function findDemoUserById(id: string): DemoUser | undefined {
 export type PublicUser = Omit<DemoUser, "password">;
 
 export function toPublicUser(user: DemoUser): PublicUser {
-  const { password: _pw, ...rest } = user;
-  return rest;
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+  };
 }

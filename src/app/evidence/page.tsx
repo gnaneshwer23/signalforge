@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useStore } from "@/lib/store";
 import {
+  ProvenanceStatusBadge,
   ReviewBadge,
   VerificationBadge,
 } from "@/components/shared/status-badges";
@@ -12,7 +13,8 @@ import { EmptyState, LoadingState } from "@/components/shared/empty-state";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
-import type { ReviewState, SourceType } from "@/lib/types";
+import type { ProvenanceStatus, ReviewState, SourceType } from "@/lib/types";
+import { deriveProvenanceStatus } from "@/lib/provenance/status";
 import { Suspense } from "react";
 
 function EvidenceExplorer() {
@@ -22,6 +24,7 @@ function EvidenceExplorer() {
   const [q, setQ] = useState("");
   const [type, setType] = useState<SourceType | "">("");
   const [review, setReview] = useState<ReviewState | "">("");
+  const [provStatus, setProvStatus] = useState<ProvenanceStatus | "">("");
 
   const signalEvidenceIds = useMemo(() => {
     if (!signalFilter) return null;
@@ -35,6 +38,16 @@ function EvidenceExplorer() {
       const source = state.sources.find((s) => s.id === ev.sourceId);
       if (type && source?.type !== type) return false;
       if (review && ev.reviewState !== review) return false;
+      if (provStatus) {
+        const status = deriveProvenanceStatus({
+          evidence: ev,
+          source,
+          claims: state.claims,
+          links: state.claimEvidenceLinks,
+          briefs: state.briefs,
+        });
+        if (status !== provStatus) return false;
+      }
       const query = q.trim().toLowerCase();
       if (!query) return true;
       return (
@@ -43,7 +56,18 @@ function EvidenceExplorer() {
         ev.tags.some((t) => t.includes(query))
       );
     });
-  }, [state.evidence, state.sources, q, type, review, signalEvidenceIds]);
+  }, [
+    state.evidence,
+    state.sources,
+    state.claims,
+    state.claimEvidenceLinks,
+    state.briefs,
+    q,
+    type,
+    review,
+    provStatus,
+    signalEvidenceIds,
+  ]);
 
   if (!hydrated) return <LoadingState />;
 
@@ -98,6 +122,22 @@ function EvidenceExplorer() {
           <option value="needs_review">Needs review</option>
           <option value="reviewed">Reviewed</option>
         </select>
+        <select
+          className="h-8 rounded-lg border border-border bg-background px-2.5 text-sm"
+          value={provStatus}
+          onChange={(e) =>
+            setProvStatus(e.target.value as ProvenanceStatus | "")
+          }
+          aria-label="Provenance status filter"
+        >
+          <option value="">All provenance statuses</option>
+          <option value="unverified">Unverified</option>
+          <option value="source_located">Source located</option>
+          <option value="evidence_reviewed">Evidence reviewed</option>
+          <option value="supported">Supported</option>
+          <option value="conflicting">Conflicting</option>
+          <option value="insufficient">Insufficient</option>
+        </select>
       </div>
 
       {rows.length === 0 ? (
@@ -110,12 +150,20 @@ function EvidenceExplorer() {
           {rows.map((ev) => {
             const source = state.sources.find((s) => s.id === ev.sourceId);
             const inDraft = state.draftBriefEvidenceIds.includes(ev.id);
+            const status = deriveProvenanceStatus({
+              evidence: ev,
+              source,
+              claims: state.claims,
+              links: state.claimEvidenceLinks,
+              briefs: state.briefs,
+            });
             return (
               <li key={ev.id} className="surface-panel p-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <VerificationBadge
                     status={source?.verification || "unverified"}
                   />
+                  <ProvenanceStatusBadge status={status} />
                   <ReviewBadge state={ev.reviewState} />
                   <span className="text-xs capitalize text-muted-foreground">
                     {source?.type.replace("_", " ")}

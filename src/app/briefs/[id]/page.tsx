@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { use, useMemo, useState } from "react";
 import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth/auth-context";
+import { roleHasPermission } from "@/lib/auth/permissions";
 import { ReviewBadge } from "@/components/shared/status-badges";
 import { ErrorState, LoadingState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
@@ -17,6 +19,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { formatDate } from "@/lib/utils";
+import type { BriefState } from "@/lib/types";
 
 export default function BriefDetailPage({
   params,
@@ -35,10 +38,74 @@ export default function BriefDetailPage({
     canApproveBrief,
     state,
   } = useStore();
+  const { user } = useAuth();
   const brief = getBrief(id);
   const claims = getClaimsForBrief(id);
   const [approveOpen, setApproveOpen] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const canMarkReview =
+    !!user && roleHasPermission(user.role, "briefs:mark_needs_review");
+  const canApprove =
+    !!user && roleHasPermission(user.role, "briefs:approve");
+  const actor = user?.email || "demo.reviewer";
+
+  async function transitionBrief(nextState: BriefState) {
+    setBusy(true);
+    setMessage(null);
+    try {
+      const res = await fetch(`/api/briefs/${id}/transition`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nextState }),
+      });
+      const body = (await res.json().catch(() => null)) as {
+        error?: string;
+        actor?: string;
+        at?: string;
+      } | null;
+      if (res.ok) {
+        // Mirror into client store for immediate UI + local audit continuity.
+        const local = setBriefState(id, nextState, body?.actor || actor);
+        setMessage(
+          local.ok
+            ? `Transition recorded · actor ${body?.actor || actor}${
+                body?.at ? ` · ${body.at}` : ""
+              }`
+            : local.reason || "Local mirror failed after server success.",
+        );
+        return;
+      }
+      if (res.status === 401 || res.status === 403) {
+        setMessage(
+          body?.error ||
+            "Server authz rejected this transition. Sign in with a role that has permission.",
+        );
+        return;
+      }
+      if (res.status === 409) {
+        setMessage(body?.error || "Transition blocked by evidence gates.");
+        return;
+      }
+      // Offline / unauthenticated demo: local transition only, labelled.
+      const local = setBriefState(id, nextState, actor);
+      setMessage(
+        local.ok
+          ? `Local demonstration transition only (${actor}). Server write unavailable.`
+          : local.reason || "Transition blocked.",
+      );
+    } catch {
+      const local = setBriefState(id, nextState, actor);
+      setMessage(
+        local.ok
+          ? `Local demonstration transition only (${actor}).`
+          : local.reason || "Transition blocked.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
 
   const gate = useMemo(
     () => (brief ? canApproveBrief(brief.id) : { ok: false, reason: "Missing" }),
@@ -93,14 +160,26 @@ export default function BriefDetailPage({
           <Button
             size="sm"
             variant="outline"
-            onClick={() => {
-              setBriefState(brief.id, "needs-review");
-              setMessage("Marked needs-review. Audit event recorded.");
-            }}
+            disabled={busy || !canMarkReview}
+            title={
+              canMarkReview
+                ? "Mark needs-review (server authz)"
+                : "Sign in as reviewer or admin"
+            }
+            onClick={() => void transitionBrief("needs-review")}
           >
             Mark needs-review
           </Button>
-          <Button size="sm" onClick={() => setApproveOpen(true)}>
+          <Button
+            size="sm"
+            disabled={busy || !canApprove}
+            title={
+              canApprove
+                ? "Approve for internal discussion (server authz)"
+                : "Sign in as reviewer or admin"
+            }
+            onClick={() => setApproveOpen(true)}
+          >
             Approve for internal discussion
           </Button>
           <Button size="sm" variant="secondary" onClick={() => window.print()}>
@@ -109,8 +188,17 @@ export default function BriefDetailPage({
         </div>
       </header>
 
+      {brief.approvedAt && (
+        <p className="no-print text-xs text-muted-foreground">
+          Last approval: {formatDate(brief.approvedAt)} by{" "}
+          {brief.approvedBy || "unknown"}
+        </p>
+      )}
+
       {message && (
-        <p className="no-print text-sm text-verified">{message}</p>
+        <p className="no-print text-sm text-verified" role="status">
+          {message}
+        </p>
       )}
 
       <section className="grid gap-3 print-break md:grid-cols-2">
@@ -305,18 +393,10 @@ export default function BriefDetailPage({
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              disabled={!gate.ok}
+              disabled={!gate.ok || !canApprove || busy}
               onClick={() => {
-                const result = setBriefState(
-                  brief.id,
-                  "approved-for-internal-discussion",
-                );
-                setMessage(
-                  result.ok
-                    ? "Approved for internal discussion. Audit recorded."
-                    : result.reason || "Approval blocked.",
-                );
                 setApproveOpen(false);
+                void transitionBrief("approved-for-internal-discussion");
               }}
             >
               Confirm approval

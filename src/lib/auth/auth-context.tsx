@@ -25,6 +25,24 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+async function fetchSession(): Promise<{
+  user: PublicUser | null;
+  demoAccounts: PublicUser[];
+}> {
+  const res = await fetch("/api/auth/me", { cache: "no-store" });
+  if (!res.ok) {
+    return { user: null, demoAccounts: [] };
+  }
+  const body = (await res.json()) as {
+    user: PublicUser | null;
+    demoAccounts: PublicUser[];
+  };
+  return {
+    user: body.user,
+    demoAccounts: body.demoAccounts ?? [],
+  };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<PublicUser | null>(null);
   const [demoAccounts, setDemoAccounts] = useState<PublicUser[]>([]);
@@ -32,17 +50,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     try {
-      const res = await fetch("/api/auth/me", { cache: "no-store" });
-      if (!res.ok) {
-        setUser(null);
-        return;
-      }
-      const body = (await res.json()) as {
-        user: PublicUser | null;
-        demoAccounts: PublicUser[];
-      };
-      setUser(body.user);
-      setDemoAccounts(body.demoAccounts ?? []);
+      const session = await fetchSession();
+      setUser(session.user);
+      setDemoAccounts(session.demoAccounts);
     } catch {
       setUser(null);
     } finally {
@@ -51,8 +61,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    void refresh();
-  }, [refresh]);
+    let cancelled = false;
+    // Defer session hydration so the effect body does not synchronously setState.
+    const handle = window.setTimeout(() => {
+      void (async () => {
+        try {
+          const session = await fetchSession();
+          if (cancelled) return;
+          setUser(session.user);
+          setDemoAccounts(session.demoAccounts);
+        } catch {
+          if (!cancelled) setUser(null);
+        } finally {
+          if (!cancelled) setLoading(false);
+        }
+      })();
+    }, 0);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(handle);
+    };
+  }, []);
 
   const login = useCallback(
     async (email: string, password: string) => {

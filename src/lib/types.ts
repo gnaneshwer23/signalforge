@@ -12,6 +12,25 @@ export type ProvenanceKind =
   | "discovery_url"
   | "fictional_demo";
 
+/**
+ * Evidence / claim provenance lifecycle (display + gating).
+ * Discovery search URLs ≠ verified claim support.
+ *
+ * - unverified — no usable source locator, or fictional demo only
+ * - source_located — URL/identifier found; human evidence review not complete
+ * - evidence_reviewed — human reviewed the record; support not yet established
+ * - supported — linked to ≥1 supported fact/interpretation via verified_source
+ * - conflicting — contradictions or mixed support/unsupported claim links
+ * - insufficient — reviewed/located but cannot establish claim support
+ */
+export type ProvenanceStatus =
+  | "unverified"
+  | "source_located"
+  | "evidence_reviewed"
+  | "supported"
+  | "conflicting"
+  | "insufficient";
+
 export type RoleName =
   | "analyst"
   | "reviewer"
@@ -219,7 +238,13 @@ export interface EvaluationRun {
   completedAt: string;
   caseResults: { caseId: string; result: EvaluationResult }[];
   actor: string;
-  illustrative: true;
+  /**
+   * false = measured against current seeded corpus with deterministic fixtures.
+   * true = illustrative / non-measured (targets, placeholders).
+   * Never claim production SLA benchmarks from either.
+   */
+  illustrative: boolean;
+  measuredLabel: string;
 }
 
 export interface BriefReview {

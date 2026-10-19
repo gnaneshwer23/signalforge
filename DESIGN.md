@@ -145,8 +145,16 @@ Stats belong in a **second** band as open metric tiles (border + white fill), la
 | Needs review | Amber text + pale amber bg |
 | Unverified | Muted text + muted bg |
 | Danger / fictional AE | Danger text + pale danger bg; always explicit wording |
+| Provenance lifecycle | Unverified / Source located / Evidence reviewed / Supported / Conflicting / Insufficient — see `src/lib/provenance/status.ts` |
 
-Keep labels short; icon optional (BadgeCheck / CircleAlert / CircleHelp).
+Keep labels short; icon optional (BadgeCheck / CircleAlert / CircleHelp / Link2 / Scale).
+
+### Shell chrome
+
+- Breadcrumbs under header
+- Global search (assets, evidence, signals, briefs) — functional, not decorative
+- Demo-data indicator always visible
+- Reset demo control gated to admin role (dead for other roles)
 
 ### CTAs
 

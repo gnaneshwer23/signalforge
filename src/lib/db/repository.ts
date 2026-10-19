@@ -210,9 +210,12 @@ export async function seedDatabase(state: StoreState = createInitialState()) {
           id: r.id,
           startedAt: r.startedAt,
           completedAt: r.completedAt,
-          caseResults: j(r.caseResults),
+          caseResults: j({
+            items: r.caseResults,
+            measuredLabel: r.measuredLabel,
+          }),
           actor: r.actor,
-          illustrative: true,
+          illustrative: r.illustrative,
         },
       });
     }
@@ -517,16 +520,32 @@ export async function loadState(): Promise<StoreState> {
         lastRunAt: e.lastRunAt ?? undefined,
       }),
     ),
-    evaluationRuns: evaluationRuns.map(
-      (r): EvaluationRun => ({
+    evaluationRuns: evaluationRuns.map((r): EvaluationRun => {
+      const parsed = parseJson<{
+        items?: EvaluationRun["caseResults"];
+        measuredLabel?: string;
+      } | EvaluationRun["caseResults"]>(r.caseResults, []);
+      const items = Array.isArray(parsed)
+        ? parsed
+        : parsed.items ?? [];
+      const measuredLabel = Array.isArray(parsed)
+        ? r.illustrative
+          ? "Illustrative / non-measured run"
+          : "Measured fixture run against current seeded corpus — not production benchmarks"
+        : parsed.measuredLabel ||
+          (r.illustrative
+            ? "Illustrative / non-measured run"
+            : "Measured fixture run against current seeded corpus — not production benchmarks");
+      return {
         id: r.id,
         startedAt: r.startedAt,
         completedAt: r.completedAt,
-        caseResults: parseJson(r.caseResults, []),
+        caseResults: items,
         actor: r.actor,
-        illustrative: true,
-      }),
-    ),
+        illustrative: r.illustrative,
+        measuredLabel,
+      };
+    }),
     briefReviews: briefReviews.map(
       (r): BriefReview => ({
         id: r.id,
