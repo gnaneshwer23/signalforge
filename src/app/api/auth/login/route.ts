@@ -9,12 +9,41 @@ import {
   sessionCookieOptions,
 } from "@/lib/auth/session";
 import { appendAuditEvent } from "@/lib/db/repository";
+import { resolveSessionSecret } from "@/lib/security/session-secret";
+import {
+  clientKeyFromRequest,
+  rateLimit,
+} from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
+    const limited = rateLimit(`login:${clientKeyFromRequest(request)}`, {
+      limit: 20,
+      windowMs: 60_000,
+    });
+    if (!limited.ok) {
+      return NextResponse.json(
+        { error: "Too many login attempts. Retry shortly." },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(Math.ceil(limited.retryAfterMs / 1000) || 1),
+          },
+        },
+      );
+    }
+
+    const secret = resolveSessionSecret();
+    if (!secret.ok) {
+      return NextResponse.json(
+        { error: secret.error, code: "session_misconfigured" },
+        { status: 503 },
+      );
+    }
+
     const body = (await request.json()) as { email?: string; password?: string };
     const email = body.email?.trim() ?? "";
     const password = body.password ?? "";

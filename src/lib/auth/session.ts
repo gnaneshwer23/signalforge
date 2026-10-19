@@ -6,6 +6,10 @@ import {
   type PublicUser,
   type Role,
 } from "./users";
+import {
+  requireSessionSecret,
+  resolveSessionSecret,
+} from "@/lib/security/session-secret";
 
 export const SESSION_COOKIE = "sf_session";
 
@@ -16,10 +20,7 @@ type SessionPayload = {
 };
 
 function sessionSecret(): string {
-  return (
-    process.env.SESSION_SECRET ||
-    "signalforge-demo-session-secret-not-for-production"
-  );
+  return requireSessionSecret();
 }
 
 function b64url(input: Buffer | string): string {
@@ -58,6 +59,8 @@ export function createSessionToken(
 }
 
 export function verifySessionToken(token: string): SessionPayload | null {
+  // Fail closed on shared deploy if SESSION_SECRET is missing/weak.
+  if (!resolveSessionSecret().ok) return null;
   const [payloadB64, sig] = token.split(".");
   if (!payloadB64 || !sig) return null;
   const expected = sign(payloadB64);

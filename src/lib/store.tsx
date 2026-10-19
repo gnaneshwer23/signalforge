@@ -20,6 +20,7 @@ import type {
   BriefState,
   ChangeDecision,
   ChangeRequest,
+  PersistenceStatus,
   Priority,
   ReviewState,
   StoreState,
@@ -30,6 +31,8 @@ type StoreContextValue = {
   state: StoreState;
   hydrated: boolean;
   persistError: string | null;
+  persistenceStatus: PersistenceStatus;
+  retryPersist: () => Promise<{ ok: boolean; reason?: string }>;
   resetDemo: () => Promise<{ ok: boolean; reason?: string }>;
   dismissWalkthrough: () => void;
   logUsage: (type: UsageEventType, detail: string, entityId?: string) => void;
@@ -93,7 +96,51 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
   const [persistReady, setPersistReady] = useState(false);
   const [persistError, setPersistError] = useState<string | null>(null);
+  const [persistenceStatus, setPersistenceStatus] =
+    useState<PersistenceStatus>("loading");
   const skipNextPersistRef = useRef(true);
+  const stateRef = useRef(state);
+  stateRef.current = state;
+
+  const persistToServer = useCallback(async (payload: StoreState) => {
+    try {
+      const res = await fetch("/api/state", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const body = (await res.json().catch(() => null)) as {
+        error?: string;
+        code?: string;
+      } | null;
+      if (res.status === 401 || res.status === 403) {
+        // Keep unsaved edits; surface auth requirement + allow retry after sign-in.
+        setPersistenceStatus("auth_required");
+        setPersistError(
+          body?.error ||
+            "Authentication required. Sign in with a labelled demo account to persist.",
+        );
+        return { ok: false as const, reason: body?.error || "Authentication required." };
+      }
+      if (!res.ok) {
+        setPersistenceStatus("persistence_error");
+        setPersistError(
+          body?.error ||
+            "Persistence error — your edits are kept locally. Use Retry to save again.",
+        );
+        return { ok: false as const, reason: body?.error || "Persist failed." };
+      }
+      setPersistenceStatus("connected");
+      setPersistError(null);
+      return { ok: true as const };
+    } catch {
+      setPersistenceStatus("persistence_error");
+      setPersistError(
+        "Persistence error — backend unreachable. Edits kept; use Retry.",
+      );
+      return { ok: false as const, reason: "Backend unreachable." };
+    }
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -104,15 +151,21 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           const remote = (await res.json()) as StoreState;
           if (!cancelled) {
             setState({ ...remote, persistenceMode: "server" });
+            setPersistenceStatus("connected");
             setPersistError(null);
           }
         } else if (!cancelled) {
+          const body = (await res.json().catch(() => null)) as {
+            error?: string;
+          } | null;
           setState((prev) => ({
             ...prev,
             persistenceMode: "local_demonstration",
           }));
+          setPersistenceStatus("demo_mode");
           setPersistError(
-            "Server state unavailable — running in local demonstration mode. Changes are not written to SQLite.",
+            body?.error ||
+              "Server state unavailable — Demo mode. Changes stay in this browser only.",
           );
         }
       } catch {
@@ -121,8 +174,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             ...prev,
             persistenceMode: "local_demonstration",
           }));
+          setPersistenceStatus("demo_mode");
           setPersistError(
-            "Backend unreachable — local demonstration mode. No production writes are claimed.",
+            "Backend unreachable — Demo mode. No production writes are claimed.",
           );
         }
       } finally {
@@ -144,53 +198,32 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       skipNextPersistRef.current = false;
       return;
     }
-    if (state.persistenceMode === "local_demonstration") return;
+    // Only auto-persist when connected to server persistence.
+    if (state.persistenceMode !== "server") return;
+    if (
+      persistenceStatus === "auth_required" ||
+      persistenceStatus === "persistence_error"
+    ) {
+      // Wait for explicit retry after auth/DB failure — do not discard edits.
+      return;
+    }
     const timer = window.setTimeout(() => {
-      void (async () => {
-        try {
-          const res = await fetch("/api/state", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(state),
-          });
-          if (res.status === 401 || res.status === 403) {
-            const body = (await res.json().catch(() => null)) as {
-              error?: string;
-            } | null;
-            setState((prev) => ({
-              ...prev,
-              persistenceMode: "local_demonstration",
-            }));
-            setPersistError(
-              body?.error ||
-                "Not authenticated for server writes — local demonstration mode. Sign in with a demo account to persist.",
-            );
-            return;
-          }
-          if (!res.ok) {
-            setState((prev) => ({
-              ...prev,
-              persistenceMode: "local_demonstration",
-            }));
-            setPersistError(
-              "Persist failed — switched to local demonstration mode. Successful production writes are not claimed.",
-            );
-            return;
-          }
-          setPersistError(null);
-        } catch {
-          setState((prev) => ({
-            ...prev,
-            persistenceMode: "local_demonstration",
-          }));
-          setPersistError(
-            "Backend unreachable during save — local demonstration mode.",
-          );
-        }
-      })();
+      void persistToServer(state);
     }, 400);
     return () => window.clearTimeout(timer);
-  }, [state, hydrated, persistReady]);
+  }, [state, hydrated, persistReady, persistenceStatus, persistToServer]);
+
+  const retryPersist = useCallback(async () => {
+    if (stateRef.current.persistenceMode !== "server") {
+      return {
+        ok: false,
+        reason: "Currently in Demo mode — server writes are not active.",
+      };
+    }
+    // Clear blocking status so the effect path can also resume after success.
+    setPersistenceStatus("connected");
+    return persistToServer(stateRef.current);
+  }, [persistToServer]);
 
   const appendAudit = useCallback(
     (
@@ -256,6 +289,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         const fresh = (await res.json()) as StoreState;
         skipNextPersistRef.current = true;
         setState({ ...fresh, persistenceMode: "server" });
+        setPersistenceStatus("connected");
         setPersistError(null);
         return { ok: true };
       }
@@ -263,6 +297,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         error?: string;
       } | null;
       if (res.status === 401 || res.status === 403) {
+        setPersistenceStatus("auth_required");
         return {
           ok: false,
           reason:
@@ -270,18 +305,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             "Reset requires an authenticated admin demo session.",
         };
       }
+      setPersistenceStatus("persistence_error");
+      return {
+        ok: false,
+        reason: body?.error || "Server reset failed.",
+      };
     } catch {
-      // fall through
+      setPersistenceStatus("persistence_error");
+      return {
+        ok: false,
+        reason: "Server reset unavailable — local state was not discarded.",
+      };
     }
-    skipNextPersistRef.current = true;
-    setState({
-      ...createInitialState(),
-      persistenceMode: "local_demonstration",
-    });
-    setPersistError(
-      "Reset applied locally only — server reset unavailable.",
-    );
-    return { ok: true, reason: "Local reset only." };
   }, []);
 
   const dismissWalkthrough = useCallback(() => {
@@ -962,6 +997,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       state,
       hydrated,
       persistError,
+      persistenceStatus,
+      retryPersist,
       resetDemo,
       dismissWalkthrough,
       logUsage,
@@ -989,6 +1026,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       state,
       hydrated,
       persistError,
+      persistenceStatus,
+      retryPersist,
       resetDemo,
       dismissWalkthrough,
       logUsage,

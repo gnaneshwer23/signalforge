@@ -371,3 +371,11 @@ export interface StoreState {
   walkthroughDismissed: boolean;
   persistenceMode: "server" | "local_demonstration";
 }
+
+/** UI-facing connection / persistence status (not inferred from homepage load alone). */
+export type PersistenceStatus =
+  | "loading"
+  | "connected"
+  | "demo_mode"
+  | "auth_required"
+  | "persistence_error";

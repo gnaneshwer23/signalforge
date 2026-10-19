@@ -9,7 +9,10 @@ export type DemoUser = {
   email: string;
   name: string;
   role: Role;
-  /** Demo-only plaintext password — never use this pattern in production. */
+  /**
+   * Demo-only plaintext password — labelled public demo credentials.
+   * Never reuse this pattern outside the portfolio prototype.
+   */
   password: string;
 };
 

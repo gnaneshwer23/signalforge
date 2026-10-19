@@ -26,7 +26,8 @@ export default function AboutPage() {
             Next.js workbench with nine navigable areas and a seeded AD corpus
           </li>
           <li>
-            Prisma + SQLite persistence with migrations, seed, and audit trail
+            Prisma + Neon PostgreSQL persistence with migrations, seed, and
+            audit trail
           </li>
           <li>
             Demo session auth with server-side role checks on mutations (UI role

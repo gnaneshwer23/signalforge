@@ -51,7 +51,7 @@ function ShellChrome({ children }: { children: React.ReactNode }) {
                     disabled={!hydrated || !canReset}
                     title={
                       canReset
-                        ? "Reset SQLite demo state (admin)"
+                        ? "Reset Neon demo corpus (admin)"
                         : "Sign in as admin to reset demo state"
                     }
                     onClick={() => {
