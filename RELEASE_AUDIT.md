@@ -100,3 +100,17 @@ Env vars confirmed via Vercel MCP: `DATABASE_URL` + `DATABASE_URL_UNPOOLED` (pro
 - **Code readiness (local / Origin):** build/lint/**41 tests** green; Neon persistence on Origin `main`
 - **Live portfolio URL readiness:** **Not yet** — still serving pre-Neon build
 - **Pilot / production-ready:** No (demo auth, Gate G ops/compliance still fail)
+
+---
+
+## Addendum — public site + onboarding (2026-10-19)
+
+| Item | Status |
+| --- | --- |
+| Origin `main` SHA | `6f9ae8b` |
+| GitHub `main` push | **Blocked** (no write credentials in agent VM) |
+| Vercel auto-redeploy | **Not triggered** (tracks GitHub; Origin ahead) |
+| Neon `UserPreference` migration | **Applied** from this environment |
+| Local verify | `npm run build` / lint / **52/52** tests; smoke `/`, `/workspace`, `/onboarding`, `/api/prefs` OK |
+
+**Blocker unchanged:** push `6f9ae8b` to `github.com/gnaneshwer23/signalforge`, then Vercel redeploys production.
