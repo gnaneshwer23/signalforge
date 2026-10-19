@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Sora, Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
-import { AppShell } from "@/components/layout/app-shell";
+import { Source_Serif_4, Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
+import { RootProviders } from "@/components/layout/providers";
 import "./globals.css";
 
-const display = Sora({
+const display = Source_Serif_4({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -33,7 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${display.variable} ${body.variable} ${mono.variable} h-full`}
     >
       <body className="min-h-full font-sans text-foreground">
-        <AppShell>{children}</AppShell>
+        <RootProviders>{children}</RootProviders>
       </body>
     </html>
   );

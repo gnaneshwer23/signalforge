@@ -1,24 +1,27 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "name": "SignalForge — medical research workbench (shot 27696621 inspiration)",
-  "version": "2.0.0",
+  "name": "SignalForge — forest green + scientific teal (public + workbench)",
+  "version": "3.0.0",
   "reference": {
     "url": "https://dribbble.com/shots/27696621-Pharma-Biotech-Website-UI-UX-Medical-research-homepage-design",
     "shotId": "27696621",
-    "note": "Inspiration only. Do not copy shot assets, photography, 3D art, or branding. Direction extracted from rendered capture + pixel sampling (sage field, white planes, charcoal CTAs)."
+    "bionilNotes": "Deep forest green + scientific teal; warm white / pale mint grounds; amber for attention. Inspiration only — no third-party assets copied.",
+    "note": "Inspiration only. Do not copy shot assets, photography, 3D art, or branding."
   },
   "fonts": {
     "display": {
-      "family": "Sora",
+      "family": "Source Serif 4",
       "source": "google",
       "cssVariable": "--font-display",
-      "fallbacks": ["ui-sans-serif", "sans-serif"]
+      "fallbacks": ["ui-serif", "Georgia", "serif"],
+      "usage": "Marketing / editorial major headings and brand wordmark on public pages"
     },
     "body": {
       "family": "Plus Jakarta Sans",
       "source": "google",
       "cssVariable": "--font-body",
-      "fallbacks": ["ui-sans-serif", "sans-serif"]
+      "fallbacks": ["ui-sans-serif", "sans-serif"],
+      "usage": "App UI, tables, forms, nav, body copy"
     },
     "mono": {
       "family": "Geist Mono",
@@ -29,37 +32,43 @@
     "avoid": ["Inter", "Roboto", "Arial", "system-ui"]
   },
   "colors": {
-    "paper": "#F5F8F4",
-    "background": "#E8F0E4",
+    "paper": "#F7FAF6",
+    "background": "#E8F2EC",
     "surface": "#FFFFFF",
-    "surfaceMuted": "#DDE8D8",
-    "sage": "#B5C9AF",
-    "ink": "#161A18",
-    "muted": "#5A6B62",
-    "border": "#C9D6C8",
-    "input": "#C5D4C3",
-    "primary": "#1A1B22",
-    "primaryForeground": "#F5F8F4",
-    "primaryDeep": "#0D0E12",
-    "secondary": "#D5E4CF",
-    "accent": "#C8DCC0",
-    "accentSignal": "#3F6B4F",
-    "ring": "#3F6B4F",
+    "surfaceMuted": "#D8E8DE",
+    "mint": "#E8F5EF",
+    "forest": "#0F3D2E",
+    "forestDeep": "#0A2E22",
+    "teal": "#1A7A6D",
+    "tealSoft": "#2A9B8C",
+    "ink": "#14241C",
+    "muted": "#4F655A",
+    "border": "#C5D9CE",
+    "input": "#BDD2C6",
+    "primary": "#0F3D2E",
+    "primaryForeground": "#F7FAF6",
+    "primaryDeep": "#0A2E22",
+    "secondary": "#D4E8DC",
+    "accent": "#C5E4DB",
+    "accentSignal": "#1A7A6D",
+    "ring": "#1A7A6D",
+    "amber": "#B45309",
     "status": {
-      "verified": "#3F6B4F",
+      "verified": "#1A7A6D",
       "needsReview": "#B45309",
-      "unverified": "#5A6B62",
+      "unverified": "#4F655A",
       "danger": "#B42318"
     },
-    "chart": ["#3F6B4F", "#1A1B22", "#B45309", "#7A9A7C", "#B5C9AF"]
+    "chart": ["#1A7A6D", "#0F3D2E", "#B45309", "#3D8B7A", "#A8CFC0"]
   },
   "cssVariableMap": {
     "--paper": "paper",
     "--background": "background",
     "--card": "surface",
     "--muted": "surfaceMuted",
-    "--sage": "sage",
-    "--mint": "sage",
+    "--mint": "mint",
+    "--forest": "forest",
+    "--teal": "teal",
     "--ink": "ink",
     "--foreground": "ink",
     "--muted-foreground": "muted",
@@ -69,6 +78,7 @@
     "--primary-foreground": "primaryForeground",
     "--secondary": "secondary",
     "--accent": "accent",
+    "--accent-signal": "accentSignal",
     "--ring": "ring",
     "--verified": "status.verified",
     "--amber-review": "status.needsReview",
@@ -93,8 +103,8 @@
     "colorToken": "border"
   },
   "shadow": {
-    "panel": "0 1px 2px rgb(22 26 24 / 0.05)",
-    "sheet": "0 10px 28px rgb(22 26 24 / 0.08)",
+    "panel": "0 1px 2px rgb(15 61 46 / 0.06)",
+    "sheet": "0 10px 28px rgb(15 61 46 / 0.1)",
     "glow": "none"
   },
   "motion": [
@@ -119,12 +129,19 @@
       "easing": "ease-out"
     }
   ],
-  "components": {
-    "nav": {
-      "placement": "left-sidebar",
-      "active": "solid-charcoal-primary",
-      "brand": "display-wordmark-first"
+  "shells": {
+    "marketing": {
+      "nav": "top-horizontal",
+      "brand": "editorial-serif-wordmark",
+      "ctaPrimary": "forest-green"
     },
+    "workbench": {
+      "nav": "left-sidebar",
+      "brand": "serif-wordmark-first",
+      "active": "solid-forest-primary"
+    }
+  },
+  "components": {
     "metrics": {
       "style": "open-tile-border",
       "valueFont": "display",
@@ -146,11 +163,6 @@
     "cta": {
       "primaryRadius": "md",
       "avoidRoundedFull": true
-    },
-    "drawer": {
-      "surface": "white",
-      "edge": "hairline",
-      "shadowToken": "sheet"
     }
   }
 }

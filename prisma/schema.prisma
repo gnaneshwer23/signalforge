@@ -244,3 +244,21 @@ model AppMeta {
   walkthroughDismissed Boolean @default(false)
   seededAt String
 }
+
+/// Demo onboarding / UX preferences. Persona role is NOT an auth Role.
+model UserPreference {
+  id String @id @default(cuid())
+  /// Anonymous prefs cookie key or linked demo user id
+  sessionKey String @unique
+  userId String?
+  displayName String?
+  /// Onboarding persona (CI, MA, …) — preference only; no server permissions
+  personaRole String?
+  objective String?
+  therapeuticArea String?
+  experienceLevel String?
+  onboardingCompleted Boolean @default(false)
+  tourCompleted Boolean @default(false)
+  createdAt String
+  updatedAt String
+}

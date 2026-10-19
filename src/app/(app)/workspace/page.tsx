@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useStore } from "@/lib/store";
+import { usePrefs } from "@/lib/onboarding/prefs-context";
+import { profileFor } from "@/lib/onboarding/role-profiles";
+import { PERSONA_OPTIONS } from "@/lib/onboarding/types";
 import { DemoMetric } from "@/components/shared/status-badges";
 import { EmptyState, LoadingState } from "@/components/shared/empty-state";
 import { Input } from "@/components/ui/input";
@@ -11,9 +14,15 @@ import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 
-export default function OverviewPage() {
+export default function WorkspacePage() {
   const router = useRouter();
   const { state, hydrated, assembleBriefFromSignal } = useStore();
+  const { prefs } = usePrefs();
+  const profile = profileFor(prefs.personaRole);
+  const personaLabel =
+    PERSONA_OPTIONS.find((p) => p.id === prefs.personaRole)?.title ||
+    "Explorer";
+  const greetName = prefs.displayName?.trim() || null;
   const [query, setQuery] = useState("");
   const [area, setArea] = useState("Moderate-to-severe atopic dermatitis");
   const [since, setSince] = useState("");
@@ -61,27 +70,53 @@ export default function OverviewPage() {
         <p className="font-display text-[1.65rem] font-semibold tracking-tight text-ink sm:text-3xl">
           SignalForge
         </p>
+        <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.14em] text-teal">
+          {greetName
+            ? `Welcome, ${greetName}`
+            : prefs.onboardingCompleted
+              ? `${personaLabel} workspace`
+              : "Intelligence workspace"}
+        </p>
         <h1 className="mt-2 max-w-2xl font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-          Evidence-grounded competitive intelligence
+          {profile.welcomeTitle}
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-[0.9375rem]">
-          Transform fragmented biomedical, clinical-trial, and regulatory
-          information into traceable competitive signals, reviewable insights,
-          and actionable strategic questions.
+          {profile.welcomeBody}
         </p>
+        {prefs.objective && (
+          <p className="mt-2 text-xs text-muted-foreground">
+            Objective: {prefs.objective}
+            {prefs.persistence === "local" ? " · prefs in localStorage" : ""}
+            {prefs.persistence === "server" ? " · prefs on server" : ""}
+          </p>
+        )}
+        <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-ink">
+          {profile.priorities.map((p) => (
+            <li key={p}>{p}</li>
+          ))}
+        </ul>
         <div className="mt-5 flex flex-wrap gap-2">
           <Link
-            href="/landscape"
-            className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--primary),black_18%)]"
+            href={profile.primaryCta.href}
+            className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--primary),black_12%)]"
           >
-            Open Landscape
+            {profile.primaryCta.label}
             <ArrowRight className="size-3.5" />
           </Link>
+          {profile.secondaryCtas.map((cta) => (
+            <Link
+              key={cta.href}
+              href={cta.href}
+              className="inline-flex h-8 items-center rounded-lg border border-border bg-secondary px-3 text-sm font-medium text-secondary-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_6%)]"
+            >
+              {cta.label}
+            </Link>
+          ))}
           <Link
-            href="/ask"
-            className="inline-flex h-8 items-center rounded-lg border border-border bg-secondary px-3 text-sm font-medium text-secondary-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_6%)]"
+            href="/onboarding"
+            className="inline-flex h-8 items-center rounded-lg border border-transparent px-3 text-sm font-medium text-accent-signal hover:underline"
           >
-            Ask Signal
+            Edit / restart onboarding
           </Link>
         </div>
         <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">

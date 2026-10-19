@@ -8,22 +8,35 @@ Therapeutic focus for this demo: **moderate-to-severe atopic dermatitis**.
 
 Illustrative / demo data only. Not a validated pharmacovigilance system. Not for clinical decision support. Interpretations are hypotheses for human review. **Do not treat this build as production-ready or regulatory-compliant** — see [AUDIT.md](./AUDIT.md).
 
+## Journey
+
+| Surface | Route | Notes |
+| --- | --- | --- |
+| Public homepage | `/` | Marketing hero + honest CTAs |
+| Platform / Solutions / Methodology / About | `/platform`, `/solutions`, `/methodology`, `/about` | Public marketing shell |
+| Guided demo | `/demo` | Short path into the workbench |
+| Onboarding | `/onboarding` | Role → objective → TA → experience → optional name |
+| Intelligence workspace | `/workspace` | Former `/` dashboard; role-adaptive welcome |
+| Workbench areas | `/landscape`, `/evidence`, `/briefs`, `/ask`, `/safety`, `/governance`, `/evaluation`, `/delivery` | Unchanged deep links |
+
+Public marketing shell ≠ authenticated app shell. Onboarding **persona** is a UX preference only — it does **not** grant server permissions (auth Role remains separate).
+
 ## What is implemented
 
 | Area | Status |
 | --- | --- |
-| Intelligence overview (`/`) | Search, TA + date filters, illustrative metrics, source distribution, activity, insight→action |
-| Competitive landscape (`/landscape`) | Search/filter/sort, MoA/indication/status, evidence links, verification + fictional labels |
-| Evidence explorer (`/evidence`) | Full provenance fields, six lifecycle statuses, claim↔evidence links, draft brief add/remove |
-| Signal briefs (`/briefs`) | Structure, unsupported gating, confirm approve with actor/time (server transition API), audit, print |
-| Ask Signal (`/ask`) | Retrieve-then-cite via `/api/ask` deterministic matcher — **not a live LLM**; abstention + rate limit |
-| Safety & governance (`/governance`, `/safety`) | Synthetic AE + mock queue; checklist as requirements-to-validate |
-| Evaluation centre (`/evaluation`) | Measured fixture runs vs illustrative targets (labelled separately) |
-| Product Owner workspace (`/delivery`) | Backlog + AC validation, milestones, change control, decisions, audit |
-| About & demo guide (`/about`) | Honest scope, provenance definitions, mocked vs real |
-| Shell | Wordmark, 9-area nav + About, breadcrumbs, global search, demo-data indicator |
-| Persistence | **Neon PostgreSQL via Prisma** (`DATABASE_URL` / `DATABASE_URL_UNPOOLED`) |
-| Auth | Demo session cookies + **server-side** role checks on persist/reset/brief transitions |
+| Public site | Homepage, platform, solutions, methodology, about, demo |
+| Onboarding | Multi-step wizard; Prisma `UserPreference` + labelled localStorage fallback |
+| Intelligence workspace (`/workspace`) | Personalised welcome, role priorities/CTAs, guided tour |
+| Competitive landscape (`/landscape`) | Search/filter/sort, MoA/indication/status, evidence links |
+| Evidence explorer (`/evidence`) | Provenance fields, six lifecycle statuses, claim↔evidence links |
+| Signal briefs (`/briefs`) | Structure, unsupported gating, server transition API, audit |
+| Ask Signal (`/ask`) | `/api/ask` deterministic matcher — **not a live LLM** |
+| Safety & governance | Synthetic AE + mock queue; checklist as requirements-to-validate |
+| Evaluation centre | Measured fixture runs vs illustrative targets |
+| Product Owner workspace | Backlog + AC validation, milestones, change control |
+| Persistence | **Neon PostgreSQL via Prisma** |
+| Auth | Demo session cookies + **server-side** role checks on mutations |
 
 ## Provenance statuses
 
@@ -40,7 +53,7 @@ Illustrative / demo data only. Not a validated pharmacovigilance system. Not for
 
 **Prisma 6 + Neon PostgreSQL** (durable store). Set `DATABASE_URL` (pooled) and `DATABASE_URL_UNPOOLED` (direct) in `.env` — never commit real credentials.
 
-Entities include: users (demo), sources (with `provenanceKind`), assets, evidence, claims, claim–evidence links, signals, briefs, brief_reviews, evaluation_cases, evaluation_runs, backlog, milestones, change_requests, audit_events, safety_flags.
+Entities include: users (demo), sources, assets, evidence, claims, signals, briefs, evaluation, backlog, milestones, change requests, audit, safety flags, **user preferences** (onboarding / tour).
 
 **Auth:** HTTP-only signed session cookie. Demo users:
 
@@ -51,24 +64,22 @@ Entities include: users (demo), sources (with `provenanceKind`), assets, evidenc
 | `po@signalforge.demo` | `po-demo` | product_owner |
 | `admin@signalforge.demo` | `admin-demo` | admin |
 
-UI role chips alone are **not** the security boundary — `PUT /api/state`, `POST /api/state/reset`, and `POST /api/briefs/[id]/transition` enforce permissions server-side. Audit history is append-merged (clients cannot erase prior audit rows by syncing a reduced array).
+UI role chips and onboarding persona alone are **not** the security boundary — `PUT /api/state`, `POST /api/state/reset`, and `POST /api/briefs/[id]/transition` enforce permissions server-side.
 
-If the API is down or the session lacks write permission, the UI enters **local demonstration mode** and does not claim successful production writes.
+Onboarding prefs: `GET/PUT /api/prefs` with Zod validation. On server failure the client may fall back to **labelled localStorage** — the UI does not claim server persist when that happens.
 
 ## What is mocked / incomplete
 
-- **No live LLM** — Ask Signal is a deterministic keyword matcher (API-labelled)
+- **No live LLM** — Ask Signal is a deterministic keyword matcher
 - **No live proprietary APIs** or real-time ingestion
 - **No production pharmacovigilance** — safety cases are synthetic and labelled fictional
-- Demo credentials are intentionally public — replace before any shared environment
+- Demo credentials are intentionally public
 - Evaluation **targets** are illustrative; **fixture runs** are measured against the seed corpus only
-- One pipeline asset (`SIGFOR-101`) is **clearly labelled fictional / unverified**
-- Discovery URLs ≠ verified claim support (`provenanceKind` + lifecycle status)
 - Controlled release gates A–G: see [AUDIT.md](./AUDIT.md) — **most are partial; do not publish as production until met**
 
 ## Design
 
-See [DESIGN.md](./DESIGN.md) and `design-tokens.json`. Visual language: sage field surfaces, white panels, charcoal primary CTAs, deep sage verification accents, Sora + Plus Jakarta Sans. Inspired by medical-research biotech homepage UI (Dribbble shot `27696621` — inspiration only; no third-party assets copied).
+See [DESIGN.md](./DESIGN.md) and `design-tokens.json`. Visual language: **forest green** + **scientific teal**, warm white / pale mint, amber for attention; **Source Serif 4** for marketing headings, **Plus Jakarta Sans** for app UI. Inspired by medical-research biotech homepage UI (Dribbble shot `27696621` — inspiration only; no third-party assets copied). No fake logos, testimonials, or invented stats.
 
 ## Run locally
 
@@ -83,47 +94,20 @@ npm run dev             # http://localhost:3847
 ```bash
 npm run build
 npm start               # also port 3847
-npm test                # matcher, permissions, provenance, rate-limit, audit-merge
+npm test
 npm run lint
 ```
-
-### Useful scripts
-
-| Script | Purpose |
-| --- | --- |
-| `npm run db:generate` | Generate Prisma Client |
-| `npm run db:migrate` | Apply migrations |
-| `npm run db:seed` | Seed AD corpus |
-| `npm run db:reset` | Reset DB + re-seed |
-| `npm test` | Unit tests |
-| `npm run lint` | ESLint |
 
 ## Environment variables
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `DATABASE_URL` | Yes | Neon Postgres pooled URL (`…-pooler…`, with `pgbouncer=true`) |
-| `DATABASE_URL_UNPOOLED` | Yes | Neon direct (non-pooler) URL for migrations (Vercel Neon integration name) |
-| `SESSION_SECRET` | Required on shared deploy | HMAC secret for demo session cookies (≥32 chars; no weak defaults) |
-
-Copy `.env.example` → `.env` and fill in Neon credentials from the Neon console. Do not put connection strings in the client bundle, README, or other tracked files. No LLM API keys.
-
-## Security notes (demo)
-
-- Security headers: `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, CSP (demo-relaxed), `Permissions-Policy`
-- Ask Signal rate-limited in-process (`/api/ask`)
-- Prompt-injection style queries abstain without inventing evidence
-
-## Out of scope
-
-Production PV systems, live proprietary data feeds, claiming regulatory/compliance certification, patient-specific treatment advice, auto-deploy to production without gates.
+| `DATABASE_URL` | Yes | Neon Postgres pooled URL |
+| `DATABASE_URL_UNPOOLED` | Yes | Neon direct URL for migrations |
+| `SESSION_SECRET` | Required on shared deploy | HMAC secret for demo session cookies (≥32 chars) |
 
 ## Live deploy
 
 Production: https://signalforge-4gob.vercel.app/
 
-- Persistence: **Neon PostgreSQL** (Vercel env: `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `SESSION_SECRET`)
-- Health: `GET /api/health` · State: `GET /api/state`
-- UI shows **Connected** when the API + DB are healthy (not demo/unavailable)
-
-**Readiness:** portfolio demo-ready — **not** pilot-ready or production-ready (see [AUDIT.md](./AUDIT.md)). If a Neon password was ever pasted into chat, rotate it in the Neon console.
+**Readiness:** portfolio demo-ready — **not** pilot-ready or production-ready (see [AUDIT.md](./AUDIT.md)).

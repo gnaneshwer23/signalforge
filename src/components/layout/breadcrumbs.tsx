@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const LABELS: Record<string, string> = {
-  "": "Overview",
+  workspace: "Workspace",
   landscape: "Landscape",
   evidence: "Evidence",
   briefs: "Briefs",
@@ -13,34 +13,42 @@ const LABELS: Record<string, string> = {
   safety: "Safety triage",
   evaluation: "Evaluation",
   delivery: "Product Owner",
-  about: "About & demo",
+  about: "About",
+  onboarding: "Onboarding",
+  platform: "Platform",
+  solutions: "Solutions",
+  methodology: "Methodology",
+  demo: "Demo",
 };
 
 export function Breadcrumbs() {
   const pathname = usePathname();
   const parts = pathname.split("/").filter(Boolean);
 
-  if (parts.length === 0) {
+  if (parts.length === 0 || (parts.length === 1 && parts[0] === "workspace")) {
     return (
       <nav aria-label="Breadcrumb" className="text-xs text-muted-foreground">
         <ol className="flex flex-wrap items-center gap-1">
-          <li aria-current="page">Overview</li>
+          <li aria-current="page">Workspace</li>
         </ol>
       </nav>
     );
   }
 
   const crumbs: { href: string; label: string; current: boolean }[] = [
-    { href: "/", label: "Overview", current: false },
+    { href: "/workspace", label: "Workspace", current: false },
   ];
 
   let acc = "";
   parts.forEach((part, idx) => {
     acc += `/${part}`;
+    if (part === "workspace") return;
     const isLast = idx === parts.length - 1;
     const label =
       LABELS[part] ||
-      (part.startsWith("brief-") || part.startsWith("ev-") || part.startsWith("asset-")
+      (part.startsWith("brief-") ||
+      part.startsWith("ev-") ||
+      part.startsWith("asset-")
         ? part
         : part);
     crumbs.push({ href: acc, label, current: isLast });

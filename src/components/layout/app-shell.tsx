@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { StoreProvider, useStore } from "@/lib/store";
-import { AuthProvider, useAuth } from "@/lib/auth/auth-context";
+import Link from "next/link";
+import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth/auth-context";
+import { usePrefs } from "@/lib/onboarding/prefs-context";
 import { roleHasPermission } from "@/lib/auth/permissions";
 import { DisclaimerBanner } from "@/components/layout/disclaimer-banner";
 import { DemoModeBanner } from "@/components/layout/demo-mode-banner";
@@ -14,9 +16,10 @@ import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { GlobalSearch } from "@/components/layout/global-search";
 import { Button } from "@/components/ui/button";
 
-function ShellChrome({ children }: { children: React.ReactNode }) {
+export function AppShellChrome({ children }: { children: React.ReactNode }) {
   const { resetDemo, hydrated } = useStore();
   const { user } = useAuth();
+  const { prefs } = usePrefs();
   const [resetMsg, setResetMsg] = useState<string | null>(null);
   const canReset = !!user && roleHasPermission(user.role, "demo:reset");
 
@@ -36,7 +39,8 @@ function ShellChrome({ children }: { children: React.ReactNode }) {
                     Therapeutic area
                   </p>
                   <p className="text-sm font-medium text-ink">
-                    Moderate-to-severe atopic dermatitis
+                    {prefs.therapeuticArea ||
+                      "Moderate-to-severe atopic dermatitis"}
                   </p>
                 </div>
                 <DemoDataIndicator />
@@ -45,6 +49,12 @@ function ShellChrome({ children }: { children: React.ReactNode }) {
                 <AuthBar />
                 <GlobalSearch />
                 <div className="flex flex-wrap items-center gap-2">
+                  <Link
+                    href="/onboarding"
+                    className="inline-flex h-8 items-center rounded-lg border border-border bg-secondary px-3 text-sm font-medium text-secondary-foreground hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_6%)]"
+                  >
+                    Edit onboarding
+                  </Link>
                   <Button
                     variant="outline"
                     size="sm"
@@ -85,12 +95,7 @@ function ShellChrome({ children }: { children: React.ReactNode }) {
   );
 }
 
+/** @deprecated Use AppShellChrome inside (app) layout with StoreProvider */
 export function AppShell({ children }: { children: React.ReactNode }) {
-  return (
-    <AuthProvider>
-      <StoreProvider>
-        <ShellChrome>{children}</ShellChrome>
-      </StoreProvider>
-    </AuthProvider>
-  );
+  return <AppShellChrome>{children}</AppShellChrome>;
 }

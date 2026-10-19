@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  async redirects() {
+    // Former intelligence dashboard lived at `/`. Public homepage now owns `/`.
+    // Deep links to workbench areas are unchanged; use /workspace for overview.
+    return [];
+  },
   async headers() {
     return [
       {

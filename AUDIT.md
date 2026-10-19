@@ -4,30 +4,42 @@
 implemented, mocked, and remaining. It does **not** claim regulatory compliance
 or production readiness.
 
-Last updated: 2026-10-19 (Neon deploy sync on `main`).
+Last updated: 2026-10-19 (public site + onboarding + role-adaptive workspace).
 
 ## Phase status
 
 | Phase | Status | Evidence |
 | --- | --- | --- |
-| 1. Stabilisation | **Met** for local build | `npm run build` green; `npm run lint` green; `npm test` 41/41 |
-| 2. Frontend completion | **Met** (demo scope) | Nine areas + About; breadcrumbs; global search; Connected / demo / auth / error persistence UI |
-| 3. Backend | **Partial** | Prisma 6 + Neon PostgreSQL; `/api/health`; CSRF + rate limits on mutations; SESSION_SECRET fail-closed on shared deploys; PUT `/api/state` + reset authz; audit append-merge |
-| 4. Evidence & AI quality | **Partial** | Six provenance statuses; claim–evidence links; Ask `/api/ask` retrieve-then-cite with abstention + rate limit; labelled deterministic demo (no live LLM) |
-| 5. Audit & QA | **Partial** | Unit tests: matcher, permissions, provenance, rate-limit, audit-merge, CSRF, session-secret, payload, persistence probes; no Playwright e2e CI |
+| 1. Stabilisation | **Met** for local build | `npm run build` green; `npm run lint` green; `npm test` 52/52 |
+| 2. Frontend completion | **Met** (demo scope) | Public marketing site + nine workbench areas; onboarding; role-adaptive `/workspace` |
+| 3. Backend | **Partial** | Prisma 6 + Neon; `/api/health`; `/api/prefs`; CSRF + rate limits; SESSION_SECRET fail-closed |
+| 4. Evidence & AI quality | **Partial** | Six provenance statuses; Ask `/api/ask` deterministic + abstention |
+| 5. Audit & QA | **Partial** | Unit tests incl. onboarding prefs validation + route architecture; no Playwright e2e CI |
 | 6. Controlled release prep | **Not ready to publish** | Gates A–G below; live URL is portfolio demo only |
 
 ## Controlled release gates A–G
 
 | Gate | Intent | Status | Notes |
 | --- | --- | --- | --- |
-| A | Build & typecheck green | **Pass (local)** | `npm run build` + lint + 41 tests |
-| B | Seeded corpus + migrations | **Pass (Neon Postgres)** | `prisma/migrations` (postgresql); Neon integration on Vercel (`DATABASE_URL` / `DATABASE_URL_UNPOOLED`) |
-| C | Authz on mutations | **Partial** | Session + role checks on state PUT/reset and brief transitions; full-document sync remains primary write path |
-| D | Provenance & unsupported claims | **Pass (demo)** | Six statuses defined; unsupported claim gating on approve |
-| E | Ask Signal honesty & abstention | **Pass (demo)** | Deterministic matcher + `/api/ask`; injection abstention tests; never claims live LLM |
+| A | Build & typecheck green | **Pass (local)** | `npm run build` + lint + 52 tests |
+| B | Seeded corpus + migrations | **Pass (Neon Postgres)** | Incl. `UserPreference` migration |
+| C | Authz on mutations | **Partial** | Session + role checks; onboarding persona ≠ auth Role |
+| D | Provenance & unsupported claims | **Pass (demo)** | Six statuses; unsupported claim gating on approve |
+| E | Ask Signal honesty & abstention | **Pass (demo)** | Deterministic matcher; never claims live LLM |
 | F | Safety labelling | **Pass (demo)** | Fictional AE only; mock queue |
-| G | Observability / ops / compliance | **Fail / not started** | No production logging stack, secrets manager, pen-test, or regulatory validation |
+| G | Observability / ops / compliance | **Fail / not started** | No production logging stack, pen-test, or regulatory validation |
+
+## Public site + onboarding (this iteration)
+
+| Item | Status |
+| --- | --- |
+| `/` public homepage | **Met** — hero copy, live product preview (not fake screenshot), honest CTAs |
+| `/platform`, `/solutions`, `/methodology`, `/about`, `/demo` | **Met** — marketing shell |
+| `/onboarding` wizard | **Met** — 7 roles, skip, optional name; server prefs + localStorage fallback |
+| `/workspace` role-adaptive | **Met** — personalised welcome/CTAs; edit onboarding; guided tour |
+| Deep links preserved | **Met** — landscape/evidence/briefs/ask/safety/governance/evaluation/delivery |
+| Fake logos/testimonials/stats | **Avoided** |
+| Persona grants permissions | **No** — documented + schema rejects fake roles like `admin` |
 
 ## Automated tests
 
@@ -35,58 +47,40 @@ Last updated: 2026-10-19 (Neon deploy sync on `main`).
 npm test
 ```
 
-Covers:
+Covers prior suites plus:
 
-- Ask Signal abstention (fictional efficacy, patient advice)
-- Prompt-injection detection / abstention
-- Role permission matrix
-- Provenance status derivation (supported / conflicting / insufficient / unverified)
-- Rate-limit bucket behaviour
-- Audit append-merge (clients cannot wipe history)
+- Onboarding prefs Zod validation (incl. rejecting unknown persona roles)
+- Role profile coverage (7 personas)
+- Route architecture (homepage vs `/workspace`; no `/` redirect away from marketing)
 
 **Not covered yet:** Playwright e2e, full a11y axe CI, load testing, penetration testing.
 
 ## Defects / known limitations
 
-1. Full-document state sync remains a primary write path (auth-gated) — finer mutation APIs exist for brief transitions only.
-2. Demo passwords are public by design — replace with real IdP before any shared environment.
-3. Durable store is Neon Postgres — Vercel has Neon `DATABASE_URL` / `DATABASE_URL_UNPOOLED` (prod+dev) and `SESSION_SECRET`. **Rotate the Neon DB password if it was ever pasted into chat.**
-4. Evaluation **targets** are illustrative; **run results** are measured against the seeded corpus with deterministic fixtures — still not production SLAs.
+1. Full-document state sync remains a primary write path (auth-gated).
+2. Demo passwords are public by design.
+3. Durable store is Neon Postgres — rotate password if ever pasted into chat.
+4. Evaluation targets are illustrative.
 5. In-memory Ask rate limiter is per-process only.
 6. No GitHub Actions CI wired in this repo snapshot.
-7. CSP allows `'unsafe-inline'` / `'unsafe-eval'` for Next.js demo pragmatism — tighten before production.
-
-## What remains for production
-
-- Neon backups / branching policy and production secret rotation
-- Real identity provider, CSRF tokens, durable distributed rate limits, immutable audit store
-- Live retrieval / model stack with human-in-the-loop evaluation SLAs (only if explicitly in scope)
-- Validated PV integrations (explicitly out of scope for this portfolio)
-- Penetration test, DPIA, and jurisdiction-specific review
-- CI/CD with gated promotions — **do not publish as production until gates A–G are met with evidence**
+7. CSP allows `'unsafe-inline'` / `'unsafe-eval'` for Next.js demo pragmatism.
+8. Prefs may fall back to localStorage when `/api/prefs` is unavailable — UI labels this honestly.
 
 ## Readiness verdict
 
 | Level | Verdict | Evidence |
 | --- | --- | --- |
-| Portfolio demo-ready | **Yes** | Build/lint/tests green; nine areas; honest labelling; Neon Postgres persistence |
+| Portfolio demo-ready | **Yes** | Public journey + workbench + Neon + tests green |
 | Pilot-ready (shared team) | **No** | Demo credentials, incomplete authz matrix, no ops |
 | Production-ready | **No** | Gate G fail; no IdP; no pen-test |
 
-## Live deploy (verified 2026-10-19)
+## Live deploy
 
 | Item | Value |
 | --- | --- |
 | Production URL | https://signalforge-4gob.vercel.app/ |
-| Origin `main` SHA | `7ba90c2` (Neon + persistence hardening) |
-| GitHub `main` SHA | `2b1d840` (**stale** — agent VM lacks GitHub write credentials) |
-| Live `GET /api/state` | **500** `Failed to load workbench state from SQLite.` |
-| Live `GET /api/health` | **404** (route not on stale build) |
-| Vercel production deploy | READY on GitHub SHA `2b1d840` (SQLite-era) |
-| Vercel env | `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `SESSION_SECRET` present (prod) |
-| Persistence verified live | **No** — blocked on GitHub→Vercel sync |
-| Local | `npm run build` / lint / **41/41** tests pass against Neon |
+| Persistence | Neon PostgreSQL (`UserPreference` migration applied from this environment) |
 
-**Blocker:** push `main` to `github.com/gnaneshwer23/signalforge` (contents:write), then Vercel auto-redeploys production from GitHub `main`. Origin already has the Neon code.
+**Note:** Vercel production tracks GitHub `main`. If GitHub write credentials are missing in the agent environment, Origin may be ahead of GitHub/live until a human pushes or syncs.
 
 **Security:** rotate Neon DB password if it was pasted in chat.

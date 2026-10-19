@@ -14,7 +14,7 @@ import {
 import { useState } from "react";
 
 const links = [
-  { href: "/", label: "Overview" },
+  { href: "/workspace", label: "Workspace" },
   { href: "/landscape", label: "Landscape" },
   { href: "/evidence", label: "Evidence" },
   { href: "/briefs", label: "Briefs" },
@@ -22,7 +22,7 @@ const links = [
   { href: "/governance", label: "Safety & governance" },
   { href: "/evaluation", label: "Evaluation" },
   { href: "/delivery", label: "Product Owner" },
-  { href: "/about", label: "About & demo" },
+  { href: "/about", label: "About" },
 ];
 
 function NavLinks({
@@ -37,12 +37,14 @@ function NavLinks({
     <nav className={cn("flex flex-col gap-0.5", className)} aria-label="Primary">
       {links.map((link, i) => {
         const active =
-          link.href === "/"
-            ? pathname === "/"
+          link.href === "/workspace"
+            ? pathname === "/workspace" || pathname === "/"
             : link.href === "/governance"
               ? pathname.startsWith("/governance") ||
                 pathname.startsWith("/safety")
-              : pathname.startsWith(link.href);
+              : link.href === "/about"
+                ? pathname === "/about"
+                : pathname.startsWith(link.href);
         return (
           <Link
             key={link.href}
@@ -79,12 +81,18 @@ export function AppNav() {
               Pharma Intelligence Workbench
             </p>
           </Link>
+          <Link
+            href="/"
+            className="mt-3 inline-block text-xs text-accent-signal hover:underline"
+          >
+            ← Public site
+          </Link>
         </div>
         <NavLinks />
       </aside>
 
       <div className="no-print flex items-center justify-between border-b border-sidebar-border bg-sidebar/95 px-4 py-3 lg:hidden">
-        <Link href="/">
+        <Link href="/workspace">
           <p className="font-display text-xl font-semibold tracking-tight text-ink">
             SignalForge
           </p>
@@ -104,6 +112,13 @@ export function AppNav() {
             </SheetHeader>
             <div className="mt-4 px-2">
               <NavLinks onNavigate={() => setOpen(false)} />
+              <Link
+                href="/"
+                onClick={() => setOpen(false)}
+                className="mt-4 block px-3 text-sm text-accent-signal"
+              >
+                Public site
+              </Link>
             </div>
           </SheetContent>
         </Sheet>

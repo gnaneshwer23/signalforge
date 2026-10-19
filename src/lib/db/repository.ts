@@ -41,6 +41,7 @@ async function clearAll() {
   await prisma.changeRequest.deleteMany();
   await prisma.safetyFlag.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.userPreference.deleteMany();
   await prisma.appMeta.deleteMany();
 }
 

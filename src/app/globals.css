@@ -43,8 +43,10 @@
   --color-paper: var(--paper);
   --color-amber-review: var(--amber-review);
   --color-verified: var(--verified);
-  --color-sage: var(--sage);
-  --color-mint: var(--sage);
+  --color-sage: var(--mint);
+  --color-mint: var(--mint);
+  --color-forest: var(--forest);
+  --color-teal: var(--teal);
   --color-accent-signal: var(--accent-signal);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.85);
@@ -53,45 +55,47 @@
 }
 
 :root {
-  /* Sage field / charcoal CTA medical-research palette (shot 27696621 adapted) */
-  --paper: #f5f8f4;
-  --ink: #161a18;
+  /* Forest green + scientific teal (Bionil-inspired; shot 27696621 adapted) */
+  --paper: #f7faf6;
+  --ink: #14241c;
   --amber-review: #b45309;
-  --verified: #3f6b4f;
-  --sage: #b5c9af;
-  --accent-signal: #3f6b4f;
-  --background: #e8f0e4;
-  --foreground: #161a18;
+  --verified: #1a7a6d;
+  --mint: #e8f5ef;
+  --forest: #0f3d2e;
+  --teal: #1a7a6d;
+  --accent-signal: #1a7a6d;
+  --background: #e8f2ec;
+  --foreground: #14241c;
   --card: #ffffff;
-  --card-foreground: #161a18;
+  --card-foreground: #14241c;
   --popover: #ffffff;
-  --popover-foreground: #161a18;
-  --primary: #1a1b22;
-  --primary-foreground: #f5f8f4;
-  --secondary: #d5e4cf;
-  --secondary-foreground: #161a18;
-  --muted: #dde8d8;
-  --muted-foreground: #5a6b62;
-  --accent: #c8dcc0;
-  --accent-foreground: #161a18;
+  --popover-foreground: #14241c;
+  --primary: #0f3d2e;
+  --primary-foreground: #f7faf6;
+  --secondary: #d4e8dc;
+  --secondary-foreground: #14241c;
+  --muted: #d8e8de;
+  --muted-foreground: #4f655a;
+  --accent: #c5e4db;
+  --accent-foreground: #14241c;
   --destructive: #b42318;
-  --border: #c9d6c8;
-  --input: #c5d4c3;
-  --ring: #3f6b4f;
-  --chart-1: #3f6b4f;
-  --chart-2: #1a1b22;
+  --border: #c5d9ce;
+  --input: #bdd2c6;
+  --ring: #1a7a6d;
+  --chart-1: #1a7a6d;
+  --chart-2: #0f3d2e;
   --chart-3: #b45309;
-  --chart-4: #7a9a7c;
-  --chart-5: #b5c9af;
+  --chart-4: #3d8b7a;
+  --chart-5: #a8cfc0;
   --radius: 0.625rem;
-  --sidebar: #f3f7f1;
-  --sidebar-foreground: #161a18;
-  --sidebar-primary: #1a1b22;
-  --sidebar-primary-foreground: #f5f8f4;
-  --sidebar-accent: #d5e4cf;
-  --sidebar-accent-foreground: #161a18;
-  --sidebar-border: #c9d6c8;
-  --sidebar-ring: #3f6b4f;
+  --sidebar: #f0f7f3;
+  --sidebar-foreground: #14241c;
+  --sidebar-primary: #0f3d2e;
+  --sidebar-primary-foreground: #f7faf6;
+  --sidebar-accent: #d4e8dc;
+  --sidebar-accent-foreground: #14241c;
+  --sidebar-border: #c5d9ce;
+  --sidebar-ring: #1a7a6d;
 }
 
 @layer base {
@@ -101,9 +105,9 @@
   body {
     @apply bg-background text-foreground antialiased;
     background-image:
-      radial-gradient(ellipse 100% 65% at 0% -8%, rgba(181, 201, 175, 0.55), transparent 55%),
-      radial-gradient(ellipse 70% 45% at 100% 0%, rgba(245, 248, 244, 0.95), transparent 50%),
-      linear-gradient(180deg, #f5f8f4 0%, #e8f0e4 48%, #e3ebe0 100%);
+      radial-gradient(ellipse 100% 65% at 0% -8%, rgba(26, 122, 109, 0.14), transparent 55%),
+      radial-gradient(ellipse 70% 45% at 100% 0%, rgba(247, 250, 246, 0.95), transparent 50%),
+      linear-gradient(180deg, #f7faf6 0%, #e8f2ec 48%, #e2efe8 100%);
     background-attachment: fixed;
     min-height: 100vh;
   }
@@ -114,8 +118,8 @@
   h2,
   h3,
   .font-display {
-    font-family: var(--font-display), ui-sans-serif, sans-serif;
-    letter-spacing: -0.025em;
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+    letter-spacing: -0.02em;
   }
   a:not([class]) {
     color: var(--accent-signal);
@@ -148,11 +152,20 @@
     color: var(--accent-signal);
   }
   .bg-sage {
-    background-color: var(--sage);
+    background-color: var(--mint);
+  }
+  .bg-mint {
+    background-color: var(--mint);
+  }
+  .text-forest {
+    color: var(--forest);
+  }
+  .text-teal {
+    color: var(--teal);
   }
   .surface-panel {
     @apply rounded-lg border border-border bg-card/95;
-    box-shadow: 0 1px 2px rgb(22 26 24 / 0.04);
+    box-shadow: 0 1px 2px rgb(15 61 46 / 0.05);
   }
   .animate-rise {
     animation: rise-in 0.45s ease-out both;

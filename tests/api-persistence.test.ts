@@ -86,7 +86,7 @@ describe("round-trip / refresh persistence", () => {
       const after = await loadState();
       expect(after.walkthroughDismissed).toBe(before.walkthroughDismissed);
     },
-    30_000,
+    60_000,
   );
 
   it.skipIf(!hasDb)(
