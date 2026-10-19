@@ -22,7 +22,7 @@ Illustrative / demo data only. Not a validated pharmacovigilance system. Not for
 | Product Owner workspace (`/delivery`) | Backlog + AC validation, milestones, change control, decisions, audit |
 | About & demo guide (`/about`) | Honest scope, provenance definitions, mocked vs real |
 | Shell | Wordmark, 9-area nav + About, breadcrumbs, global search, demo-data indicator |
-| Persistence | **SQLite via Prisma** with migrations + seed |
+| Persistence | **Neon PostgreSQL via Prisma** (`DATABASE_URL` / `DATABASE_URL_UNPOOLED`) |
 | Auth | Demo session cookies + **server-side** role checks on persist/reset/brief transitions |
 
 ## Provenance statuses
@@ -38,10 +38,7 @@ Illustrative / demo data only. Not a validated pharmacovigilance system. Not for
 
 ## Database & auth
 
-**Prisma 6 + SQLite** (`prisma/dev.db`).
-
-- Supabase MCP listed unrelated projects only (no SignalForge project) — SQLite kept intentionally.
-- Neon MCP unavailable for a dedicated project in this environment.
+**Prisma 6 + Neon PostgreSQL** (durable store). Set `DATABASE_URL` (pooled) and `DATABASE_URL_UNPOOLED` (direct) in `.env` — never commit real credentials.
 
 Entities include: users (demo), sources (with `provenanceKind`), assets, evidence, claims, claim–evidence links, signals, briefs, brief_reviews, evaluation_cases, evaluation_runs, backlog, milestones, change_requests, audit_events, safety_flags.
 
@@ -105,10 +102,11 @@ npm run lint
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `DATABASE_URL` | Yes | SQLite URL, e.g. `file:./dev.db` (relative to `prisma/`) |
+| `DATABASE_URL` | Yes | Neon Postgres pooled URL (`…-pooler…`, with `pgbouncer=true`) |
+| `DATABASE_URL_UNPOOLED` | Yes | Neon direct (non-pooler) URL for migrations (Vercel Neon integration name) |
 | `SESSION_SECRET` | Recommended | HMAC secret for demo session cookies |
 
-No LLM API keys. No secrets required beyond the demo session secret.
+Copy `.env.example` → `.env` and fill in Neon credentials from the Neon console. Do not put connection strings in the client bundle, README, or other tracked files. No LLM API keys.
 
 ## Security notes (demo)
 

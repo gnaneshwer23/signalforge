@@ -4,7 +4,7 @@ import { prisma } from "../src/lib/db";
 
 async function main() {
   await seedDatabase();
-  console.log("Seeded atopic dermatitis corpus into SQLite (prisma/dev.db).");
+  console.log("Seeded atopic dermatitis corpus into Postgres (DATABASE_URL).");
 }
 
 main()

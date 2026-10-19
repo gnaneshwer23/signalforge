@@ -12,7 +12,7 @@ Last updated: 2026-10-19 (end-to-end mission pass on `main`).
 | --- | --- | --- |
 | 1. Stabilisation | **Met** for local build | `npm run build` green; `npm run lint` green; `npm test` 17/17 |
 | 2. Frontend completion | **Met** (demo scope) | Nine areas + About; breadcrumbs; global search; demo-data indicator; Bionil-inspired tokens |
-| 3. Backend | **Partial** | Prisma 6 + SQLite; demo session auth; PUT `/api/state` + reset authz; brief transition API with actor/time; audit append-merge. No managed Postgres (Supabase listed unrelated projects only) |
+| 3. Backend | **Partial** | Prisma 6 + Neon PostgreSQL (`DATABASE_URL` / `DATABASE_URL_UNPOOLED`); demo session auth; PUT `/api/state` + reset authz; brief transition API with actor/time; audit append-merge |
 | 4. Evidence & AI quality | **Partial** | Six provenance statuses; claim–evidence links; Ask `/api/ask` retrieve-then-cite with abstention + rate limit; labelled deterministic demo (no live LLM) |
 | 5. Audit & QA | **Partial** | Unit tests: matcher, permissions, provenance, rate-limit, audit-merge; no Playwright e2e CI |
 | 6. Controlled release prep | **Not ready to publish** | Gates A–G below; live URL exists as portfolio demo only |
@@ -22,7 +22,7 @@ Last updated: 2026-10-19 (end-to-end mission pass on `main`).
 | Gate | Intent | Status | Notes |
 | --- | --- | --- | --- |
 | A | Build & typecheck green | **Pass (local)** | `npm run build` + lint |
-| B | Seeded corpus + migrations | **Pass (local SQLite)** | `prisma/migrations`, seed |
+| B | Seeded corpus + migrations | **Pass (Neon Postgres)** | `prisma/migrations` (postgresql), seed against Neon |
 | C | Authz on mutations | **Partial** | Session + role checks on state PUT/reset and brief transitions; full-document sync remains primary write path |
 | D | Provenance & unsupported claims | **Pass (demo)** | Six statuses defined; unsupported claim gating on approve |
 | E | Ask Signal honesty & abstention | **Pass (demo)** | Deterministic matcher + `/api/ask`; injection abstention tests; never claims live LLM |
@@ -50,7 +50,7 @@ Covers:
 
 1. Full-document state sync remains a primary write path (auth-gated) — finer mutation APIs exist for brief transitions only.
 2. Demo passwords are public by design — replace with real IdP before any shared environment.
-3. SQLite file DB is local-demo only — not multi-instance safe; Vercel serverless needs durable external DB for multi-instance.
+3. Durable store is Neon Postgres — Vercel project already has Neon `DATABASE_URL` / `DATABASE_URL_UNPOOLED` (prod+dev); rotate credentials if ever pasted into chat.
 4. Evaluation **targets** are illustrative; **run results** are measured against the seeded corpus with deterministic fixtures — still not production SLAs.
 5. In-memory Ask rate limiter is per-process only.
 6. No GitHub Actions CI wired in this repo snapshot.
@@ -58,7 +58,7 @@ Covers:
 
 ## What remains for production
 
-- Managed Postgres (Supabase/Neon) dedicated to SignalForge with backups
+- Neon backups / branching policy and production secret rotation
 - Real identity provider, CSRF tokens, durable distributed rate limits, immutable audit store
 - Live retrieval / model stack with human-in-the-loop evaluation SLAs (only if explicitly in scope)
 - Validated PV integrations (explicitly out of scope for this portfolio)
@@ -69,8 +69,8 @@ Covers:
 
 | Level | Verdict | Evidence |
 | --- | --- | --- |
-| Portfolio demo-ready | **Yes** | Build/lint/tests green; nine areas; honest labelling; local SQLite persistence |
-| Pilot-ready (shared team) | **No** | Demo credentials, SQLite, incomplete authz matrix, no ops |
-| Production-ready | **No** | Gate G fail; no IdP; no managed DB; no pen-test |
+| Portfolio demo-ready | **Yes** | Build/lint/tests green; nine areas; honest labelling; Neon Postgres persistence |
+| Pilot-ready (shared team) | **No** | Demo credentials, incomplete authz matrix, no ops |
+| Production-ready | **No** | Gate G fail; no IdP; no pen-test |
 
 Live portfolio deploy (verify independently): https://signalforge-4gob.vercel.app/
