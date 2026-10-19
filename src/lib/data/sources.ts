@@ -12,6 +12,7 @@ export const sources: Source[] = [
     publicationDate: "2016-12-15",
     retrievalDate: "2026-01-12",
     verification: "verified",
+    provenanceKind: "verified_source",
   },
   {
     id: "src-dupi-label",
@@ -23,6 +24,7 @@ export const sources: Source[] = [
     publicationDate: "2024-06-01",
     retrievalDate: "2026-02-01",
     verification: "verified",
+    provenanceKind: "verified_source",
   },
   {
     id: "src-tralo-ecztend",
@@ -34,6 +36,7 @@ export const sources: Source[] = [
     publicationDate: "2023-08-01",
     retrievalDate: "2026-01-20",
     verification: "verified",
+    provenanceKind: "discovery_url",
   },
   {
     id: "src-tralo-press",
@@ -44,6 +47,7 @@ export const sources: Source[] = [
     publicationDate: "2024-03-01",
     retrievalDate: "2026-01-18",
     verification: "verified",
+    provenanceKind: "discovery_url",
   },
   {
     id: "src-lebri-advocate",
@@ -55,6 +59,7 @@ export const sources: Source[] = [
     publicationDate: "2023-03-15",
     retrievalDate: "2026-01-22",
     verification: "verified",
+    provenanceKind: "discovery_url",
   },
   {
     id: "src-lebri-ema",
@@ -65,6 +70,7 @@ export const sources: Source[] = [
     publicationDate: "2023-11-01",
     retrievalDate: "2026-02-02",
     verification: "verified",
+    provenanceKind: "discovery_url",
   },
   {
     id: "src-nemo-arise",
@@ -76,6 +82,7 @@ export const sources: Source[] = [
     publicationDate: "2024-08-01",
     retrievalDate: "2026-01-25",
     verification: "verified",
+    provenanceKind: "discovery_url",
   },
   {
     id: "src-nemo-press",
@@ -86,6 +93,7 @@ export const sources: Source[] = [
     publicationDate: "2024-12-15",
     retrievalDate: "2026-01-28",
     verification: "verified",
+    provenanceKind: "discovery_url",
   },
   {
     id: "src-upa-measureup",
@@ -97,6 +105,7 @@ export const sources: Source[] = [
     publicationDate: "2021-05-20",
     retrievalDate: "2026-01-15",
     verification: "verified",
+    provenanceKind: "discovery_url",
   },
   {
     id: "src-abro-jade",
@@ -108,6 +117,7 @@ export const sources: Source[] = [
     publicationDate: "2020-07-01",
     retrievalDate: "2026-01-16",
     verification: "verified",
+    provenanceKind: "discovery_url",
   },
   {
     id: "src-jak-safety",
@@ -118,6 +128,7 @@ export const sources: Source[] = [
     publicationDate: "2021-09-01",
     retrievalDate: "2026-02-03",
     verification: "verified",
+    provenanceKind: "verified_source",
   },
   {
     id: "src-ema-ad-class",
@@ -128,6 +139,7 @@ export const sources: Source[] = [
     publicationDate: "2024-02-01",
     retrievalDate: "2026-02-04",
     verification: "verified",
+    provenanceKind: "discovery_url",
   },
   {
     id: "src-sigfor-fictional",
@@ -138,6 +150,7 @@ export const sources: Source[] = [
     publicationDate: "2025-11-01",
     retrievalDate: "2026-02-10",
     verification: "unverified",
+    provenanceKind: "fictional_demo",
   },
   {
     id: "src-safety-fictional",
@@ -148,5 +161,6 @@ export const sources: Source[] = [
     publicationDate: "2026-02-08",
     retrievalDate: "2026-02-10",
     verification: "unverified",
+    provenanceKind: "fictional_demo",
   },
 ];

@@ -21,6 +21,8 @@ export function createInitialState(): StoreState {
     claims: structuredClone(claims),
     claimEvidenceLinks: structuredClone(claimEvidenceLinks),
     evaluationCases: structuredClone(evaluationCases),
+    evaluationRuns: [],
+    briefReviews: [],
     auditEvents: structuredClone(seedAuditEvents),
     usageEvents: structuredClone(seedUsageEvents),
     backlog: structuredClone(backlog),
@@ -32,6 +34,7 @@ export function createInitialState(): StoreState {
     evaluationTargets: { ...evaluationTargets },
     lastEvaluationRunAt: null,
     walkthroughDismissed: false,
+    persistenceMode: "server",
   };
 }
 

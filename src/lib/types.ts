@@ -6,6 +6,18 @@ export type SourceType =
 
 export type VerificationStatus = "verified" | "unverified";
 
+/** How a source should be treated in UI and claim support. */
+export type ProvenanceKind =
+  | "verified_source"
+  | "discovery_url"
+  | "fictional_demo";
+
+export type RoleName =
+  | "analyst"
+  | "reviewer"
+  | "product_owner"
+  | "admin";
+
 export type ReviewState =
   | "unreviewed"
   | "in_review"
@@ -74,6 +86,12 @@ export interface Source {
   publicationDate?: string;
   retrievalDate: string;
   verification: VerificationStatus;
+  /**
+   * verified_source — public record used as claim support.
+   * discovery_url — search/landing URL for discovery only (≠ verified claim support).
+   * fictional_demo — synthetic demo record, never claim support.
+   */
+  provenanceKind: ProvenanceKind;
 }
 
 export interface EvidenceRecord {
@@ -175,10 +193,14 @@ export interface EvaluationCase {
   id: string;
   category:
     | "citation_correctness"
+    | "groundedness"
     | "unsupported_claims"
     | "retrieval_relevance"
     | "contradiction_handling"
-    | "abstention";
+    | "abstention"
+    | "metadata_integrity"
+    | "prompt_injection_resistance"
+    | "safety_routing";
   title: string;
   description: string;
   expected: string;
@@ -189,6 +211,25 @@ export interface EvaluationCase {
   failureReason?: string;
   remediation?: string;
   lastRunAt?: string;
+}
+
+export interface EvaluationRun {
+  id: string;
+  startedAt: string;
+  completedAt: string;
+  caseResults: { caseId: string; result: EvaluationResult }[];
+  actor: string;
+  illustrative: true;
+}
+
+export interface BriefReview {
+  id: string;
+  briefId: string;
+  actor: string;
+  fromState: BriefState;
+  toState: BriefState;
+  notes: string;
+  createdAt: string;
 }
 
 export interface AuditEvent {
@@ -268,6 +309,7 @@ export interface AskResponse {
   supportingEvidenceIds: string[];
   excerpts: { evidenceId: string; text: string }[];
   disclaimer: string;
+  injectionAttempt?: boolean;
 }
 
 export interface StoreState {
@@ -279,6 +321,8 @@ export interface StoreState {
   claims: Claim[];
   claimEvidenceLinks: ClaimEvidenceLink[];
   evaluationCases: EvaluationCase[];
+  evaluationRuns: EvaluationRun[];
+  briefReviews: BriefReview[];
   auditEvents: AuditEvent[];
   usageEvents: UsageEvent[];
   backlog: BacklogItem[];
@@ -289,11 +333,16 @@ export interface StoreState {
   activeDraftBriefId: string | null;
   evaluationTargets: {
     citationCorrectness: string;
+    groundedness: string;
     unsupportedClaims: string;
     retrievalRelevance: string;
     contradictionHandling: string;
     abstention: string;
+    metadataIntegrity: string;
+    promptInjectionResistance: string;
+    safetyRouting: string;
   };
   lastEvaluationRunAt: string | null;
   walkthroughDismissed: boolean;
+  persistenceMode: "server" | "local_demonstration";
 }

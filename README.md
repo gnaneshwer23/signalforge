@@ -1,64 +1,72 @@
 # SignalForge — Pharma Intelligence Workbench
 
-Evidence-grounded pharmaceutical competitive intelligence workbench (portfolio MVP). SignalForge turns fragmented biomedical, clinical-trial, and regulatory information into **traceable competitive signals**, **reviewable insights**, and **actionable strategic questions**.
+Evidence-grounded pharmaceutical competitive intelligence workbench (**portfolio prototype**). SignalForge turns fragmented biomedical, clinical-trial, and regulatory information into **traceable competitive signals**, **reviewable insights**, and **actionable strategic questions**.
 
 **Independent portfolio prototype — not affiliated with Atacana Group.**
 
 Therapeutic focus for this demo: **moderate-to-severe atopic dermatitis**.
 
-Illustrative / demo data only. Not a validated pharmacovigilance system. Not for clinical decision support. Interpretations are hypotheses for human review.
+Illustrative / demo data only. Not a validated pharmacovigilance system. Not for clinical decision support. Interpretations are hypotheses for human review. **Do not treat this build as production-ready or regulatory-compliant** — see [AUDIT.md](./AUDIT.md).
 
 ## What is implemented
 
 | Area | Status |
 | --- | --- |
-| Intelligence overview (`/`) | Working UI + seeded signals |
-| Competitive landscape (`/landscape`, `/landscape/[id]`) | Search, filters, sort, verification labels |
-| Evidence explorer (`/evidence`, `/evidence/[id]`) | Provenance, review state, add-to-brief |
-| Briefs (`/briefs`, `/briefs/[id]`) | Claim-level citations, unsupported warnings, draft → needs-review → approved-for-internal-discussion with confirmation, print/export |
-| Ask Signal (`/ask`) | Deterministic seeded matcher — **not a live LLM** |
-| Safety (`/safety`) | Synthetic / fictional AE triage → mock human-review queue |
-| Governance (`/governance`) | Checklist + audit log |
-| Evaluation (`/evaluation`) | Mock evaluation centre (illustrative metrics) |
-| Delivery (`/delivery`) | PO backlog, milestones, change requests + decision log |
-| Persistence | **SQLite via Prisma** (`prisma/dev.db`) with migrations + seed |
+| Intelligence overview (`/`) | Search, TA + date filters, illustrative metrics, source distribution, activity, insight→action |
+| Competitive landscape (`/landscape`) | Search/filter/sort, MoA/indication/status, evidence links, verification + fictional labels |
+| Evidence explorer (`/evidence`) | Full provenance fields, claim↔evidence links, draft brief add/remove, missing-provenance warnings |
+| Signal briefs (`/briefs`) | Structure, unsupported gating, confirm approve, audit + brief reviews, print export; approval ≠ regulatory validation |
+| Ask Signal (`/ask`) | Deterministic corpus matcher — **not a live LLM**; abstention + injection resistance |
+| Safety & governance (`/governance`, `/safety`) | Synthetic AE + mock queue; checklist as requirements-to-validate |
+| Evaluation centre (`/evaluation`) | Citation, groundedness, unsupported, retrieval, abstention, metadata, injection, safety routing — mock/illustrative |
+| Product Owner workspace (`/delivery`) | Backlog + AC validation, milestones, change control, decisions, audit |
+| About & demo guide (`/about`) | Honest scope, mocked vs real, limitations |
+| Persistence | **SQLite via Prisma** with migrations + seed |
+| Auth | Demo session cookies + **server-side** role checks on persist/reset |
 
-## Database choice
+## Database & auth
 
-**Prisma 6 + SQLite** (local file `prisma/dev.db`).
+**Prisma 6 + SQLite** (`prisma/dev.db`).
 
 - Supabase MCP listed unrelated projects only (no SignalForge project).
-- Neon MCP required authentication.
+- Neon MCP required authentication / was unavailable for a dedicated project.
 - SQLite keeps the demo fully runnable offline with real models, relationships, and migrations.
 
-Schema covers: sources, assets, evidence, signals, briefs, claims, claim–evidence links, evaluation cases, backlog, milestones, change requests, safety flags, audit events, usage events, and app meta.
+Entities include: users (demo), sources (with `provenanceKind`), assets, evidence, claims, claim–evidence links, signals, briefs, brief_reviews, evaluation_cases, evaluation_runs, backlog, milestones, change_requests, audit_events, safety_flags.
 
-On first API load, if `AppMeta` is missing, the atopic dermatitis corpus is seeded automatically. `POST /api/state/reset` re-seeds from the TypeScript seed modules. Client store hydrates via `GET /api/state` and debounced `PUT /api/state`.
+**Auth:** HTTP-only signed session cookie. Demo users:
 
-## What is mocked / incomplete (production readiness)
+| Email | Password | Role |
+| --- | --- | --- |
+| `analyst@signalforge.demo` | `analyst-demo` | analyst |
+| `reviewer@signalforge.demo` | `reviewer-demo` | reviewer |
+| `po@signalforge.demo` | `po-demo` | product_owner |
+| `admin@signalforge.demo` | `admin-demo` | admin |
 
-- **No live LLM** — Ask Signal is a deterministic keyword matcher over the seeded corpus
+UI role chips alone are **not** the security boundary — `PUT /api/state` and `POST /api/state/reset` enforce permissions server-side. Audit history is append-merged (clients cannot erase prior audit rows by syncing a reduced array).
+
+If the API is down or the session lacks write permission, the UI enters **local demonstration mode** and does not claim successful production writes.
+
+## What is mocked / incomplete
+
+- **No live LLM** — Ask Signal is a deterministic keyword matcher
 - **No live proprietary APIs** or real-time ingestion
-- **No production pharmacovigilance** — safety cases are synthetic and clearly labelled fictional
-- **No auth / multi-user RBAC** — demo actor labels only (`demo.user`, `demo.reviewer`)
-- **No compliance certification claims** — governance is a checklist + audit log mock
-- Evaluation pass rates and targets are **illustrative demo metrics**
+- **No production pharmacovigilance** — safety cases are synthetic and labelled fictional
+- Demo credentials are intentionally public — replace before any shared environment
+- Evaluation pass rates and targets are **illustrative**
 - One pipeline asset (`SIGFOR-101`) is **clearly labelled fictional / unverified**
-- Client store mirrors server state via full-document sync (not fine-grained APIs)
+- Discovery URLs ≠ verified claim support (`provenanceKind`)
+- Controlled release gates A–G: see [AUDIT.md](./AUDIT.md) — **most are partial; do not publish until met**
 
-## Architecture notes (from PRD)
+## Design
 
-- Citations attach to **claim–evidence links**, not whole briefs
-- Material claims without evidence links show an **unsupported** warning
-- A brief cannot be labelled fully evidence-supported if material claims lack sources
-- Ask Signal **abstains** when evidence is insufficient
-- Demo metrics are labelled illustrative
+See [DESIGN.md](./DESIGN.md) and `design-tokens.json`. Visual language: clinical green accents, pale mint surfaces, white panels, Fraunces + Source Sans 3. Inspired by premium biotech product UI (inspiration only — no third-party assets copied).
 
 ## Run locally
 
 ```bash
 npm install
-cp .env.example .env   # DATABASE_URL="file:./dev.db"
+cp .env.example .env
 npx prisma migrate dev
 npm run db:seed         # optional if migrate already seeded
 npm run dev             # http://localhost:3847
@@ -67,6 +75,7 @@ npm run dev             # http://localhost:3847
 ```bash
 npm run build
 npm start               # also port 3847
+npm test                # matcher + permission unit tests
 ```
 
 ### Useful scripts
@@ -77,19 +86,17 @@ npm start               # also port 3847
 | `npm run db:migrate` | Apply migrations |
 | `npm run db:seed` | Seed AD corpus |
 | `npm run db:reset` | Reset DB + re-seed |
+| `npm test` | Unit tests |
 
 ## Environment variables
 
 | Variable | Required | Description |
 | --- | --- | --- |
 | `DATABASE_URL` | Yes | SQLite URL, e.g. `file:./dev.db` (relative to `prisma/`) |
+| `SESSION_SECRET` | Recommended | HMAC secret for demo session cookies |
 
-No LLM API keys. No secrets required for the demo.
-
-## Design notes
-
-Visual language: clinical green accents, pale mint surfaces, white panels, Fraunces + Source Sans 3. Inspired by premium biotech product UI (inspiration only — no third-party assets copied).
+No LLM API keys. No secrets required beyond the demo session secret.
 
 ## Out of scope
 
-Production PV systems, live proprietary data feeds, claiming regulatory/compliance certification, patient-specific treatment advice.
+Production PV systems, live proprietary data feeds, claiming regulatory/compliance certification, patient-specific treatment advice, auto-deploy to production without gates.

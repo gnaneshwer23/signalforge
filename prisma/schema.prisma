@@ -17,7 +17,16 @@ model Source {
   publicationDate String?
   retrievalDate String
   verification String
+  provenanceKind String @default("discovery_url")
   evidence EvidenceRecord[]
+}
+
+model User {
+  id String @id
+  email String @unique
+  name String
+  role String
+  createdAt String
 }
 
 model Asset {
@@ -135,6 +144,25 @@ model EvaluationCase {
   failureReason String?
   remediation String?
   lastRunAt String?
+}
+
+model EvaluationRun {
+  id String @id
+  startedAt String
+  completedAt String
+  caseResults String
+  actor String
+  illustrative Boolean @default(true)
+}
+
+model BriefReview {
+  id String @id
+  briefId String
+  actor String
+  fromState String
+  toState String
+  notes String
+  createdAt String
 }
 
 model AuditEvent {

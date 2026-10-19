@@ -19,9 +19,10 @@ export default function EvaluationPage() {
           Mock evaluation suite
         </h1>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Deterministic fixture checks for citation correctness, unsupported
-          claims, retrieval relevance, contradiction handling, and abstention.
-          Results are illustrative demo outputs —{" "}
+          Deterministic fixture checks for citation, groundedness, unsupported
+          claims, retrieval, contradiction handling, abstention, metadata
+          integrity, prompt-injection resistance, and safety routing. Results
+          are illustrative demo outputs —{" "}
           <strong>not production benchmarks</strong>.
         </p>
       </header>

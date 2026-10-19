@@ -14,19 +14,21 @@ export default function OverviewPage() {
   const { state, hydrated, assembleBriefFromSignal } = useStore();
   const [query, setQuery] = useState("");
   const [area, setArea] = useState("Moderate-to-severe atopic dermatitis");
+  const [since, setSince] = useState("");
 
   const filteredSignals = useMemo(() => {
     const q = query.trim().toLowerCase();
     return state.signals.filter((s) => {
       const areaOk = !area || s.therapeuticArea === area;
       if (!areaOk) return false;
+      if (since && s.updatedAt.slice(0, 10) < since) return false;
       if (!q) return true;
       return (
         s.title.toLowerCase().includes(q) ||
         s.summary.toLowerCase().includes(q)
       );
     });
-  }, [state.signals, query, area]);
+  }, [state.signals, query, area, since]);
 
   const needingReview = state.signals.filter((s) => s.reviewNeeded);
   const emerging = state.signals.filter((s) => s.emerging);
@@ -35,6 +37,19 @@ export default function OverviewPage() {
     const sb = state.sources.find((x) => x.id === b.sourceId);
     return (sb?.retrievalDate || "").localeCompare(sa?.retrievalDate || "");
   });
+
+  const sourceDistribution = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const s of state.sources) {
+      const key = s.provenanceKind;
+      counts[key] = (counts[key] || 0) + 1;
+    }
+    return counts;
+  }, [state.sources]);
+
+  const highImpact = state.signals.filter(
+    (s) => s.urgency === "high" || s.urgency === "elevated",
+  );
 
   if (!hydrated) return <LoadingState />;
 
@@ -52,7 +67,7 @@ export default function OverviewPage() {
           information into traceable competitive signals, reviewable insights,
           and actionable strategic questions.
         </p>
-        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -71,6 +86,13 @@ export default function OverviewPage() {
               Moderate-to-severe atopic dermatitis
             </option>
           </select>
+          <Input
+            type="date"
+            value={since}
+            onChange={(e) => setSince(e.target.value)}
+            aria-label="Updated since date"
+            className="sm:max-w-[11rem]"
+          />
         </div>
       </section>
 
@@ -78,21 +100,24 @@ export default function OverviewPage() {
         <DemoMetric label="Monitored assets" value={state.assets.length} />
         <DemoMetric label="Evidence records" value={state.evidence.length} />
         <DemoMetric label="Needs review" value={needingReview.length} />
-        <DemoMetric label="Emerging signals" value={emerging.length} />
+        <DemoMetric label="Elevated / high impact" value={highImpact.length} />
       </section>
 
       <section className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-3 lg:col-span-2">
           <div className="flex items-end justify-between gap-2">
             <h2 className="font-display text-2xl text-ink">Emerging signals</h2>
-            <Link href="/briefs" className="text-sm text-muted-foreground hover:text-foreground">
+            <Link
+              href="/briefs"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
               Open briefs
             </Link>
           </div>
           {filteredSignals.length === 0 ? (
             <EmptyState
               title="No signals match"
-              description="Adjust the therapeutic-area filter or search terms. The demo corpus is bounded to moderate-to-severe atopic dermatitis."
+              description="Adjust the therapeutic-area filter, date, or search terms. The demo corpus is bounded to moderate-to-severe atopic dermatitis."
             />
           ) : (
             <ul className="space-y-3">
@@ -106,6 +131,11 @@ export default function OverviewPage() {
                     <span>Updated {formatDate(signal.updatedAt)}</span>
                     <span>·</span>
                     <span className="capitalize">{signal.urgency} urgency</span>
+                    <span>·</span>
+                    <span>
+                      Confidence framing: human review
+                      {signal.reviewNeeded ? " required" : " recommended"}
+                    </span>
                     {signal.reviewNeeded && (
                       <span className="text-amber-review">Needs review</span>
                     )}
@@ -115,6 +145,9 @@ export default function OverviewPage() {
                   </h3>
                   <p className="mt-2 text-sm text-muted-foreground">
                     {signal.summary}
+                  </p>
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    Insight → action: {signal.followUpQuestions[0] || signal.implications}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     <Link
@@ -142,6 +175,45 @@ export default function OverviewPage() {
         </div>
 
         <div className="space-y-6">
+          <div>
+            <h2 className="font-display text-2xl text-ink">
+              Source distribution
+            </h2>
+            <p className="mt-1 text-xs text-amber-review">
+              Illustrative demo counts
+            </p>
+            <ul className="mt-3 space-y-2 text-sm">
+              {Object.entries(sourceDistribution).map(([k, v]) => (
+                <li
+                  key={k}
+                  className="flex justify-between border border-border px-2 py-1.5"
+                >
+                  <span className="capitalize text-muted-foreground">
+                    {k.replaceAll("_", " ")}
+                  </span>
+                  <span className="text-ink">{v}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h2 className="font-display text-2xl text-ink">Activity</h2>
+            <ul className="mt-3 space-y-2">
+              {state.usageEvents.slice(0, 5).map((u) => (
+                <li key={u.id} className="text-sm">
+                  <span className="text-xs text-muted-foreground">
+                    {formatDate(u.timestamp)}
+                  </span>
+                  <span className="mt-0.5 block text-ink">{u.detail}</span>
+                </li>
+              ))}
+              {state.usageEvents.length === 0 && (
+                <li className="text-sm text-muted-foreground">
+                  No activity yet in this session.
+                </li>
+              )}
+            </ul>
+          </div>
           <div>
             <h2 className="font-display text-2xl text-ink">Monitored assets</h2>
             <ul className="mt-3 space-y-2">
@@ -175,7 +247,7 @@ export default function OverviewPage() {
                       <span className="text-ink">{ev.title}</span>
                       <span className="mt-0.5 block text-xs text-muted-foreground">
                         Retrieved {formatDate(source?.retrievalDate)} ·{" "}
-                        {source?.type.replace("_", " ")}
+                        {source?.provenanceKind.replaceAll("_", " ")}
                       </span>
                     </Link>
                   </li>
@@ -183,6 +255,9 @@ export default function OverviewPage() {
               })}
             </ul>
           </div>
+          <p className="text-xs text-muted-foreground">
+            Emerging signals this filter: {emerging.length} · illustrative
+          </p>
         </div>
       </section>
     </div>

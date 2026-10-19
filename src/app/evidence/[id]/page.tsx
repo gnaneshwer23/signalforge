@@ -4,6 +4,7 @@ import Link from "next/link";
 import { use, useEffect } from "react";
 import { useStore } from "@/lib/store";
 import {
+  ProvenanceBadge,
   ReviewBadge,
   VerificationBadge,
 } from "@/components/shared/status-badges";
@@ -56,14 +57,43 @@ export default function EvidenceDetailPage({
         </Link>
         <div className="mt-2 flex flex-wrap gap-2">
           <VerificationBadge status={source.verification} />
+          <ProvenanceBadge kind={source.provenanceKind} />
           <ReviewBadge state={evidence.reviewState} />
         </div>
         <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
           {evidence.title}
         </h1>
+        {(source.provenanceKind === "discovery_url" ||
+          source.provenanceKind === "fictional_demo" ||
+          !source.url) && (
+          <p
+            className="mt-3 border border-amber-review bg-amber-review px-3 py-2 text-sm text-amber-review"
+            role="status"
+          >
+            {source.provenanceKind === "fictional_demo"
+              ? "Missing / fictional provenance — this record is demo-only and must not support regulatory or medical claims."
+              : source.provenanceKind === "discovery_url"
+                ? "Discovery URL only — search or landing links are not verified claim support."
+                : "Missing provenance URL — treat as unverified until a direct source is attached."}
+          </p>
+        )}
       </div>
 
       <dl className="grid gap-3 sm:grid-cols-2">
+        <div className="surface-panel px-3 py-2">
+          <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+            Publisher
+          </dt>
+          <dd>{source.publisher || "—"}</dd>
+        </div>
+        <div className="surface-panel px-3 py-2">
+          <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+            Provenance kind
+          </dt>
+          <dd className="capitalize">
+            {source.provenanceKind.replaceAll("_", " ")}
+          </dd>
+        </div>
         <div className="surface-panel px-3 py-2">
           <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
             Source type

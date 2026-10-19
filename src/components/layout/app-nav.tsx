@@ -19,10 +19,10 @@ const links = [
   { href: "/evidence", label: "Evidence" },
   { href: "/briefs", label: "Briefs" },
   { href: "/ask", label: "Ask Signal" },
-  { href: "/safety", label: "Safety" },
-  { href: "/governance", label: "Governance" },
+  { href: "/governance", label: "Safety & governance" },
   { href: "/evaluation", label: "Evaluation" },
-  { href: "/delivery", label: "Delivery" },
+  { href: "/delivery", label: "Product Owner" },
+  { href: "/about", label: "About & demo" },
 ];
 
 function NavLinks({
@@ -34,12 +34,15 @@ function NavLinks({
 }) {
   const pathname = usePathname();
   return (
-    <nav className={cn("flex flex-col gap-1", className)}>
+    <nav className={cn("flex flex-col gap-1", className)} aria-label="Primary">
       {links.map((link, i) => {
         const active =
           link.href === "/"
             ? pathname === "/"
-            : pathname.startsWith(link.href);
+            : link.href === "/governance"
+              ? pathname.startsWith("/governance") ||
+                pathname.startsWith("/safety")
+              : pathname.startsWith(link.href);
         return (
           <Link
             key={link.href}
