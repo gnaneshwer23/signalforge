@@ -73,13 +73,20 @@ Covers:
 | Pilot-ready (shared team) | **No** | Demo credentials, incomplete authz matrix, no ops |
 | Production-ready | **No** | Gate G fail; no IdP; no pen-test |
 
-## Live deploy (verified)
+## Live deploy (verified 2026-10-19)
 
 | Item | Value |
 | --- | --- |
 | Production URL | https://signalforge-4gob.vercel.app/ |
-| Persistence | Neon PostgreSQL (Prisma) |
-| Probes | `GET /api/health`, `GET /api/state` |
-| Verdict | Portfolio demo-ready when health reports `ok` and UI shows **Connected** after demo login |
+| Origin `main` SHA | `7ba90c2` (Neon + persistence hardening) |
+| GitHub `main` SHA | `2b1d840` (**stale** — agent VM lacks GitHub write credentials) |
+| Live `GET /api/state` | **500** `Failed to load workbench state from SQLite.` |
+| Live `GET /api/health` | **404** (route not on stale build) |
+| Vercel production deploy | READY on GitHub SHA `2b1d840` (SQLite-era) |
+| Vercel env | `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `SESSION_SECRET` present (prod) |
+| Persistence verified live | **No** — blocked on GitHub→Vercel sync |
+| Local | `npm run build` / lint / **41/41** tests pass against Neon |
 
-*Deploy SHA / Vercel READY status filled after production redeploy from `main`.*
+**Blocker:** push `main` to `github.com/gnaneshwer23/signalforge` (contents:write), then Vercel auto-redeploys production from GitHub `main`. Origin already has the Neon code.
+
+**Security:** rotate Neon DB password if it was pasted in chat.
