@@ -81,14 +81,20 @@ Steps: set in Vercel Project → Settings → Environment Variables → redeploy
 
 ## 10. Commit / PR link
 
-See git push / Origin PR for branch `cursor/neon-postgres-f207` after this release commit.
+- Origin `main`: `9dd4055` — *Finish Neon deploy sync: batched seed, safer tests, docs.*
+- Feature branch: `cursor/neon-postgres-f207` (pushed to Origin; includes Neon migration + harden + sync commits)
+- GitHub `gnaneshwer23/signalforge` `main` still at `2b1d840` (no GitHub token in this environment — push blocked)
+- Origin `pr` CLI unavailable for this forge path (`Repository … was not found on Origin`)
 
 ## 11. Whether new deployment was performed
 
-Recorded after green build + Neon configured (see agent final report).
+**No new production deployment.** Vercel project `signalforge-4gob` remains on deployment `dpl_4oFjdqWWwZuJKsKKdjqXj2DtioB3` (GitHub SHA `2b1d840`, SQLite-era). Live `GET /api/state` still returns 500 SQLite error. Env vars (`SESSION_SECRET`, preview `DATABASE_URL` / `DATABASE_URL_UNPOOLED`) were configured via Vercel MCP; Neon migrate/seed completed against the shared Neon DB.
+
+Redeploy requires pushing `9dd4055` (or later) to GitHub `main` (Vercel is GitHub-linked) or a CLI/token deploy from this workspace.
 
 ## 12. Blockers + readiness verdict
 
-- **Blockers:** Neon password rotation still required; production Neon integration vars may differ from chat-pasted URL until confirmed; concurrent agents sharing Neon can race seeds
-- **Portfolio demo-ready:** Yes (after deploy of this branch)
+- **Blockers:** (1) **Rotate Neon DB password** — pasted in chat again. (2) GitHub push/auth missing → cannot refresh Vercel production from this agent. (3) Concurrent agents sharing Neon can race full-document `saveState`/seed.
+- **Code readiness (local):** build/lint/test green; Neon persistence implemented on Origin `main`
+- **Live portfolio URL readiness:** **Not yet** — still serving pre-Neon build until GitHub/Vercel redeploy
 - **Pilot / production-ready:** No (demo auth, Gate G ops/compliance still fail)
