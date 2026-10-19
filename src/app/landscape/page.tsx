@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { useStore } from "@/lib/store";
 import { VerificationBadge } from "@/components/shared/status-badges";
 import { EmptyState, LoadingState } from "@/components/shared/empty-state";
+import { PageHeader } from "@/components/shared/page-header";
 import { Input } from "@/components/ui/input";
 import { formatDate } from "@/lib/utils";
 import type { DevelopmentPhase, VerificationStatus } from "@/lib/types";
@@ -39,16 +40,11 @@ export default function LandscapePage() {
 
   return (
     <div className="space-y-6">
-      <header className="animate-rise">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-          Competitive assets
-        </p>
-        <h1 className="mt-1 font-display text-4xl text-ink">Landscape</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Monitored assets in moderate-to-severe atopic dermatitis. Attributes
-          link to evidence; verified and unverified sources are distinguished.
-        </p>
-      </header>
+      <PageHeader
+        eyebrow="Competitive assets"
+        title="Landscape"
+        description="Monitored assets in moderate-to-severe atopic dermatitis. Attributes link to evidence; verified and unverified sources are distinguished."
+      />
 
       <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
         <Input
@@ -58,7 +54,7 @@ export default function LandscapePage() {
           className="sm:max-w-xs"
         />
         <select
-          className="h-8 rounded-lg border border-border bg-background px-2.5 text-sm"
+          className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
           value={phase}
           onChange={(e) => setPhase(e.target.value as DevelopmentPhase | "")}
         >
@@ -76,7 +72,7 @@ export default function LandscapePage() {
           ))}
         </select>
         <select
-          className="h-8 rounded-lg border border-border bg-background px-2.5 text-sm"
+          className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
           value={verification}
           onChange={(e) =>
             setVerification(e.target.value as VerificationStatus | "")
@@ -87,7 +83,7 @@ export default function LandscapePage() {
           <option value="unverified">Unverified</option>
         </select>
         <select
-          className="h-8 rounded-lg border border-border bg-background px-2.5 text-sm"
+          className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
           value={sort}
           onChange={(e) => setSort(e.target.value as SortKey)}
         >

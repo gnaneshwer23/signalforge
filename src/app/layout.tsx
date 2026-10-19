@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Fraunces, Source_Sans_3, Geist_Mono } from "next/font/google";
+import { Sora, Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { AppShell } from "@/components/layout/app-shell";
 import "./globals.css";
 
-const display = Fraunces({
+const display = Sora({
   variable: "--font-display",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const body = Source_Sans_3({
+const body = Plus_Jakarta_Sans({
   variable: "--font-body",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const mono = Geist_Mono({

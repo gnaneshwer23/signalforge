@@ -58,27 +58,42 @@ export default function OverviewPage() {
   return (
     <div className="space-y-8">
       <section className="animate-rise">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-          Intelligence overview
-        </p>
-        <h1 className="mt-1 font-display text-4xl text-ink sm:text-5xl">
+        <p className="font-display text-[1.65rem] font-semibold tracking-tight text-ink sm:text-3xl">
           SignalForge
+        </p>
+        <h1 className="mt-2 max-w-2xl font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+          Evidence-grounded competitive intelligence
         </h1>
-        <p className="mt-3 max-w-2xl text-base text-muted-foreground">
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-[0.9375rem]">
           Transform fragmented biomedical, clinical-trial, and regulatory
           information into traceable competitive signals, reviewable insights,
           and actionable strategic questions.
         </p>
+        <div className="mt-5 flex flex-wrap gap-2">
+          <Link
+            href="/landscape"
+            className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--primary),black_18%)]"
+          >
+            Open Landscape
+            <ArrowRight className="size-3.5" />
+          </Link>
+          <Link
+            href="/ask"
+            className="inline-flex h-8 items-center rounded-lg border border-border bg-secondary px-3 text-sm font-medium text-secondary-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_6%)]"
+          >
+            Ask Signal
+          </Link>
+        </div>
         <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Global search across signals…"
+            placeholder="Filter signals…"
             className="sm:max-w-md"
             aria-label="Search signals"
           />
           <select
-            className="h-8 rounded-lg border border-border bg-background px-2.5 text-sm"
+            className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
             value={area}
             onChange={(e) => setArea(e.target.value)}
             aria-label="Therapeutic area filter"
@@ -108,10 +123,12 @@ export default function OverviewPage() {
       <section className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-3 lg:col-span-2">
           <div className="flex items-end justify-between gap-2">
-            <h2 className="font-display text-2xl text-ink">Emerging signals</h2>
+            <h2 className="font-display text-xl font-semibold text-ink">
+              Emerging signals
+            </h2>
             <Link
               href="/briefs"
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-sm text-accent-signal hover:underline"
             >
               Open briefs
             </Link>
@@ -126,7 +143,7 @@ export default function OverviewPage() {
               {filteredSignals.map((signal, idx) => (
                 <li
                   key={signal.id}
-                  className="surface-panel animate-rise p-4 transition-colors hover:bg-accent/40"
+                  className="surface-panel animate-rise p-4 transition-colors hover:bg-[color-mix(in_oklab,var(--accent)_35%,white)]"
                   style={{ animationDelay: `${idx * 40}ms` }}
                 >
                   <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -142,19 +159,20 @@ export default function OverviewPage() {
                       <span className="text-amber-review">Needs review</span>
                     )}
                   </div>
-                  <h3 className="mt-1 font-display text-xl text-ink">
+                  <h3 className="mt-1.5 font-display text-lg font-semibold text-ink">
                     {signal.title}
                   </h3>
                   <p className="mt-2 text-sm text-muted-foreground">
                     {signal.summary}
                   </p>
                   <p className="mt-2 text-xs text-muted-foreground">
-                    Insight → action: {signal.followUpQuestions[0] || signal.implications}
+                    Insight → action:{" "}
+                    {signal.followUpQuestions[0] || signal.implications}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     <Link
                       href={`/evidence?signal=${signal.id}`}
-                      className="inline-flex h-7 items-center gap-1 rounded-lg border border-transparent bg-primary px-2.5 text-[0.8rem] font-medium text-primary-foreground hover:bg-primary/80"
+                      className="inline-flex h-7 items-center gap-1 rounded-lg border border-transparent bg-primary px-2.5 text-[0.8rem] font-medium text-primary-foreground hover:bg-[color-mix(in_oklab,var(--primary),black_18%)]"
                     >
                       View evidence
                       <ArrowRight className="size-3.5" />
@@ -178,7 +196,7 @@ export default function OverviewPage() {
 
         <div className="space-y-6">
           <div>
-            <h2 className="font-display text-2xl text-ink">
+            <h2 className="font-display text-xl font-semibold text-ink">
               Source distribution
             </h2>
             <p className="mt-1 text-xs text-amber-review">
@@ -188,18 +206,20 @@ export default function OverviewPage() {
               {Object.entries(sourceDistribution).map(([k, v]) => (
                 <li
                   key={k}
-                  className="flex justify-between border border-border px-2 py-1.5"
+                  className="flex justify-between rounded-lg border border-border bg-card/80 px-3 py-2"
                 >
                   <span className="capitalize text-muted-foreground">
                     {k.replaceAll("_", " ")}
                   </span>
-                  <span className="text-ink">{v}</span>
+                  <span className="font-medium text-ink">{v}</span>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <h2 className="font-display text-2xl text-ink">Activity</h2>
+            <h2 className="font-display text-xl font-semibold text-ink">
+              Activity
+            </h2>
             <ul className="mt-3 space-y-2">
               {state.usageEvents.slice(0, 5).map((u) => (
                 <li key={u.id} className="text-sm">
@@ -217,13 +237,15 @@ export default function OverviewPage() {
             </ul>
           </div>
           <div>
-            <h2 className="font-display text-2xl text-ink">Monitored assets</h2>
+            <h2 className="font-display text-xl font-semibold text-ink">
+              Monitored assets
+            </h2>
             <ul className="mt-3 space-y-2">
               {state.assets.map((asset) => (
                 <li key={asset.id}>
                   <Link
                     href={`/landscape/${asset.id}`}
-                    className="block border border-transparent px-2 py-1.5 text-sm hover:border-border hover:bg-card"
+                    className="block rounded-lg border border-transparent px-2 py-1.5 text-sm hover:border-border hover:bg-card"
                   >
                     <span className="text-ink">{asset.name}</span>
                     <span className="mt-0.5 block text-xs text-muted-foreground">
@@ -236,7 +258,9 @@ export default function OverviewPage() {
             </ul>
           </div>
           <div>
-            <h2 className="font-display text-2xl text-ink">Recent updates</h2>
+            <h2 className="font-display text-xl font-semibold text-ink">
+              Recent updates
+            </h2>
             <ul className="mt-3 space-y-2">
               {recentEvidence.slice(0, 5).map((ev) => {
                 const source = state.sources.find((s) => s.id === ev.sourceId);
@@ -244,7 +268,7 @@ export default function OverviewPage() {
                   <li key={ev.id}>
                     <Link
                       href={`/evidence/${ev.id}`}
-                      className="block border border-transparent px-2 py-1.5 text-sm hover:border-border hover:bg-card"
+                      className="block rounded-lg border border-transparent px-2 py-1.5 text-sm hover:border-border hover:bg-card"
                     >
                       <span className="text-ink">{ev.title}</span>
                       <span className="mt-0.5 block text-xs text-muted-foreground">

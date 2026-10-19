@@ -2,6 +2,7 @@
 
 import { useStore } from "@/lib/store";
 import { LoadingState } from "@/components/shared/empty-state";
+import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 
@@ -13,26 +14,24 @@ export default function EvaluationPage() {
 
   return (
     <div className="space-y-6">
-      <header className="animate-rise">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-          AI evaluation centre
-        </p>
-        <h1 className="mt-1 font-display text-4xl text-ink">
-          Evaluation suite
-        </h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Fixture checks for citation, groundedness, unsupported claims,
-          retrieval, contradiction handling, abstention, metadata integrity,
-          prompt-injection resistance, and safety routing.{" "}
-          <strong>Run results are measured</strong> against the current seeded
-          corpus with deterministic fixtures.{" "}
-          <strong>Targets remain illustrative</strong> and are not production
-          SLAs.
-        </p>
-      </header>
+      <PageHeader
+        eyebrow="AI evaluation centre"
+        title="Evaluation suite"
+        description={
+          <>
+            Fixture checks for citation, groundedness, unsupported claims,
+            retrieval, contradiction handling, abstention, metadata integrity,
+            prompt-injection resistance, and safety routing.{" "}
+            <strong>Run results are measured</strong> against the current seeded
+            corpus with deterministic fixtures.{" "}
+            <strong>Targets remain illustrative</strong> and are not production
+            SLAs.
+          </>
+        }
+      />
 
       <section className="surface-panel p-4">
-        <h2 className="font-display text-xl text-ink">
+        <h2 className="font-display text-lg font-semibold text-ink">
           Illustrative targets (not measured)
         </h2>
         <p className="mt-1 text-xs text-amber-review">
@@ -41,7 +40,7 @@ export default function EvaluationPage() {
         </p>
         <ul className="mt-2 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
           {Object.entries(state.evaluationTargets).map(([k, v]) => (
-            <li key={k} className="border border-border px-3 py-2">
+            <li key={k} className="rounded-lg border border-border bg-card/80 px-3 py-2">
               <span className="block text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
                 {k} · illustrative
               </span>

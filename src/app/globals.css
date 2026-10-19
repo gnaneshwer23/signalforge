@@ -43,52 +43,55 @@
   --color-paper: var(--paper);
   --color-amber-review: var(--amber-review);
   --color-verified: var(--verified);
-  --color-mint: var(--mint);
+  --color-sage: var(--sage);
+  --color-mint: var(--sage);
+  --color-accent-signal: var(--accent-signal);
   --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --radius-md: calc(var(--radius) * 0.85);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-xl: calc(var(--radius) * 1.25);
 }
 
 :root {
-  /* Clinical green / pale mint biotech palette */
-  --paper: #f4faf7;
-  --ink: #14352c;
+  /* Sage field / charcoal CTA medical-research palette (shot 27696621 adapted) */
+  --paper: #f5f8f4;
+  --ink: #161a18;
   --amber-review: #b45309;
-  --verified: #0f6b52;
-  --mint: #d8efe6;
-  --background: #eef7f2;
-  --foreground: #14352c;
+  --verified: #3f6b4f;
+  --sage: #b5c9af;
+  --accent-signal: #3f6b4f;
+  --background: #e8f0e4;
+  --foreground: #161a18;
   --card: #ffffff;
-  --card-foreground: #14352c;
+  --card-foreground: #161a18;
   --popover: #ffffff;
-  --popover-foreground: #14352c;
-  --primary: #0f6b52;
-  --primary-foreground: #f4faf7;
-  --secondary: #dceee6;
-  --secondary-foreground: #14352c;
-  --muted: #e4f2eb;
-  --muted-foreground: #4a6b5f;
-  --accent: #d2ebe1;
-  --accent-foreground: #14352c;
+  --popover-foreground: #161a18;
+  --primary: #1a1b22;
+  --primary-foreground: #f5f8f4;
+  --secondary: #d5e4cf;
+  --secondary-foreground: #161a18;
+  --muted: #dde8d8;
+  --muted-foreground: #5a6b62;
+  --accent: #c8dcc0;
+  --accent-foreground: #161a18;
   --destructive: #b42318;
-  --border: #c5ddd2;
-  --input: #c9e0d6;
-  --ring: #0f6b52;
-  --chart-1: #0f6b52;
-  --chart-2: #1a8a6a;
+  --border: #c9d6c8;
+  --input: #c5d4c3;
+  --ring: #3f6b4f;
+  --chart-1: #3f6b4f;
+  --chart-2: #1a1b22;
   --chart-3: #b45309;
-  --chart-4: #2d5a4c;
-  --chart-5: #7a9a8c;
-  --radius: 0.375rem;
-  --sidebar: #f7fcf9;
-  --sidebar-foreground: #14352c;
-  --sidebar-primary: #0f6b52;
-  --sidebar-primary-foreground: #f4faf7;
-  --sidebar-accent: #dceee6;
-  --sidebar-accent-foreground: #14352c;
-  --sidebar-border: #c5ddd2;
-  --sidebar-ring: #0f6b52;
+  --chart-4: #7a9a7c;
+  --chart-5: #b5c9af;
+  --radius: 0.625rem;
+  --sidebar: #f3f7f1;
+  --sidebar-foreground: #161a18;
+  --sidebar-primary: #1a1b22;
+  --sidebar-primary-foreground: #f5f8f4;
+  --sidebar-accent: #d5e4cf;
+  --sidebar-accent-foreground: #161a18;
+  --sidebar-border: #c9d6c8;
+  --sidebar-ring: #3f6b4f;
 }
 
 @layer base {
@@ -98,9 +101,9 @@
   body {
     @apply bg-background text-foreground antialiased;
     background-image:
-      radial-gradient(ellipse 110% 70% at 0% -10%, rgba(15, 107, 82, 0.09), transparent 55%),
-      radial-gradient(ellipse 80% 50% at 100% 0%, rgba(216, 239, 230, 0.9), transparent 45%),
-      linear-gradient(180deg, #f7fcf9 0%, #e8f3ed 100%);
+      radial-gradient(ellipse 100% 65% at 0% -8%, rgba(181, 201, 175, 0.55), transparent 55%),
+      radial-gradient(ellipse 70% 45% at 100% 0%, rgba(245, 248, 244, 0.95), transparent 50%),
+      linear-gradient(180deg, #f5f8f4 0%, #e8f0e4 48%, #e3ebe0 100%);
     background-attachment: fixed;
     min-height: 100vh;
   }
@@ -111,8 +114,11 @@
   h2,
   h3,
   .font-display {
-    font-family: var(--font-display), ui-serif, Georgia, serif;
-    letter-spacing: -0.02em;
+    font-family: var(--font-display), ui-sans-serif, sans-serif;
+    letter-spacing: -0.025em;
+  }
+  a:not([class]) {
+    color: var(--accent-signal);
   }
 }
 
@@ -138,8 +144,15 @@
   .bg-verified {
     background-color: color-mix(in oklab, var(--verified) 12%, white);
   }
+  .text-accent-signal {
+    color: var(--accent-signal);
+  }
+  .bg-sage {
+    background-color: var(--sage);
+  }
   .surface-panel {
-    @apply rounded-md border border-border bg-card/95;
+    @apply rounded-lg border border-border bg-card/95;
+    box-shadow: 0 1px 2px rgb(22 26 24 / 0.04);
   }
   .animate-rise {
     animation: rise-in 0.45s ease-out both;
@@ -180,6 +193,14 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise,
+  .animate-fade-delay,
+  .animate-slide-nav {
+    animation: fade-in 0.2s ease-out both;
   }
 }
 

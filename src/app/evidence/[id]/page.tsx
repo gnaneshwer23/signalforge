@@ -64,7 +64,7 @@ export default function EvidenceDetailPage({
   return (
     <div className="space-y-6 animate-rise">
       <div>
-        <Link href="/evidence" className="text-sm text-muted-foreground hover:text-foreground">
+        <Link href="/evidence" className="text-sm text-accent-signal hover:underline">
           ← Evidence
         </Link>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -76,7 +76,7 @@ export default function EvidenceDetailPage({
         <p className="mt-2 text-xs text-muted-foreground">
           {PROVENANCE_STATUS_DEFINITIONS[provenanceStatus].definition}
         </p>
-        <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+        <h1 className="mt-2 font-display text-3xl font-semibold text-ink sm:text-4xl">
           {evidence.title}
         </h1>
         {(source.provenanceKind === "discovery_url" ||

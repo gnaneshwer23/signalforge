@@ -37,10 +37,10 @@ export default function AssetDetailPage({
   return (
     <div className="space-y-6 animate-rise">
       <div>
-        <Link href="/landscape" className="text-sm text-muted-foreground hover:text-foreground">
+        <Link href="/landscape" className="text-sm text-accent-signal hover:underline">
           ← Landscape
         </Link>
-        <h1 className="mt-2 font-display text-4xl text-ink">{asset.name}</h1>
+        <h1 className="mt-2 font-display text-3xl font-semibold text-ink sm:text-4xl">{asset.name}</h1>
         <p className="mt-1 text-muted-foreground">{asset.organization}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <VerificationBadge status={asset.verification} />

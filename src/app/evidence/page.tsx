@@ -10,6 +10,7 @@ import {
   VerificationBadge,
 } from "@/components/shared/status-badges";
 import { EmptyState, LoadingState } from "@/components/shared/empty-state";
+import { PageHeader } from "@/components/shared/page-header";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
@@ -73,25 +74,25 @@ function EvidenceExplorer() {
 
   return (
     <div className="space-y-6">
-      <header className="animate-rise">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-          Evidence explorer
-        </p>
-        <h1 className="mt-1 font-display text-4xl text-ink">Evidence</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Structured records with source type, dates, identifiers, asset
-          association, and review state. Publication date and retrieval date are
-          shown separately.
-        </p>
-        {signalFilter && (
-          <p className="mt-2 text-xs text-amber-review">
-            Filtered to evidence linked from signal {signalFilter}.{" "}
-            <Link href="/evidence" className="underline">
-              Clear filter
-            </Link>
-          </p>
-        )}
-      </header>
+      <PageHeader
+        eyebrow="Evidence explorer"
+        title="Evidence"
+        description={
+          <>
+            Structured records with source type, dates, identifiers, asset
+            association, and review state. Publication date and retrieval date
+            are shown separately.
+            {signalFilter ? (
+              <span className="mt-2 block text-xs text-amber-review">
+                Filtered to evidence linked from signal {signalFilter}.{" "}
+                <Link href="/evidence" className="underline">
+                  Clear filter
+                </Link>
+              </span>
+            ) : null}
+          </>
+        }
+      />
 
       <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
         <Input
@@ -101,7 +102,7 @@ function EvidenceExplorer() {
           className="sm:max-w-xs"
         />
         <select
-          className="h-8 rounded-lg border border-border bg-background px-2.5 text-sm"
+          className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
           value={type}
           onChange={(e) => setType(e.target.value as SourceType | "")}
         >
@@ -112,7 +113,7 @@ function EvidenceExplorer() {
           <option value="press_release">Press release</option>
         </select>
         <select
-          className="h-8 rounded-lg border border-border bg-background px-2.5 text-sm"
+          className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
           value={review}
           onChange={(e) => setReview(e.target.value as ReviewState | "")}
         >
@@ -123,7 +124,7 @@ function EvidenceExplorer() {
           <option value="reviewed">Reviewed</option>
         </select>
         <select
-          className="h-8 rounded-lg border border-border bg-background px-2.5 text-sm"
+          className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
           value={provStatus}
           onChange={(e) =>
             setProvStatus(e.target.value as ProvenanceStatus | "")

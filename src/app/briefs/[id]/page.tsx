@@ -134,7 +134,7 @@ export default function BriefDetailPage({
       </div>
 
       <div className="no-print">
-        <Link href="/briefs" className="text-sm text-muted-foreground hover:text-foreground">
+        <Link href="/briefs" className="text-sm text-accent-signal hover:underline">
           ← Briefs
         </Link>
       </div>
@@ -149,7 +149,7 @@ export default function BriefDetailPage({
               </span>
             )}
           </div>
-          <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+          <h1 className="mt-2 font-display text-3xl font-semibold text-ink sm:text-4xl">
             {brief.title}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">

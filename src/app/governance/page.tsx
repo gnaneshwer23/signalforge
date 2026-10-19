@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useStore } from "@/lib/store";
 import { LoadingState } from "@/components/shared/empty-state";
+import { PageHeader } from "@/components/shared/page-header";
 import { formatDate } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -58,28 +59,26 @@ export default function GovernancePage() {
 
   return (
     <div className="space-y-8">
-      <header className="animate-rise">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-          Safety & governance
-        </p>
-        <h1 className="mt-1 font-display text-4xl text-ink">
-          Synthetic AE triage & requirements checklist
-        </h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Safety cases are explicitly fictional. Governance items are{" "}
-          <strong>requirements to validate</strong>, not certifications or
-          attestations of production readiness.
-        </p>
-      </header>
+      <PageHeader
+        eyebrow="Safety & governance"
+        title="Synthetic AE triage & requirements checklist"
+        description={
+          <>
+            Safety cases are explicitly fictional. Governance items are{" "}
+            <strong>requirements to validate</strong>, not certifications or
+            attestations of production readiness.
+          </>
+        }
+      />
 
       <section className="space-y-4">
         <div className="flex items-end justify-between gap-2">
-          <h2 className="font-display text-2xl text-ink">
+          <h2 className="font-display text-xl font-semibold text-ink">
             Synthetic AE queue
           </h2>
           <Link
             href="/safety"
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="text-sm text-accent-signal hover:underline"
           >
             Safety-only view
           </Link>
@@ -121,7 +120,7 @@ export default function GovernancePage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-display text-2xl text-ink">
+        <h2 className="font-display text-xl font-semibold text-ink">
           Governance checklist
         </h2>
         {checklist.map((item) => (
@@ -141,7 +140,7 @@ export default function GovernancePage() {
       </section>
 
       <section>
-        <h2 className="font-display text-2xl text-ink">
+        <h2 className="font-display text-xl font-semibold text-ink">
           Audit log — reviews, approvals, safety routing
         </h2>
         <ul className="mt-3 space-y-2">

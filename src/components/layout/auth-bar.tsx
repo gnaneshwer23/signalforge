@@ -82,7 +82,7 @@ export function AuthBar() {
           <button
             key={a.id}
             type="button"
-            className="border border-border bg-background px-2 py-0.5 text-[11px] text-muted-foreground hover:bg-accent hover:text-foreground"
+            className="rounded-md border border-border bg-card px-2 py-0.5 text-[11px] text-muted-foreground hover:bg-accent hover:text-foreground"
             onClick={() => {
               setEmail(a.email);
               const passwords: Record<string, string> = {

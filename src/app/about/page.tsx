@@ -1,26 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { PageHeader } from "@/components/shared/page-header";
 
 export default function AboutPage() {
   return (
     <div className="space-y-8">
-      <header className="animate-rise">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-          About & demo guide
-        </p>
-        <h1 className="mt-1 font-display text-4xl text-ink">
-          Honest scope for SignalForge
-        </h1>
-        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          Independent portfolio prototype for evidence-grounded pharmaceutical
-          competitive intelligence. Not affiliated with Atacana Group. Therapeutic
-          focus: moderate-to-severe atopic dermatitis.
-        </p>
-      </header>
+      <PageHeader
+        eyebrow="About & demo guide"
+        title="Honest scope for SignalForge"
+        description="Independent portfolio prototype for evidence-grounded pharmaceutical competitive intelligence. Not affiliated with Atacana Group. Therapeutic focus: moderate-to-severe atopic dermatitis."
+      />
 
       <section className="surface-panel animate-fade-delay space-y-3 p-5">
-        <h2 className="font-display text-2xl text-ink">What is real</h2>
+        <h2 className="font-display text-xl font-semibold text-ink">What is real</h2>
         <ul className="list-disc space-y-2 pl-5 text-sm text-muted-foreground">
           <li>
             Next.js workbench with nine navigable areas and a seeded AD corpus
@@ -45,7 +38,7 @@ export default function AboutPage() {
       </section>
 
       <section className="surface-panel space-y-3 p-5">
-        <h2 className="font-display text-2xl text-ink">What is mocked</h2>
+        <h2 className="font-display text-xl font-semibold text-ink">What is mocked</h2>
         <ul className="list-disc space-y-2 pl-5 text-sm text-muted-foreground">
           <li>
             <strong className="text-ink">Ask Signal is not a live LLM</strong> —
@@ -67,7 +60,7 @@ export default function AboutPage() {
       </section>
 
       <section className="surface-panel space-y-3 p-5">
-        <h2 className="font-display text-2xl text-ink">
+        <h2 className="font-display text-xl font-semibold text-ink">
           Provenance statuses (precise)
         </h2>
         <ul className="space-y-2 text-sm text-muted-foreground">
@@ -101,7 +94,7 @@ export default function AboutPage() {
       </section>
 
       <section className="surface-panel space-y-3 p-5">
-        <h2 className="font-display text-2xl text-ink">Demo walkthrough</h2>
+        <h2 className="font-display text-xl font-semibold text-ink">Demo walkthrough</h2>
         <ol className="list-decimal space-y-2 pl-5 text-sm text-muted-foreground">
           <li>
             Sign in as <code className="text-ink">reviewer@signalforge.demo</code>{" "}
@@ -129,7 +122,7 @@ export default function AboutPage() {
       </section>
 
       <section className="surface-panel space-y-3 border-amber-review p-5">
-        <h2 className="font-display text-2xl text-ink">Limitations</h2>
+        <h2 className="font-display text-xl font-semibold text-ink">Limitations</h2>
         <p className="text-sm text-muted-foreground">
           Not for clinical decision support. Not a validated pharmacovigilance
           system. Interpretations are hypotheses for human review. See{" "}

@@ -68,7 +68,7 @@ If the API is down or the session lacks write permission, the UI enters **local 
 
 ## Design
 
-See [DESIGN.md](./DESIGN.md) and `design-tokens.json`. Visual language: clinical green accents, pale mint surfaces, white panels, Fraunces + Source Sans 3. Inspired by premium biotech product UI (inspiration only — no third-party assets copied).
+See [DESIGN.md](./DESIGN.md) and `design-tokens.json`. Visual language: sage field surfaces, white panels, charcoal primary CTAs, deep sage verification accents, Sora + Plus Jakarta Sans. Inspired by medical-research biotech homepage UI (Dribbble shot `27696621` — inspiration only; no third-party assets copied).
 
 ## Run locally
 

@@ -94,14 +94,16 @@ export function DemoMetric({
   value: string | number;
 }) {
   return (
-    <div className="surface-panel px-3 py-2">
-      <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+    <div className="surface-panel px-4 py-3">
+      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
         {label}
         <span className="ml-1 normal-case tracking-normal text-amber-review">
           · illustrative demo data
         </span>
       </p>
-      <p className="font-display text-2xl text-ink">{value}</p>
+      <p className="mt-1 font-display text-2xl font-semibold tracking-tight text-ink sm:text-[1.75rem]">
+        {value}
+      </p>
     </div>
   );
 }

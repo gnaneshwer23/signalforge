@@ -27,15 +27,15 @@ function ShellChrome({ children }: { children: React.ReactNode }) {
       <div className="flex flex-1 flex-col lg:flex-row">
         <AppNav />
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="no-print flex flex-col gap-3 border-b border-border bg-card/70 px-4 py-3">
+          <header className="no-print flex flex-col gap-3 border-b border-border bg-card/80 px-4 py-3.5 backdrop-blur-[2px]">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 <Breadcrumbs />
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                     Therapeutic area
                   </p>
-                  <p className="text-sm text-ink">
+                  <p className="text-sm font-medium text-ink">
                     Moderate-to-severe atopic dermatitis
                   </p>
                 </div>
@@ -73,7 +73,7 @@ function ShellChrome({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           </header>
-          <main className="flex-1 px-4 py-5 sm:px-6 lg:px-8">
+          <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-6xl">
               <DemoWalkthrough />
               {children}

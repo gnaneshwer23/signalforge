@@ -40,7 +40,7 @@ export function DemoModeBanner() {
 
   return (
     <div
-      className="no-print border-b border-amber-review bg-amber-review px-4 py-2 text-sm text-amber-review"
+      className="no-print border-b border-amber-review/50 bg-amber-review px-4 py-2 text-sm text-amber-review"
       role="status"
     >
       <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">

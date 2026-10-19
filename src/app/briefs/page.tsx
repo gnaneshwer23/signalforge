@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useStore } from "@/lib/store";
 import { ReviewBadge } from "@/components/shared/status-badges";
 import { EmptyState, LoadingState } from "@/components/shared/empty-state";
+import { PageHeader } from "@/components/shared/page-header";
 import { formatDate } from "@/lib/utils";
 
 export default function BriefsPage() {
@@ -12,17 +13,11 @@ export default function BriefsPage() {
 
   return (
     <div className="space-y-6">
-      <header className="animate-rise">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-          Intelligence briefs
-        </p>
-        <h1 className="mt-1 font-display text-4xl text-ink">Briefs</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Structured drafts with claim-level evidence links, confidence
-          rationale, and workflow states from draft → needs-review →
-          approved-for-internal-discussion.
-        </p>
-      </header>
+      <PageHeader
+        eyebrow="Intelligence briefs"
+        title="Briefs"
+        description="Structured drafts with claim-level evidence links, confidence rationale, and workflow states from draft → needs-review → approved-for-internal-discussion."
+      />
 
       {state.briefs.length === 0 ? (
         <EmptyState
@@ -39,7 +34,7 @@ export default function BriefsPage() {
                   Updated {formatDate(brief.updatedAt)}
                 </span>
               </div>
-              <h2 className="mt-2 font-display text-2xl text-ink">
+              <h2 className="mt-2 font-display text-xl font-semibold text-ink">
                 <Link
                   href={`/briefs/${brief.id}`}
                   className="underline-offset-2 hover:underline"

@@ -1,25 +1,25 @@
 # SignalForge Visual System
 
-**Inspiration:** [Bionil — Pharma Factory Landing page](https://dribbble.com/shots/22558925-Bionil-Pharma-Factory-Landing-page) (Artiflow UI/UX Agency, shot `22558925`).  
-**Adaptation only** — do **not** copy Bionil assets, illustrations, logo, copy, or brand name.
+**Inspiration:** [Pharma Biotech Website UI/UX — Medical research homepage](https://dribbble.com/shots/27696621-Pharma-Biotech-Website-UI-UX-Medical-research-homepage-design) (shot `27696621`, Luminara-style medical research concept).  
+**Adaptation only** — do **not** copy shot assets, photography, 3D illustrations, logo, copy, or brand name.
 
 **Scope:** Enterprise pharma AI workbench (Overview, Landscape, Evidence, Briefs, Ask Signal, Safety, Governance, Evaluation, Delivery). Apply consistently across **all** screens.
 
-**Source notes (2026-10-19):** Dribbble serves a bot/login wall to automated fetches. Guidance below synthesizes (1) shot metadata + Artiflow healthcare/pharma landing patterns, (2) clinical biotech UI conventions matching the shot’s stated category, and (3) SignalForge product constraints (dense workbench, status semantics, human-review workflows). Machine-readable tokens: [`design-tokens.json`](./design-tokens.json).
+**Source notes (2026-10-19):** Dribbble antibot blocked direct HTML fetch. Visual direction extracted from a rendered shot capture (thum.io) plus pixel sampling: soft sage mint fields, white content planes, near-black charcoal CTAs, airy whitespace, large soft radii on marketing cards. Machine-readable tokens: [`design-tokens.json`](./design-tokens.json).
 
 ---
 
 ## Design intent
 
-Clean-room clinical biotech: sterile surfaces, deep clinical green authority, pale mint atmosphere, generous whitespace, restrained chrome. Feels like a regulated intelligence bench — not a marketing dashboard and not a purple SaaS template.
+Clean-room medical research: pale sage atmosphere, white work surfaces, charcoal authority for primary actions, restrained chrome. Feels like a regulated intelligence bench — not a marketing landing clone and not a purple SaaS template.
 
 | Landing-page cue (reference) | Workbench adaptation (SignalForge) |
 | --- | --- |
-| Full-bleed hero + photography | Soft mint wash behind shell; brand + one page title + short purpose line |
+| Full-bleed hero + lab photography / glass 3D | Soft sage wash behind shell; no stock photos or copied 3D |
 | Large marketing stats | Compact metric row / `DemoMetric` — large number, tiny uppercase label |
-| Soft floating cards | Prefer **non-cards**: hairline borders or open sections; cards only for interactive containers |
-| Pill CTAs | Soft rectangle CTAs (`6–8px` radius) — avoid `rounded-full` pills |
-| Decorative factory art | Real product UI only; no copied illustrations |
+| Soft floating cards (large radius) | Prefer **non-cards**; interactive panels use hairline borders + moderate radius (`10–12px`) |
+| Pill / dark CTAs | Soft rectangle charcoal CTAs (`8–10px` radius) — avoid `rounded-full` pills |
+| Decorative scientific art | Real product UI only; no copied illustrations |
 
 ---
 
@@ -29,33 +29,34 @@ Clean-room clinical biotech: sterile surfaces, deep clinical green authority, pa
 
 | Token | Hex | Role |
 | --- | --- | --- |
-| `--sf-paper` | `#F4FAF7` | Pale mint page wash / paper |
-| `--sf-background` | `#EEF7F2` | App background |
+| `--sf-paper` | `#F5F8F4` | Cool sage-tinted paper (not warm cream) |
+| `--sf-background` | `#E8F0E4` | App background / sage field |
 | `--sf-surface` | `#FFFFFF` | Panels, tables, drawers |
-| `--sf-surface-muted` | `#E4F2EB` | Hover rows, muted wells |
-| `--sf-mint` | `#D8EFE6` | Accent wash, chip fills |
-| `--sf-ink` | `#14352C` | Primary text / brand ink |
-| `--sf-muted` | `#4A6B5F` | Secondary text |
-| `--sf-border` | `#C5DDD2` | Hairline borders |
-| `--sf-primary` | `#0F6B52` | Clinical green — CTAs, active nav, links |
-| `--sf-primary-foreground` | `#F4FAF7` | On primary |
-| `--sf-primary-deep` | `#0A4A3A` | Hover / pressed primary |
-| `--sf-ring` | `#0F6B52` | Focus ring |
+| `--sf-surface-muted` | `#DDE8D8` | Hover rows, muted wells |
+| `--sf-sage` | `#B5C9AF` | Accent wash, chip fills (sampled ~`#B1C5AB`) |
+| `--sf-ink` | `#161A18` | Primary text / brand ink |
+| `--sf-muted` | `#5A6B62` | Secondary text |
+| `--sf-border` | `#C9D6C8` | Hairline borders |
+| `--sf-primary` | `#1A1B22` | Charcoal — CTAs, active nav (shot CTA treatment) |
+| `--sf-primary-foreground` | `#F5F8F4` | On primary |
+| `--sf-primary-deep` | `#0D0E12` | Hover / pressed primary |
+| `--sf-accent-signal` | `#3F6B4F` | Links, verified, scientific accent (deeper sage) |
+| `--sf-ring` | `#3F6B4F` | Focus ring |
 
 ### Status (verification & review)
 
 | Token | Hex | Meaning |
 | --- | --- | --- |
-| `--sf-verified` | `#0F6B52` | Verified source / approved |
+| `--sf-verified` | `#3F6B4F` | Verified source / approved |
 | `--sf-verified-bg` | mix 12% verified on white | Chip / row tint |
 | `--sf-needs-review` | `#B45309` | Needs human review |
 | `--sf-needs-review-bg` | mix 14% amber on white | Chip tint |
-| `--sf-unverified` | `#4A6B5F` | Unverified / incomplete provenance |
-| `--sf-unverified-bg` | `#E4F2EB` | Neutral muted chip |
+| `--sf-unverified` | `#5A6B62` | Unverified / incomplete provenance |
+| `--sf-unverified-bg` | `#DDE8D8` | Neutral muted chip |
 | `--sf-danger` | `#B42318` | Safety / destructive / hard fail |
 | `--sf-danger-bg` | mix 10% danger on white | Alert strip |
 
-Avoid purple, neon glow, and high-chroma gradients. Atmosphere = soft mint radial wash + white panels — not dark mode.
+Avoid purple, neon glow, and high-chroma gradients. Atmosphere = soft sage field + white panels — not dark mode. Prefer cool sage paper over warm cream editorial tropes.
 
 ---
 
@@ -65,19 +66,17 @@ Avoid Inter, Roboto, Arial, and system UI stacks.
 
 | Role | Recommendation | Fallback chain | Notes |
 | --- | --- | --- | --- |
-| **Display / brand** | **Fraunces** (Google Fonts) | `ui-serif, Georgia, serif` | Hero-level **SignalForge** wordmark; page H1 sparingly. Optical size / soft contrast preferred. |
-| **Body / UI** | **Source Sans 3** | `ui-sans-serif, sans-serif` | Tables, forms, nav, body. |
-| **Mono / IDs** | **IBM Plex Mono** or **Geist Mono** | `ui-monospace, monospace` | Evidence IDs, claim keys, audit timestamps. |
-
-**Alternate expressive pair** (if swapping later): **Newsreader** (display) + **Manrope** (body).
+| **Display / brand** | **Sora** (Google Fonts) | `ui-sans-serif, sans-serif` | Hero-level **SignalForge** wordmark; geometric modern sans matching research-homepage energy. |
+| **Body / UI** | **Plus Jakarta Sans** | `ui-sans-serif, sans-serif` | Tables, forms, nav, body. |
+| **Mono / IDs** | **Geist Mono** | `ui-monospace, monospace` | Evidence IDs, claim keys, audit timestamps. |
 
 ### Type scale (workbench)
 
 | Use | Size | Weight | Tracking |
 | --- | --- | --- | --- |
-| Brand wordmark | `1.5–1.75rem` | 600 | `-0.02em` |
-| Page title (H1) | `1.375–1.5rem` | 600 | `-0.02em` |
-| Section title (H2) | `1.125rem` | 600 | `-0.01em` |
+| Brand wordmark | `1.5–1.75rem` | 600 | `-0.03em` |
+| Page title (H1) | `1.5–1.75rem` | 600 | `-0.025em` |
+| Section title (H2) | `1.125rem` | 600 | `-0.015em` |
 | Body | `0.875–0.9375rem` | 400 | `0` |
 | Meta / eyebrow | `0.6875rem` | 500 | `0.12–0.14em` uppercase |
 | Metric value | `1.5–1.75rem` display | 600 | `-0.02em` |
@@ -93,11 +92,11 @@ Line length for prose: ~65–75ch. Tables stay compact; do not enlarge body to �
 | Spacing base | `4px` | Scale: 4 / 8 / 12 / 16 / 24 / 32 / 48 |
 | Page padding | `16–32px` | `px-4 sm:px-6 lg:px-8` |
 | Section gap | `24–32px` | One purpose per section |
-| `--radius` | `6px` (`0.375rem`) | Default controls & panels |
-| `--radius-sm` | `4px` | Chips, dense badges |
-| `--radius-lg` | `8–10px` | Drawers, dialogs only |
+| `--radius` | `10px` (`0.625rem`) | Default controls & panels (marketing radii dialed down) |
+| `--radius-sm` | `6px` | Chips, dense badges |
+| `--radius-lg` | `12–14px` | Drawers, dialogs only |
 | Border | `1px solid var(--sf-border)` | Prefer border over shadow |
-| Shadow | `0 1px 2px rgb(20 53 44 / 0.04)` | Optional lift on open sheets only — no multi-layer glow |
+| Shadow | `0 1px 2px rgb(22 26 24 / 0.05)` | Optional lift on open sheets only — no multi-layer glow |
 
 **Do not** use `rounded-full` pills for primary CTAs or nav. Status chips may use slight rounding (`rounded-md`), not stadium pills.
 
@@ -107,9 +106,10 @@ Line length for prose: ~65–75ch. Tables stay compact; do not enlarge body to �
 
 ### Navigation
 
-- Left sidebar (desktop): pale mint/sidebar wash, hairline right border.
+- Left sidebar (desktop): pale sage/sidebar wash, hairline right border.
 - Brand: **SignalForge** in display font as the strongest first signal; subtitle “Pharma Intelligence Workbench” in muted meta.
-- Active item: solid clinical green fill + light text (not underline-only).
+- Active item: solid charcoal fill + light text (reference CTA language).
+- Soft sage left rail / hover wash for inactive items.
 - Mobile: sheet drawer from left; same link list.
 
 ### Hero / overview treatment
@@ -120,7 +120,7 @@ Workbench “hero” = composition, not marketing:
 2. One page headline  
 3. One short supporting sentence  
 4. One primary CTA group (e.g. Open Landscape / Ask Signal)  
-5. Optional soft mint atmosphere — **no** inset media cards, floating badges, or stat strips competing in the first viewport  
+5. Optional soft sage atmosphere — **no** inset media cards, floating badges, or copied photography  
 
 Stats belong in a **second** band as open metric tiles (border + white fill), large display numbers, uppercase demo labels.
 
@@ -141,13 +141,11 @@ Stats belong in a **second** band as open metric tiles (border + white fill), la
 
 | Kind | Style |
 | --- | --- |
-| Verified | Green text + pale verified bg + soft green border |
+| Verified | Deep sage text + pale verified bg + soft border |
 | Needs review | Amber text + pale amber bg |
 | Unverified | Muted text + muted bg |
 | Danger / fictional AE | Danger text + pale danger bg; always explicit wording |
 | Provenance lifecycle | Unverified / Source located / Evidence reviewed / Supported / Conflicting / Insufficient — see `src/lib/provenance/status.ts` |
-
-Keep labels short; icon optional (BadgeCheck / CircleAlert / CircleHelp / Link2 / Scale).
 
 ### Shell chrome
 
@@ -158,22 +156,23 @@ Keep labels short; icon optional (BadgeCheck / CircleAlert / CircleHelp / Link2 
 
 ### CTAs
 
-- **Primary:** `--sf-primary` fill, light text, `6px` radius, no glow.
-- **Secondary:** white/mint fill + border.
+- **Primary:** charcoal fill, light text, `10px` radius, no glow.
+- **Secondary:** white/sage fill + border.
 - **Ghost:** text + hover accent wash.
+- Links / scientific accent: `--sf-accent-signal`.
 - One primary per section.
 
 ### Drawers / sheets
 
 - Right or left sheet for evidence detail, brief claim review, walkthrough.
 - White surface, hairline edge, restrained shadow.
-- Title in display or semibold sans; body Source Sans 3.
+- Title in display or semibold sans; body Plus Jakarta Sans.
 - Footer actions: secondary + primary, right-aligned.
 
 ### Alerts / disclaimer
 
-- Persistent disclaimer banner: muted mint strip or soft amber if cautionary — never alarming red for routine compliance copy.
-- Safety fiction cases use danger tokens.
+- Persistent disclaimer banner: muted sage strip — never alarming red for routine compliance copy.
+- Safety fiction cases use danger / amber-review tokens.
 
 ---
 
@@ -195,28 +194,27 @@ Optional micro: button/hover background `150–200ms`; sheet enter `200–250ms`
 | --- | --- |
 | `design-tokens.json` | Canonical token values for Theme / CSS generation |
 | `src/app/globals.css` | Map tokens → CSS variables (`--background`, `--primary`, status helpers, keyframes) |
-| `src/app/layout.tsx` | Load Fraunces + Source Sans 3 (+ mono) |
+| `src/app/layout.tsx` | Load Sora + Plus Jakarta Sans (+ mono) |
 | UI surfaces | Apply `surface-panel`, status badges, nav active styles across all routes |
-
-**Concurrency note:** A redesign agent may already be editing theme files. Prefer reading this doc + `design-tokens.json` over racing CSS edits.
 
 ---
 
 ## Non-goals
 
-- Copying Bionil naming, logo, photography, or illustration  
+- Copying Luminara / shot naming, logo, photography, or 3D art  
 - Dark-mode-first chrome  
 - Purple / indigo SaaS gradients  
-- Dense newspaper layouts or cream+terracotta editorial tropes  
+- Warm cream + terracotta editorial tropes  
 - Marketing pill clusters, floating promo badges, multi-shadow cards  
+- Glassmorphism overlays in the workbench chrome  
 
 ---
 
 ## Checklist for redesign agent
 
-- [ ] All workbench routes share the same surface / primary / status tokens  
-- [ ] SignalForge wordmark remains the strongest brand signal in the shell  
-- [ ] Status chips encode verified / needs-review / unverified / danger  
-- [ ] Tables and drawers feel clinical and quiet  
-- [ ] At least two of the three motions ship; honor reduced motion  
-- [ ] No Bionil assets or branding  
+- [x] All workbench routes share the same surface / primary / status tokens  
+- [x] SignalForge wordmark remains the strongest brand signal in the shell  
+- [x] Status chips encode verified / needs-review / unverified / danger  
+- [x] Tables and drawers feel clinical and quiet  
+- [x] At least two of the three motions ship; honor reduced motion  
+- [x] No shot assets or branding  

@@ -2,6 +2,7 @@
 
 import { useStore } from "@/lib/store";
 import { LoadingState } from "@/components/shared/empty-state";
+import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 
@@ -11,18 +12,12 @@ export default function SafetyPage() {
 
   return (
     <div className="space-y-6">
-      <header className="animate-rise">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-amber-review">
-          Synthetic AE triage · fictional
-        </p>
-        <h1 className="mt-1 font-display text-4xl text-ink">Safety workbench</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Explicitly fictional adverse-event cases for workflow demonstration
-          only. SignalForge does not contact FAERS, EudraVigilance, or any
-          sponsor safety database. This is not a validated pharmacovigilance
-          system.
-        </p>
-      </header>
+      <PageHeader
+        tone="caution"
+        eyebrow="Synthetic AE triage · fictional"
+        title="Safety workbench"
+        description="Explicitly fictional adverse-event cases for workflow demonstration only. SignalForge does not contact FAERS, EudraVigilance, or any sponsor safety database. This is not a validated pharmacovigilance system."
+      />
 
       {state.safetyFlags.map((flag) => (
         <article key={flag.id} className="surface-panel border-amber-review p-4">
@@ -37,12 +32,14 @@ export default function SafetyPage() {
               Queue: {flag.queueStatus.replaceAll("_", " ")}
             </span>
           </div>
-          <h2 className="mt-3 font-display text-2xl text-ink">{flag.label}</h2>
+          <h2 className="mt-3 font-display text-xl font-semibold text-ink">
+            {flag.label}
+          </h2>
           <p className="mt-2 text-sm text-muted-foreground">{flag.narrative}</p>
 
           <div className="mt-4 grid gap-4 lg:grid-cols-2">
             <div>
-              <h3 className="font-display text-lg text-ink">Extracted fields</h3>
+              <h3 className="font-display text-lg font-semibold text-ink">Extracted fields</h3>
               <dl className="mt-2 space-y-2 text-sm">
                 {Object.entries(flag.extractedFields).map(([k, v]) => (
                   <div key={k} className="grid grid-cols-[140px_1fr] gap-2">
@@ -56,7 +53,7 @@ export default function SafetyPage() {
             </div>
             <div className="space-y-4">
               <div>
-                <h3 className="font-display text-lg text-ink">Missing fields</h3>
+                <h3 className="font-display text-lg font-semibold text-ink">Missing fields</h3>
                 <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
                   {flag.missingFields.map((m) => (
                     <li key={m}>{m}</li>
@@ -64,7 +61,7 @@ export default function SafetyPage() {
                 </ul>
               </div>
               <div>
-                <h3 className="font-display text-lg text-ink">Uncertainty</h3>
+                <h3 className="font-display text-lg font-semibold text-ink">Uncertainty</h3>
                 <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
                   {flag.uncertaintyNotes.map((m) => (
                     <li key={m}>{m}</li>

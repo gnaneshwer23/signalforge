@@ -1,21 +1,21 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "name": "SignalForge — Bionil-inspired clinical workbench",
-  "version": "1.0.0",
+  "name": "SignalForge — medical research workbench (shot 27696621 inspiration)",
+  "version": "2.0.0",
   "reference": {
-    "url": "https://dribbble.com/shots/22558925-Bionil-Pharma-Factory-Landing-page",
-    "shotId": "22558925",
-    "note": "Inspiration only. Do not copy Bionil assets, illustrations, or branding."
+    "url": "https://dribbble.com/shots/27696621-Pharma-Biotech-Website-UI-UX-Medical-research-homepage-design",
+    "shotId": "27696621",
+    "note": "Inspiration only. Do not copy shot assets, photography, 3D art, or branding. Direction extracted from rendered capture + pixel sampling (sage field, white planes, charcoal CTAs)."
   },
   "fonts": {
     "display": {
-      "family": "Fraunces",
+      "family": "Sora",
       "source": "google",
       "cssVariable": "--font-display",
-      "fallbacks": ["ui-serif", "Georgia", "serif"]
+      "fallbacks": ["ui-sans-serif", "sans-serif"]
     },
     "body": {
-      "family": "Source Sans 3",
+      "family": "Plus Jakarta Sans",
       "source": "google",
       "cssVariable": "--font-body",
       "fallbacks": ["ui-sans-serif", "sans-serif"]
@@ -24,41 +24,42 @@
       "family": "Geist Mono",
       "source": "google",
       "cssVariable": "--font-geist-mono",
-      "fallbacks": ["ui-monospace", "monospace"],
-      "alternate": "IBM Plex Mono"
+      "fallbacks": ["ui-monospace", "monospace"]
     },
     "avoid": ["Inter", "Roboto", "Arial", "system-ui"]
   },
   "colors": {
-    "paper": "#F4FAF7",
-    "background": "#EEF7F2",
+    "paper": "#F5F8F4",
+    "background": "#E8F0E4",
     "surface": "#FFFFFF",
-    "surfaceMuted": "#E4F2EB",
-    "mint": "#D8EFE6",
-    "ink": "#14352C",
-    "muted": "#4A6B5F",
-    "border": "#C5DDD2",
-    "input": "#C9E0D6",
-    "primary": "#0F6B52",
-    "primaryForeground": "#F4FAF7",
-    "primaryDeep": "#0A4A3A",
-    "secondary": "#DCEEE6",
-    "accent": "#D2EBE1",
-    "ring": "#0F6B52",
+    "surfaceMuted": "#DDE8D8",
+    "sage": "#B5C9AF",
+    "ink": "#161A18",
+    "muted": "#5A6B62",
+    "border": "#C9D6C8",
+    "input": "#C5D4C3",
+    "primary": "#1A1B22",
+    "primaryForeground": "#F5F8F4",
+    "primaryDeep": "#0D0E12",
+    "secondary": "#D5E4CF",
+    "accent": "#C8DCC0",
+    "accentSignal": "#3F6B4F",
+    "ring": "#3F6B4F",
     "status": {
-      "verified": "#0F6B52",
+      "verified": "#3F6B4F",
       "needsReview": "#B45309",
-      "unverified": "#4A6B5F",
+      "unverified": "#5A6B62",
       "danger": "#B42318"
     },
-    "chart": ["#0F6B52", "#1A8A6A", "#B45309", "#2D5A4C", "#7A9A8C"]
+    "chart": ["#3F6B4F", "#1A1B22", "#B45309", "#7A9A7C", "#B5C9AF"]
   },
   "cssVariableMap": {
     "--paper": "paper",
     "--background": "background",
     "--card": "surface",
     "--muted": "surfaceMuted",
-    "--mint": "mint",
+    "--sage": "sage",
+    "--mint": "sage",
     "--ink": "ink",
     "--foreground": "ink",
     "--muted-foreground": "muted",
@@ -80,10 +81,10 @@
     "sectionGap": 24
   },
   "radius": {
-    "base": "0.375rem",
-    "sm": "0.25rem",
-    "md": "0.375rem",
-    "lg": "0.5rem",
+    "base": "0.625rem",
+    "sm": "0.375rem",
+    "md": "0.625rem",
+    "lg": "0.875rem",
     "avoidFullPill": true
   },
   "border": {
@@ -92,8 +93,8 @@
     "colorToken": "border"
   },
   "shadow": {
-    "panel": "0 1px 2px rgb(20 53 44 / 0.04)",
-    "sheet": "0 8px 24px rgb(20 53 44 / 0.08)",
+    "panel": "0 1px 2px rgb(22 26 24 / 0.05)",
+    "sheet": "0 10px 28px rgb(22 26 24 / 0.08)",
     "glow": "none"
   },
   "motion": [
@@ -121,7 +122,7 @@
   "components": {
     "nav": {
       "placement": "left-sidebar",
-      "active": "solid-primary",
+      "active": "solid-charcoal-primary",
       "brand": "display-wordmark-first"
     },
     "metrics": {

@@ -30,7 +30,7 @@ export function DemoWalkthrough() {
               <li key={step.href}>
                 <Link
                   href={step.href}
-                  className="inline-flex items-center gap-2 border border-border bg-background px-2.5 py-1.5 text-xs text-foreground transition-colors hover:bg-accent"
+                  className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs text-foreground transition-colors hover:bg-accent"
                 >
                   <span className="text-muted-foreground">{i + 1}.</span>
                   {step.label}

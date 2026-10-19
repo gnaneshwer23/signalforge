@@ -34,7 +34,7 @@ function NavLinks({
 }) {
   const pathname = usePathname();
   return (
-    <nav className={cn("flex flex-col gap-1", className)} aria-label="Primary">
+    <nav className={cn("flex flex-col gap-0.5", className)} aria-label="Primary">
       {links.map((link, i) => {
         const active =
           link.href === "/"
@@ -49,10 +49,10 @@ function NavLinks({
             href={link.href}
             onClick={onNavigate}
             className={cn(
-              "animate-slide-nav rounded-md px-3 py-2 text-sm transition-colors",
+              "animate-slide-nav rounded-[0.5rem] px-3 py-2 text-sm font-medium transition-colors duration-150",
               active
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground",
             )}
             style={{ animationDelay: `${i * 30}ms` }}
           >
@@ -69,11 +69,13 @@ export function AppNav() {
 
   return (
     <>
-      <aside className="no-print hidden w-56 shrink-0 border-r border-border bg-sidebar/80 p-4 lg:block">
-        <div className="mb-6">
-          <Link href="/" className="block">
-            <p className="font-display text-2xl text-ink">SignalForge</p>
-            <p className="mt-1 text-xs text-muted-foreground">
+      <aside className="no-print hidden w-60 shrink-0 border-r border-sidebar-border bg-sidebar/90 p-5 lg:block">
+        <div className="mb-8">
+          <Link href="/" className="group block">
+            <p className="font-display text-[1.65rem] font-semibold leading-none tracking-tight text-ink transition-colors group-hover:text-accent-signal">
+              SignalForge
+            </p>
+            <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
               Pharma Intelligence Workbench
             </p>
           </Link>
@@ -81,13 +83,15 @@ export function AppNav() {
         <NavLinks />
       </aside>
 
-      <div className="no-print flex items-center justify-between border-b border-border bg-sidebar/90 px-4 py-3 lg:hidden">
+      <div className="no-print flex items-center justify-between border-b border-sidebar-border bg-sidebar/95 px-4 py-3 lg:hidden">
         <Link href="/">
-          <p className="font-display text-xl text-ink">SignalForge</p>
+          <p className="font-display text-xl font-semibold tracking-tight text-ink">
+            SignalForge
+          </p>
         </Link>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger
-            className="inline-flex size-8 items-center justify-center rounded-lg border border-border bg-background hover:bg-muted"
+            className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-card hover:bg-muted"
             aria-label="Open navigation"
           >
             <Menu className="size-4" />

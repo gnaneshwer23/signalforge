@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useStore } from "@/lib/store";
 import { LoadingState } from "@/components/shared/empty-state";
+import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { AskResponse } from "@/lib/types";
@@ -77,25 +78,23 @@ export default function AskSignalPage() {
 
   return (
     <div className="space-y-6">
-      <header className="animate-rise">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-          Ask Signal
-        </p>
-        <h1 className="mt-1 font-display text-4xl text-ink">
-          Retrieve-then-answer (demo matcher)
-        </h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Answers are retrieved from the seeded AD corpus via a deterministic
-          keyword matcher, then cited. This UI does <strong>not</strong> claim a
-          live LLM or real-time ingestion. It abstains when evidence is
-          insufficient and never invents references or patient-specific advice.
-          Corpus documents are treated as untrusted inputs.
-        </p>
-        <p className="mt-2 text-xs text-amber-review" role="status">
-          Mode: deterministic demo · live LLM: no · persistence:{" "}
-          {state.persistenceMode}
-        </p>
-      </header>
+      <PageHeader
+        eyebrow="Ask Signal"
+        title="Retrieve-then-answer (demo matcher)"
+        description={
+          <>
+            Answers are retrieved from the seeded AD corpus via a deterministic
+            keyword matcher, then cited. This UI does <strong>not</strong> claim
+            a live LLM or real-time ingestion. It abstains when evidence is
+            insufficient and never invents references or patient-specific advice.
+            Corpus documents are treated as untrusted inputs.
+            <span className="mt-2 block text-xs text-amber-review" role="status">
+              Mode: deterministic demo · live LLM: no · persistence:{" "}
+              {state.persistenceMode}
+            </span>
+          </>
+        }
+      />
 
       <section className="surface-panel p-4">
         <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
@@ -107,7 +106,7 @@ export default function AskSignalPage() {
               key={s}
               type="button"
               onClick={() => setQuery(s)}
-              className="border border-border bg-background px-2.5 py-1.5 text-left text-xs transition-colors hover:bg-accent"
+              className="rounded-md border border-border bg-card px-2.5 py-1.5 text-left text-xs transition-colors hover:bg-accent"
             >
               {s}
             </button>
