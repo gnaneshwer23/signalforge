@@ -55,7 +55,7 @@ export default function PlatformPage() {
       </ul>
 
       <p className="mt-12 text-xs text-muted-foreground">
-        Independent portfolio prototype — not affiliated with Atacana Group. Not
+        Independent portfolio prototype — not affiliated with any consultancy. Not
         production-ready or regulatory-compliant.
       </p>
     </div>

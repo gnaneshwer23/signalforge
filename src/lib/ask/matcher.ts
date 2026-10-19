@@ -64,8 +64,9 @@ export function runAskMatcher({
 
   const patientAdvice =
     /treat me|my child|should i take|dose for me|prescribe/.test(q);
+  // Only the labelled fictional pipeline (SIGFOR / Northwind) — not real OX40 assets.
   const fictionalQuery =
-    /sigfor|ox40|northwind|fictional pipeline/.test(q) &&
+    /sigfor|northwind|fictional pipeline/.test(q) &&
     /efficac|superior|approve|best/.test(q);
   const insufficient =
     injection ||

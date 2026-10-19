@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
 import { loadState, saveState } from "@/lib/db/repository";
 import { getSessionUser } from "@/lib/auth/session";
-import { assertPermission } from "@/lib/auth/permissions";
 import { validateStatePayload } from "@/lib/api/state-payload";
+import { authorizeStateWrite } from "@/lib/api/authorize-state-write";
 import { assertSameOrigin } from "@/lib/security/csrf";
 import {
   clientKeyFromRequest,
   rateLimit,
 } from "@/lib/security/rate-limit";
-import type { StoreState } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -44,9 +43,9 @@ export async function GET() {
 }
 
 /**
- * Persist workbench mutations. Requires an authenticated demo session with
- * prefs:write. Audit history is append-merged server-side — clients cannot
- * erase prior audit events by sending a reduced array.
+ * Persist workbench mutations with per-action authz (A1).
+ * prefs:write alone cannot approve briefs, route safety, or rewrite privileged fields.
+ * Audit history is append-merged server-side — clients cannot erase prior events.
  */
 export async function PUT(request: Request) {
   try {
@@ -75,11 +74,13 @@ export async function PUT(request: Request) {
     }
 
     const user = await getSessionUser();
-    const authz = assertPermission(user?.role, "prefs:write");
-    if (!authz.ok) {
+    if (!user) {
       return NextResponse.json(
-        { error: authz.error, code: "auth_required" },
-        { status: authz.status },
+        {
+          error: "Authentication required. Sign in with a demo account.",
+          code: "auth_required",
+        },
+        { status: 401 },
       );
     }
 
@@ -101,13 +102,33 @@ export async function PUT(request: Request) {
       );
     }
 
-    // Strip client ability to invent persistenceMode; never trust client audit wipe
-    const sanitized: StoreState = {
-      ...validated.state,
-      persistenceMode: "server",
-    };
-    await saveState(sanitized);
-    return NextResponse.json({ ok: true, actor: user!.email });
+    const current = await loadState();
+    const authorized = authorizeStateWrite(
+      current,
+      validated.state,
+      user.role,
+    );
+    if (!authorized.ok) {
+      return NextResponse.json(
+        {
+          error: authorized.error,
+          code:
+            authorized.status === 409
+              ? "approval_blocked"
+              : authorized.status === 403
+                ? "forbidden"
+                : "auth_required",
+        },
+        { status: authorized.status },
+      );
+    }
+
+    await saveState(authorized.state);
+    return NextResponse.json({
+      ok: true,
+      actor: user.email,
+      permissionsUsed: authorized.permissionsUsed,
+    });
   } catch (error) {
     console.error("PUT /api/state failed", error);
     return NextResponse.json(

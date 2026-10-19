@@ -297,6 +297,66 @@ export const evidence: EvidenceRecord[] = [
     ],
   },
   {
+    id: "ev-amlitelimab-stream",
+    sourceId: "src-amlitelimab-stream",
+    assetIds: ["asset-amlitelimab"],
+    title: "Amlitelimab STREAM-AD / Phase 3 registry footprint",
+    summary:
+      "ClinicalTrials.gov record for amlitelimab in moderate-to-severe AD; OX40L non-depleting pathway.",
+    studyCharacteristics:
+      "Interventional Phase 2/3 registry entry; endpoints and arms as listed on ClinicalTrials.gov.",
+    limitations:
+      "Registry listing is not a peer-reviewed efficacy conclusion; status and endpoints change over time.",
+    supports:
+      "Supports that an OX40L programme (amlitelimab) is under active late-stage AD investigation with a public NCT.",
+    doesNotEstablish:
+      "Does not establish superiority to IL-4Rα / IL-13 biologics or oral JAKs.",
+    reviewState: "reviewed",
+    therapeuticArea: "Moderate-to-severe atopic dermatitis",
+    tags: ["ox40l", "phase-3", "pipeline"],
+    excerpt:
+      "Amlitelimab (anti-OX40L) is registered for moderate-to-severe atopic dermatitis studies including STREAM-AD (NCT05717907).",
+    keywords: [
+      "amlitelimab",
+      "ox40l",
+      "stream-ad",
+      "nct05717907",
+      "pipeline",
+      "phase 3",
+    ],
+  },
+  {
+    id: "ev-rocatinlimab-rocket",
+    sourceId: "src-rocatinlimab-rocket",
+    assetIds: ["asset-rocatinlimab"],
+    title: "Rocatinlimab ROCKET Phase 3 registry footprint",
+    summary:
+      "ClinicalTrials.gov record for rocatinlimab (anti-OX40) Phase 3 AD programme (ROCKET).",
+    studyCharacteristics:
+      "Interventional Phase 3 registry entry; multi-study ROCKET programme identifiers.",
+    limitations:
+      "Registry metadata alone cannot support comparative efficacy claims.",
+    supports:
+      "Supports that rocatinlimab is a late-stage OX40-pathway AD asset with a public NCT deep link.",
+    doesNotEstablish:
+      "Does not establish itch-specific superiority versus nemolizumab or other biologics.",
+    reviewState: "reviewed",
+    therapeuticArea: "Moderate-to-severe atopic dermatitis",
+    tags: ["ox40", "phase-3", "pipeline"],
+    excerpt:
+      "Rocatinlimab (OX40 receptor mAb) Phase 3 ROCKET programme includes NCT05398445 for moderate-to-severe atopic dermatitis.",
+    keywords: [
+      "rocatinlimab",
+      "ox40",
+      "rocket",
+      "nct05398445",
+      "itch",
+      "mechanism",
+      "pipeline",
+      "phase 3",
+    ],
+  },
+  {
     id: "ev-sigfor-fictional",
     sourceId: "src-sigfor-fictional",
     assetIds: ["asset-sigfor-101"],

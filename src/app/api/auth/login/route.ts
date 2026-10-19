@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {
-  findDemoUserByEmail,
+  authenticateDemoUser,
   toPublicUser,
 } from "@/lib/auth/users";
 import {
@@ -47,8 +47,8 @@ export async function POST(request: Request) {
     const body = (await request.json()) as { email?: string; password?: string };
     const email = body.email?.trim() ?? "";
     const password = body.password ?? "";
-    const user = findDemoUserByEmail(email);
-    if (!user || user.password !== password) {
+    const user = authenticateDemoUser(email, password);
+    if (!user) {
       return NextResponse.json(
         { error: "Invalid demo credentials." },
         { status: 401 },

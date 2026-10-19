@@ -85,11 +85,11 @@ export function AuthBar() {
             className="rounded-md border border-border bg-card px-2 py-0.5 text-[11px] text-muted-foreground hover:bg-accent hover:text-foreground"
             onClick={() => {
               setEmail(a.email);
+              // Admin password is env-only (A2) — never autofill a published value.
               const passwords: Record<string, string> = {
                 analyst: "analyst-demo",
                 reviewer: "reviewer-demo",
                 product_owner: "po-demo",
-                admin: "admin-demo",
               };
               setPassword(passwords[a.role] || "");
             }}

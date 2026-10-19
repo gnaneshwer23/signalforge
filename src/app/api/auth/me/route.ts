@@ -19,7 +19,10 @@ export async function GET() {
   const user = await getSessionUser();
   return NextResponse.json({
     user,
-    demoAccounts: DEMO_USERS.map(toPublicUser),
+    // Exclude admin from public demo chips — password is env-only (A2).
+    demoAccounts: DEMO_USERS.filter((u) => !u.requiresEnvPassword).map(
+      toPublicUser,
+    ),
     permissions: user
       ? Object.fromEntries(
           SAMPLE_PERMISSIONS.map((p) => [p, roleHasPermission(user.role, p)]),

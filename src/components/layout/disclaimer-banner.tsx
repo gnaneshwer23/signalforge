@@ -9,11 +9,10 @@ export function DisclaimerBanner() {
         <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-review" />
         <p>
           <strong className="font-medium">SignalForge</strong> is an independent
-          portfolio prototype with illustrative / demo data. It is{" "}
-          <strong className="font-medium">not affiliated with Atacana Group</strong>,
-          not a validated pharmacovigilance system, and not for clinical decision
-          support. All sample metrics are labelled as illustrative demo data.
-          Interpretations are hypotheses for human review.
+          portfolio prototype with illustrative / demo data — not a validated
+          pharmacovigilance system, and not for clinical decision support. All
+          sample metrics are labelled as illustrative demo data. Interpretations
+          are hypotheses for human review.
         </p>
       </div>
     </div>

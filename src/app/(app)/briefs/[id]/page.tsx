@@ -129,7 +129,7 @@ export default function BriefDetailPage({
     <div className="space-y-6 animate-rise">
       <div className="print-only surface-panel mb-4 p-3 text-xs">
         Demo warning: SignalForge portfolio prototype with illustrative data. Not
-        a validated PV system. Not affiliated with Atacana Group. Review state:{" "}
+        a validated PV system. Independent portfolio prototype. Review state:{" "}
         {brief.state}.
       </div>
 

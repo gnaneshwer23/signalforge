@@ -11,7 +11,7 @@ export default function AboutPage() {
       </h1>
       <p className="mt-4 text-base text-muted-foreground">
         Independent portfolio prototype for evidence-grounded pharmaceutical
-        competitive intelligence. Not affiliated with Atacana Group. Therapeutic
+        competitive intelligence. Independent portfolio prototype. Therapeutic
         focus: moderate-to-severe atopic dermatitis.
       </p>
 

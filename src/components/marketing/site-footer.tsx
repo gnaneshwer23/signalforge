@@ -8,7 +8,7 @@ export function SiteFooter() {
           <p className="font-display text-xl font-semibold text-ink">SignalForge</p>
           <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
             Evidence-grounded pharmaceutical competitive intelligence workbench.
-            Independent portfolio prototype — not affiliated with Atacana Group.
+            Independent portfolio prototype — not affiliated with any consultancy.
           </p>
         </div>
         <div>

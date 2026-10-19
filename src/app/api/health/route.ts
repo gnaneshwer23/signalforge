@@ -26,6 +26,11 @@ export async function GET() {
   }
 
   const ok = db === "ok" && session.ok;
+  const commitSha =
+    process.env.VERCEL_GIT_COMMIT_SHA ||
+    process.env.GIT_COMMIT_SHA ||
+    process.env.COMMIT_SHA ||
+    null;
   return NextResponse.json(
     {
       ok,
@@ -33,6 +38,8 @@ export async function GET() {
       sessionSecretConfigured: session.ok,
       ...(detail ? { detail } : {}),
       persistence: "postgresql",
+      commitSha,
+      adminResetConfigured: Boolean(process.env.ADMIN_DEMO_PASSWORD?.trim()),
     },
     { status: ok ? 200 : 503 },
   );

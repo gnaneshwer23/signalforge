@@ -21,6 +21,7 @@ const links = [
   { href: "/ask", label: "Ask Signal" },
   { href: "/governance", label: "Safety & governance" },
   { href: "/evaluation", label: "Evaluation" },
+  { href: "/decisions", label: "Decisions" },
   { href: "/delivery", label: "Product Owner" },
   { href: "/about", label: "About" },
 ];
