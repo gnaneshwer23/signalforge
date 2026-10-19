@@ -34,7 +34,7 @@ export default function BriefsPage() {
                   Updated {formatDate(brief.updatedAt)}
                 </span>
               </div>
-              <h2 className="mt-2 font-display text-xl font-semibold text-ink">
+              <h2 className="mt-2 section-title">
                 <Link
                   href={`/briefs/${brief.id}`}
                   className="underline-offset-2 hover:underline"

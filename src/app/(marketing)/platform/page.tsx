@@ -3,22 +3,20 @@ import { ProductPreview } from "@/components/marketing/product-preview";
 
 export default function PlatformPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
-      <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-teal">
-        Platform
-      </p>
+    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      <p className="meta-label text-teal">Platform</p>
       <h1 className="mt-3 max-w-3xl font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
         Nine areas. One evidence corpus. Explicit limits.
       </h1>
-      <p className="mt-4 max-w-2xl text-base text-muted-foreground">
+      <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
         SignalForge is a portfolio workbench: Neon Postgres persistence, demo
         session cookies, and a seeded moderate-to-severe atopic dermatitis corpus.
         Ask Signal is deterministic retrieve-then-cite — not a live LLM.
       </p>
 
-      <ProductPreview className="mt-12" />
+      <ProductPreview className="mt-12 animate-rise" />
 
-      <ul className="mt-14 grid gap-8 sm:grid-cols-2">
+      <ul className="mt-16 grid gap-10 sm:grid-cols-2">
         {[
           {
             t: "Workspace",
@@ -41,12 +39,16 @@ export default function PlatformPage() {
             href: "/governance",
           },
         ].map((item) => (
-          <li key={item.t}>
-            <h2 className="font-display text-xl font-semibold text-ink">{item.t}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{item.d}</p>
+          <li key={item.t} className="border-t border-border pt-6">
+            <h2 className="font-display text-xl font-semibold text-ink">
+              {item.t}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {item.d}
+            </p>
             <Link
               href={item.href}
-              className="mt-3 inline-block text-sm font-medium text-accent-signal hover:underline"
+              className="mt-4 inline-block text-sm font-medium text-accent-signal hover:underline"
             >
               Open in demo →
             </Link>
@@ -54,7 +56,7 @@ export default function PlatformPage() {
         ))}
       </ul>
 
-      <p className="mt-12 text-xs text-muted-foreground">
+      <p className="mt-14 text-xs leading-relaxed text-muted-foreground">
         Independent portfolio prototype — not affiliated with any consultancy. Not
         production-ready or regulatory-compliant.
       </p>

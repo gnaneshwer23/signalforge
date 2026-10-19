@@ -108,7 +108,7 @@ export function OnboardingWizard() {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="meta-label">
           {progressLabel}
         </p>
         <button
@@ -152,7 +152,7 @@ export function OnboardingWizard() {
                   type="button"
                   onClick={() => setPersonaRole(opt.id)}
                   className={cn(
-                    "h-full w-full rounded-lg border px-4 py-3 text-left transition-colors",
+                    "h-full w-full rounded-md border px-4 py-3 text-left transition-colors",
                     personaRole === opt.id
                       ? "border-primary bg-primary text-primary-foreground"
                       : "border-border bg-card hover:bg-secondary",
@@ -188,7 +188,7 @@ export function OnboardingWizard() {
                   type="button"
                   onClick={() => setObjective(obj)}
                   className={cn(
-                    "w-full rounded-lg border px-4 py-3 text-left text-sm transition-colors",
+                    "w-full rounded-md border px-4 py-3 text-left text-sm transition-colors",
                     objective === obj
                       ? "border-primary bg-primary text-primary-foreground"
                       : "border-border bg-card hover:bg-secondary",
@@ -217,7 +217,7 @@ export function OnboardingWizard() {
               setUnsupportedTa(false);
             }}
             className={cn(
-              "w-full rounded-lg border px-4 py-3 text-left text-sm",
+              "w-full rounded-md border px-4 py-3 text-left text-sm",
               therapeuticArea === SEEDED_THERAPEUTIC_AREA && !unsupportedTa
                 ? "border-primary bg-primary text-primary-foreground"
                 : "border-border bg-card",
@@ -232,7 +232,7 @@ export function OnboardingWizard() {
               setTherapeuticArea(null);
             }}
             className={cn(
-              "w-full rounded-lg border px-4 py-3 text-left text-sm",
+              "w-full rounded-md border px-4 py-3 text-left text-sm",
               unsupportedTa
                 ? "border-amber-review bg-amber-review/10"
                 : "border-border bg-card",
@@ -274,7 +274,7 @@ export function OnboardingWizard() {
                   type="button"
                   onClick={() => setExperienceLevel(opt.id)}
                   className={cn(
-                    "w-full rounded-lg border px-4 py-3 text-left transition-colors",
+                    "w-full rounded-md border px-4 py-3 text-left transition-colors",
                     experienceLevel === opt.id
                       ? "border-primary bg-primary text-primary-foreground"
                       : "border-border bg-card hover:bg-secondary",

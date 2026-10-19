@@ -54,7 +54,7 @@ export default function LandscapePage() {
           className="sm:max-w-xs"
         />
         <select
-          className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
+          className="h-8 rounded-md border border-border bg-card px-2.5 text-sm"
           value={phase}
           onChange={(e) => setPhase(e.target.value as DevelopmentPhase | "")}
         >
@@ -72,7 +72,7 @@ export default function LandscapePage() {
           ))}
         </select>
         <select
-          className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
+          className="h-8 rounded-md border border-border bg-card px-2.5 text-sm"
           value={verification}
           onChange={(e) =>
             setVerification(e.target.value as VerificationStatus | "")
@@ -83,7 +83,7 @@ export default function LandscapePage() {
           <option value="unverified">Unverified</option>
         </select>
         <select
-          className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
+          className="h-8 rounded-md border border-border bg-card px-2.5 text-sm"
           value={sort}
           onChange={(e) => setSort(e.target.value as SortKey)}
         >

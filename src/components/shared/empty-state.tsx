@@ -15,21 +15,39 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "surface-panel flex flex-col items-start gap-2 px-4 py-8 text-left",
+        "surface-panel flex flex-col items-start gap-2 px-5 py-10 text-left",
         className,
       )}
+      role="status"
     >
-      <h3 className="font-display text-lg text-ink">{title}</h3>
-      <p className="max-w-xl text-sm text-muted-foreground">{description}</p>
-      {action}
+      <h3 className="section-title">{title}</h3>
+      <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+        {description}
+      </p>
+      {action ? <div className="pt-2">{action}</div> : null}
     </div>
   );
 }
 
-export function LoadingState({ label = "Loading workbench…" }: { label?: string }) {
+export function LoadingState({
+  label = "Loading workbench…",
+}: {
+  label?: string;
+}) {
   return (
-    <div className="surface-panel animate-pulse px-4 py-8 text-sm text-muted-foreground">
-      {label}
+    <div
+      className="surface-panel px-5 py-10"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+    >
+      <div className="flex items-center gap-3">
+        <span
+          className="size-4 shrink-0 rounded-full border-2 border-border border-t-teal animate-spin"
+          aria-hidden
+        />
+        <p className="text-sm text-muted-foreground">{label}</p>
+      </div>
     </div>
   );
 }
@@ -42,9 +60,14 @@ export function ErrorState({
   description: string;
 }) {
   return (
-    <div className="surface-panel border-destructive/40 px-4 py-6">
-      <h3 className="font-display text-lg text-destructive">{title}</h3>
-      <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+    <div
+      className="surface-panel border-destructive/35 px-5 py-8"
+      role="alert"
+    >
+      <h3 className="section-title text-destructive">{title}</h3>
+      <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+        {description}
+      </p>
     </div>
   );
 }

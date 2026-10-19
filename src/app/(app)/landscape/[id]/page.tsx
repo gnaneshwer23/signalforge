@@ -40,7 +40,7 @@ export default function AssetDetailPage({
         <Link href="/landscape" className="text-sm text-accent-signal hover:underline">
           ← Landscape
         </Link>
-        <h1 className="mt-2 font-display text-3xl font-semibold text-ink sm:text-4xl">{asset.name}</h1>
+        <h1 className="mt-2 page-title">{asset.name}</h1>
         <p className="mt-1 text-muted-foreground">{asset.organization}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <VerificationBadge status={asset.verification} />
@@ -71,12 +71,12 @@ export default function AssetDetailPage({
       </dl>
 
       <section className="surface-panel p-4">
-        <h2 className="font-display text-2xl text-ink">Notes</h2>
+        <h2 className="section-title text-xl">Notes</h2>
         <p className="mt-2 text-sm text-muted-foreground">{asset.notes}</p>
       </section>
 
       <section>
-        <h2 className="font-display text-2xl text-ink">Linked evidence</h2>
+        <h2 className="section-title text-xl">Linked evidence</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Attribute statements should be traced to these records.
         </p>

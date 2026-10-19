@@ -31,7 +31,7 @@ export function DemoWalkthrough() {
     <div className="no-print animate-rise mb-4 border border-border bg-card/95 px-4 py-3">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="font-display text-lg text-ink">Guided first use</p>
+          <p className="text-base font-semibold tracking-tight text-ink">Guided first use</p>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
             Signal → evidence → brief → Ask Signal → next action. Illustrative
             path for onboarding — not a measured KPI.

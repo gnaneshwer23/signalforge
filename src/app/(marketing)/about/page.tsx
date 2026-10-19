@@ -2,22 +2,20 @@ import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
-      <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-teal">
-        About
-      </p>
+    <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      <p className="meta-label text-teal">About</p>
       <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
         Honest scope for SignalForge
       </h1>
-      <p className="mt-4 text-base text-muted-foreground">
+      <p className="mt-5 text-base leading-relaxed text-muted-foreground">
         Independent portfolio prototype for evidence-grounded pharmaceutical
-        competitive intelligence. Independent portfolio prototype. Therapeutic
-        focus: moderate-to-severe atopic dermatitis.
+        competitive intelligence. Therapeutic focus: moderate-to-severe atopic
+        dermatitis.
       </p>
 
-      <section className="mt-12 space-y-3">
+      <section className="mt-14 space-y-3">
         <h2 className="font-display text-xl font-semibold text-ink">What is real</h2>
-        <ul className="list-disc space-y-2 pl-5 text-sm text-muted-foreground">
+        <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
           <li>
             Next.js public site + nine-area workbench with a seeded AD corpus
           </li>
@@ -42,7 +40,7 @@ export default function AboutPage() {
 
       <section className="mt-10 space-y-3">
         <h2 className="font-display text-xl font-semibold text-ink">What is mocked</h2>
-        <ul className="list-disc space-y-2 pl-5 text-sm text-muted-foreground">
+        <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
           <li>
             <strong className="text-ink">Ask Signal is not a live LLM</strong> —
             deterministic keyword matcher over the seed corpus
@@ -64,7 +62,7 @@ export default function AboutPage() {
 
       <section className="mt-10 space-y-3">
         <h2 className="font-display text-xl font-semibold text-ink">Limitations</h2>
-        <ul className="list-disc space-y-2 pl-5 text-sm text-muted-foreground">
+        <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
           <li>Not a validated pharmacovigilance system</li>
           <li>Not for clinical decision support</li>
           <li>Not production-ready or regulatory-compliant</li>
@@ -78,13 +76,13 @@ export default function AboutPage() {
       <div className="mt-12 flex flex-wrap gap-3">
         <Link
           href="/demo"
-          className="inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground"
+          className="inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--primary),black_12%)]"
         >
           Guided demo
         </Link>
         <Link
           href="/workspace"
-          className="inline-flex h-10 items-center rounded-lg border border-border bg-card px-4 text-sm font-medium"
+          className="inline-flex h-10 items-center rounded-md border border-border bg-card px-4 text-sm font-medium transition-colors hover:bg-secondary"
         >
           Open workspace
         </Link>

@@ -32,14 +32,14 @@ export default function SafetyPage() {
               Queue: {flag.queueStatus.replaceAll("_", " ")}
             </span>
           </div>
-          <h2 className="mt-3 font-display text-xl font-semibold text-ink">
+          <h2 className="mt-3 section-title">
             {flag.label}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">{flag.narrative}</p>
 
           <div className="mt-4 grid gap-4 lg:grid-cols-2">
             <div>
-              <h3 className="font-display text-lg font-semibold text-ink">Extracted fields</h3>
+              <h3 className="text-base font-semibold tracking-tight text-ink">Extracted fields</h3>
               <dl className="mt-2 space-y-2 text-sm">
                 {Object.entries(flag.extractedFields).map(([k, v]) => (
                   <div key={k} className="grid grid-cols-[140px_1fr] gap-2">
@@ -53,7 +53,7 @@ export default function SafetyPage() {
             </div>
             <div className="space-y-4">
               <div>
-                <h3 className="font-display text-lg font-semibold text-ink">Missing fields</h3>
+                <h3 className="text-base font-semibold tracking-tight text-ink">Missing fields</h3>
                 <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
                   {flag.missingFields.map((m) => (
                     <li key={m}>{m}</li>
@@ -61,7 +61,7 @@ export default function SafetyPage() {
                 </ul>
               </div>
               <div>
-                <h3 className="font-display text-lg font-semibold text-ink">Uncertainty</h3>
+                <h3 className="text-base font-semibold tracking-tight text-ink">Uncertainty</h3>
                 <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
                   {flag.uncertaintyNotes.map((m) => (
                     <li key={m}>{m}</li>

@@ -73,7 +73,7 @@ export default function GovernancePage() {
 
       <section className="space-y-4">
         <div className="flex items-end justify-between gap-2">
-          <h2 className="font-display text-xl font-semibold text-ink">
+          <h2 className="section-title">
             Synthetic AE queue
           </h2>
           <Link
@@ -99,7 +99,7 @@ export default function GovernancePage() {
                 Queue: {flag.queueStatus.replaceAll("_", " ")}
               </span>
             </div>
-            <h3 className="mt-3 font-display text-xl text-ink">{flag.label}</h3>
+            <h3 className="mt-3 section-title">{flag.label}</h3>
             <p className="mt-2 text-sm text-muted-foreground">{flag.narrative}</p>
             <div className="mt-4 flex flex-col gap-2 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs text-muted-foreground">
@@ -120,14 +120,14 @@ export default function GovernancePage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-display text-xl font-semibold text-ink">
+        <h2 className="section-title">
           Governance checklist
         </h2>
         {checklist.map((item) => (
           <div key={item.id} className="surface-panel flex gap-3 p-4">
             <Checkbox id={item.id} disabled className="mt-1" />
             <div>
-              <label htmlFor={item.id} className="font-display text-lg text-ink">
+              <label htmlFor={item.id} className="text-base font-semibold tracking-tight text-ink">
                 {item.title}
               </label>
               <p className="mt-1 text-sm text-muted-foreground">{item.detail}</p>
@@ -140,7 +140,7 @@ export default function GovernancePage() {
       </section>
 
       <section>
-        <h2 className="font-display text-xl font-semibold text-ink">
+        <h2 className="section-title">
           Audit log — reviews, approvals, safety routing
         </h2>
         <ul className="mt-3 space-y-2">

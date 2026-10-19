@@ -2,24 +2,22 @@ import Link from "next/link";
 
 export default function MethodologyPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
-      <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-teal">
-        Methodology
-      </p>
+    <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      <p className="meta-label text-teal">Methodology</p>
       <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
         Provenance before persuasion
       </h1>
-      <p className="mt-4 text-base text-muted-foreground">
+      <p className="mt-5 text-base leading-relaxed text-muted-foreground">
         SignalForge treats interpretations as hypotheses. Material claims without
         evidence links stay unsupported. Discovery URLs are not the same as
         verified claim support.
       </p>
 
-      <section className="mt-12 space-y-4">
+      <section className="mt-14 space-y-4">
         <h2 className="font-display text-xl font-semibold text-ink">
           Provenance lifecycle
         </h2>
-        <ul className="space-y-3 text-sm text-muted-foreground">
+        <ul className="space-y-3.5 text-sm leading-relaxed text-muted-foreground">
           <li>
             <strong className="text-ink">Unverified</strong> — no usable locator,
             or fictional demo only.
@@ -51,7 +49,7 @@ export default function MethodologyPage() {
         <h2 className="font-display text-xl font-semibold text-ink">
           Ask Signal honesty
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm leading-relaxed text-muted-foreground">
           Queries run through a deterministic matcher over the seed corpus with
           rate limiting and abstention (including prompt-injection style inputs and
           patient-advice requests). The UI never claims a live model.
@@ -62,7 +60,7 @@ export default function MethodologyPage() {
         <h2 className="font-display text-xl font-semibold text-ink">
           What we do not claim
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm leading-relaxed text-muted-foreground">
           Regulatory compliance, production pharmacovigilance validation, live
           proprietary feeds, or clinical decision support. See{" "}
           <Link href="/about" className="text-accent-signal hover:underline">

@@ -28,26 +28,14 @@ export function VerificationBadge({
 }) {
   if (status === "verified") {
     return (
-      <Badge
-        variant="secondary"
-        className={cn(
-          "gap-1 rounded-md border border-[color-mix(in_oklab,var(--verified)_40%,var(--border))] bg-verified text-verified",
-          className,
-        )}
-      >
+      <Badge variant="verified" className={cn("gap-1", className)}>
         <BadgeCheck className="size-3.5" />
         Verified source
       </Badge>
     );
   }
   return (
-    <Badge
-      variant="secondary"
-      className={cn(
-        "gap-1 rounded-md border border-border bg-muted text-muted-foreground",
-        className,
-      )}
-    >
+    <Badge variant="muted" className={cn("gap-1", className)}>
       <CircleHelp className="size-3.5" />
       Unverified
     </Badge>
@@ -70,17 +58,10 @@ export function ReviewBadge({
 
   return (
     <Badge
-      variant="secondary"
-      className={cn(
-        "rounded-md capitalize",
-        needs && "border-amber-review bg-amber-review text-amber-review",
-        approved && "border-[color-mix(in_oklab,var(--verified)_40%,var(--border))] bg-verified text-verified",
-        reviewed && "border-border bg-secondary text-foreground",
-        !needs && !approved && !reviewed && "border-border bg-muted text-muted-foreground",
-        className,
-      )}
+      variant={needs ? "caution" : approved ? "verified" : reviewed ? "secondary" : "muted"}
+      className={cn("capitalize", className)}
     >
-      {needs && <CircleAlert className="mr-1 size-3.5" />}
+      {needs && <CircleAlert className="size-3.5" />}
       {String(state).replaceAll("_", " ").replaceAll("-", " ")}
     </Badge>
   );
@@ -94,14 +75,14 @@ export function DemoMetric({
   value: string | number;
 }) {
   return (
-    <div className="surface-panel px-4 py-3">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+    <div className="surface-panel px-4 py-3.5">
+      <p className="meta-label">
         {label}
         <span className="ml-1 normal-case tracking-normal text-amber-review">
           · illustrative demo data
         </span>
       </p>
-      <p className="mt-1 font-display text-2xl font-semibold tracking-tight text-ink sm:text-[1.75rem]">
+      <p className="mt-1.5 text-2xl font-semibold tracking-tight text-ink sm:text-[1.75rem]">
         {value}
       </p>
     </div>
@@ -117,13 +98,7 @@ export function ProvenanceBadge({
 }) {
   if (kind === "verified_source") {
     return (
-      <Badge
-        variant="secondary"
-        className={cn(
-          "gap-1 rounded-md border border-[color-mix(in_oklab,var(--verified)_40%,var(--border))] bg-verified text-verified",
-          className,
-        )}
-      >
+      <Badge variant="verified" className={cn("gap-1", className)}>
         <BadgeCheck className="size-3.5" />
         Verified source
       </Badge>
@@ -131,26 +106,14 @@ export function ProvenanceBadge({
   }
   if (kind === "discovery_url") {
     return (
-      <Badge
-        variant="secondary"
-        className={cn(
-          "gap-1 rounded-md border border-border bg-muted text-muted-foreground",
-          className,
-        )}
-      >
+      <Badge variant="muted" className={cn("gap-1", className)}>
         <Link2 className="size-3.5" />
         Discovery URL ≠ claim support
       </Badge>
     );
   }
   return (
-    <Badge
-      variant="secondary"
-      className={cn(
-        "gap-1 rounded-md border border-amber-review bg-amber-review text-amber-review",
-        className,
-      )}
-    >
+    <Badge variant="caution" className={cn("gap-1", className)}>
       <Sparkles className="size-3.5" />
       Fictional demo record
     </Badge>
@@ -165,20 +128,20 @@ export function ProvenanceStatusBadge({
   className?: string;
 }) {
   const meta = PROVENANCE_STATUS_DEFINITIONS[status];
-  const tone =
+  const variant =
     status === "supported"
-      ? "border-[color-mix(in_oklab,var(--verified)_40%,var(--border))] bg-verified text-verified"
+      ? "verified"
       : status === "conflicting" || status === "insufficient"
-        ? "border-amber-review bg-amber-review text-amber-review"
+        ? "caution"
         : status === "unverified"
-          ? "border-border bg-muted text-muted-foreground"
-          : "border-border bg-secondary text-foreground";
+          ? "muted"
+          : "secondary";
 
   return (
     <Badge
-      variant="secondary"
+      variant={variant}
       title={meta.definition}
-      className={cn("gap-1 rounded-md", tone, className)}
+      className={cn("gap-1", className)}
     >
       {status === "supported" && <BadgeCheck className="size-3.5" />}
       {status === "conflicting" && <Scale className="size-3.5" />}

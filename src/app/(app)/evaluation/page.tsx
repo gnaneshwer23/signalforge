@@ -31,7 +31,7 @@ export default function EvaluationPage() {
       />
 
       <section className="surface-panel p-4">
-        <h2 className="font-display text-lg font-semibold text-ink">
+        <h2 className="text-base font-semibold tracking-tight text-ink">
           Illustrative targets (not measured)
         </h2>
         <p className="mt-1 text-xs text-amber-review">
@@ -40,7 +40,7 @@ export default function EvaluationPage() {
         </p>
         <ul className="mt-2 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
           {Object.entries(state.evaluationTargets).map(([k, v]) => (
-            <li key={k} className="rounded-lg border border-border bg-card/80 px-3 py-2">
+            <li key={k} className="rounded-md border border-border bg-card/80 px-3 py-2">
               <span className="block text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
                 {k} · illustrative
               </span>

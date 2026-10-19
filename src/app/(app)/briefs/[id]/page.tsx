@@ -149,7 +149,7 @@ export default function BriefDetailPage({
               </span>
             )}
           </div>
-          <h1 className="mt-2 font-display text-3xl font-semibold text-ink sm:text-4xl">
+          <h1 className="mt-2 page-title">
             {brief.title}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -209,7 +209,7 @@ export default function BriefDetailPage({
           ["Uncertainty", brief.uncertainty],
         ].map(([title, body]) => (
           <div key={title} className="surface-panel p-4">
-            <h2 className="font-display text-xl text-ink">{title}</h2>
+            <h2 className="section-title">{title}</h2>
             <p className="mt-2 text-sm text-muted-foreground">{body}</p>
           </div>
         ))}
@@ -217,7 +217,7 @@ export default function BriefDetailPage({
 
       <section className="grid gap-3 md:grid-cols-3">
         <div className="surface-panel p-4">
-          <h2 className="font-display text-xl text-ink">Gaps</h2>
+          <h2 className="section-title">Gaps</h2>
           <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
             {brief.gaps.map((g) => (
               <li key={g}>{g}</li>
@@ -225,7 +225,7 @@ export default function BriefDetailPage({
           </ul>
         </div>
         <div className="surface-panel p-4">
-          <h2 className="font-display text-xl text-ink">Follow-up questions</h2>
+          <h2 className="section-title">Follow-up questions</h2>
           <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
             {brief.followUpQuestions.map((g) => (
               <li key={g}>{g}</li>
@@ -233,7 +233,7 @@ export default function BriefDetailPage({
           </ul>
         </div>
         <div className="surface-panel p-4">
-          <h2 className="font-display text-xl text-ink">Contradictions</h2>
+          <h2 className="section-title">Contradictions</h2>
           <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
             {brief.contradictions.length === 0 ? (
               <li>None recorded</li>
@@ -245,7 +245,7 @@ export default function BriefDetailPage({
       </section>
 
       <section className="print-break">
-        <h2 className="font-display text-2xl text-ink">Claims</h2>
+        <h2 className="section-title text-xl">Claims</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Facts, interpretations, hypotheses, and actions are distinguished.
           Citations attach to claim–evidence links.
@@ -340,7 +340,7 @@ export default function BriefDetailPage({
       </section>
 
       <section className="print-break">
-        <h2 className="font-display text-2xl text-ink">Linked evidence</h2>
+        <h2 className="section-title text-xl">Linked evidence</h2>
         <ul className="mt-2 space-y-1">
           {brief.evidenceIds.map((eid) => {
             const ev = getEvidence(eid);
@@ -359,7 +359,7 @@ export default function BriefDetailPage({
       </section>
 
       <section className="no-print surface-panel p-4">
-        <h2 className="font-display text-xl text-ink">Audit log</h2>
+        <h2 className="section-title">Audit log</h2>
         <ul className="mt-2 space-y-2 text-sm">
           {auditForBrief.length === 0 ? (
             <li className="text-muted-foreground">No audit events yet.</li>

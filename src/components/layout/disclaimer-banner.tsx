@@ -4,7 +4,7 @@ import { AlertTriangle } from "lucide-react";
 
 export function DisclaimerBanner() {
   return (
-    <div className="no-print border-b border-border bg-[color-mix(in_oklab,var(--sage)_35%,white)] text-ink">
+    <div className="no-print border-b border-border bg-mint/50 text-ink">
       <div className="mx-auto flex max-w-7xl items-start gap-2 px-4 py-2.5 text-xs leading-relaxed sm:text-[13px]">
         <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-review" />
         <p>

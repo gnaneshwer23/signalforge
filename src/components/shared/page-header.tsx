@@ -17,18 +17,16 @@ export function PageHeader({
   tone?: "default" | "caution";
 }) {
   return (
-    <header className={cn("animate-rise space-y-3", className)}>
+    <header className={cn("animate-rise space-y-2.5", className)}>
       <p
         className={cn(
-          "text-[11px] font-medium uppercase tracking-[0.14em]",
+          "meta-label",
           tone === "caution" ? "text-amber-review" : "text-muted-foreground",
         )}
       >
         {eyebrow}
       </p>
-      <h1 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
-        {title}
-      </h1>
+      <h1 className="page-title">{title}</h1>
       {description ? (
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-[0.9375rem]">
           {description}

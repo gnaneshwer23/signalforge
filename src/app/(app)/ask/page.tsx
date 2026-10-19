@@ -163,7 +163,7 @@ export default function AskSignalPage() {
 
           <div className="grid gap-3 md:grid-cols-2">
             <div className="surface-panel p-4">
-              <h2 className="font-display text-xl text-ink">Limitations</h2>
+              <h2 className="section-title">Limitations</h2>
               <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
                 {response.limitations.map((l) => (
                   <li key={l}>{l}</li>
@@ -171,7 +171,7 @@ export default function AskSignalPage() {
               </ul>
             </div>
             <div className="surface-panel p-4">
-              <h2 className="font-display text-xl text-ink">Citations</h2>
+              <h2 className="section-title">Citations</h2>
               {response.supportingEvidenceIds.length === 0 ? (
                 <p className="mt-2 text-sm text-muted-foreground">
                   None — abstention path (no invented references).

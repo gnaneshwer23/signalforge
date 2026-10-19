@@ -1,58 +1,47 @@
-# SignalForge Visual System
+# SignalForge Visual System — Chlorophyll Clinical
 
-**Inspiration:** [Pharma Biotech Website UI/UX — Medical research homepage](https://dribbble.com/shots/27696621-Pharma-Biotech-Website-UI-UX-Medical-research-homepage-design) (shot `27696621`) plus Bionil-style **forest green / scientific teal** notes.  
-**Adaptation only** — do **not** copy shot assets, photography, 3D illustrations, logo, copy, or brand name.
+**Inspiration (not copied):**  
+[Pharma Biotech medical-research homepage](https://dribbble.com/shots/27696621-Pharma-Biotech-Website-UI-UX-Medical-research-homepage-design) · [Bionil Pharma Factory landing](https://dribbble.com/shots/22558925-Bionil-Pharma-Factory-Landing-page)
 
-**Scope:** One design system for **public marketing** and **authenticated workbench** (Workspace, Landscape, Evidence, Briefs, Ask Signal, Safety, Governance, Evaluation, Delivery). Machine-readable tokens: [`design-tokens.json`](./design-tokens.json).
+Adaptation only — do **not** copy shot assets, photography, 3D art, layouts, logo, or copy.
+
+**Scope:** One design system for **public marketing** and **authenticated workbench**. Machine-readable tokens: [`design-tokens.json`](./design-tokens.json) (v4).
 
 ---
 
 ## Design intent
 
-Clean-room medical research: deep **forest green** authority, **scientific teal** accents, warm white / pale mint atmosphere, amber for items needing attention. Marketing uses editorial serif headlines; the workbench stays calm and clinical with the same palette.
+Premium scientific SaaS: deep **forest green** authority, **scientific teal** accents, warm white / pale mint atmosphere, charcoal/ink type, **amber only for warnings**. Marketing uses editorial serif for display headlines; the workbench is calm, clinical, and data-dense with geometric sans.
 
 | Cue | SignalForge adaptation |
 | --- | --- |
-| Biotech homepage hero | Full-bleed mint/forest atmosphere + **live product preview** (not a fake screenshot) |
-| Soft marketing cards | Prefer **non-cards**; interactive panels use hairline borders + moderate radius |
-| Dark CTAs | Forest green primary (`--sf-primary`) — avoid `rounded-full` pills |
-| Decorative scientific art | Real product UI only; no copied illustrations or fake logos/testimonials/stats |
+| Biotech homepage hero | Full-bleed mint/forest atmosphere + **live ProductPreview** |
+| Soft marketing cards | Prefer **non-cards**; interactive panels use hairline borders |
+| Dark CTAs | Forest green primary — never `rounded-full` pills |
+| Decorative scientific art | Real product UI only; no fake logos/testimonials/stats |
 
 ---
 
 ## Color tokens
 
-### Surfaces & brand
-
 | Token | Hex | Role |
 | --- | --- | --- |
-| `--sf-paper` | `#F7FAF6` | Warm white / pale mint paper |
-| `--sf-background` | `#E8F2EC` | App / page field |
-| `--sf-mint` | `#E8F5EF` | Soft wash / hero atmosphere |
-| `--sf-surface` | `#FFFFFF` | Panels, tables, drawers |
-| `--sf-surface-muted` | `#D8E8DE` | Hover rows, muted wells |
-| `--sf-forest` | `#0F3D2E` | Brand / primary CTA |
-| `--sf-forest-deep` | `#0A2E22` | Hover / pressed primary |
-| `--sf-teal` | `#1A7A6D` | Scientific accent, links, verified |
-| `--sf-ink` | `#14241C` | Primary text |
-| `--sf-muted` | `#4F655A` | Secondary text |
-| `--sf-border` | `#C5D9CE` | Hairline borders |
-| `--sf-primary` | `#0F3D2E` | Forest — CTAs, active nav |
-| `--sf-primary-foreground` | `#F7FAF6` | On primary |
-| `--sf-accent-signal` | `#1A7A6D` | Teal links / scientific accent |
-| `--sf-ring` | `#1A7A6D` | Focus ring |
-| `--sf-amber` | `#B45309` | Attention / needs review |
+| `--sf-paper` / `--paper` | `#F4F8F5` | Warm white / pale mint paper |
+| `--background` | `#E6F0EA` | App / page field |
+| `--mint` | `#E3F2EB` | Soft wash / hero atmosphere |
+| `--card` | `#FFFFFF` | Panels, tables, drawers |
+| `--muted` | `#D5E6DB` | Hover rows, muted wells |
+| `--forest` / `--primary` | `#0B3A2C` | Brand / primary CTA |
+| `--forest-deep` | `#07281E` | Hover / pressed primary |
+| `--teal` / `--accent-signal` | `#117A6B` | Scientific accent, links, verified |
+| `--ink` / `--foreground` | `#101F18` | Primary text |
+| `--muted-foreground` | `#4A5E54` | Secondary text |
+| `--border` | `#BFD4C8` | Hairline borders |
+| `--amber-review` | `#A85708` | Attention / needs review only |
+| `--verified` | `#117A6B` | Verified / supported |
+| `--destructive` | `#A61E14` | Safety / destructive |
 
-### Status
-
-| Token | Hex | Meaning |
-| --- | --- | --- |
-| `--sf-verified` | `#1A7A6D` | Verified / supported (teal) |
-| `--sf-needs-review` | `#B45309` | Needs human review (amber) |
-| `--sf-unverified` | `#4F655A` | Unverified / incomplete |
-| `--sf-danger` | `#B42318` | Safety / destructive |
-
-Avoid purple, neon glow, charcoal-as-primary, and high-chroma gradients. Prefer cool mint paper over warm cream editorial tropes.
+Avoid purple, neon glow, cream+terracotta, and high-chroma gradients.
 
 ---
 
@@ -60,22 +49,24 @@ Avoid purple, neon glow, charcoal-as-primary, and high-chroma gradients. Prefer 
 
 Avoid Inter, Roboto, Arial, and system UI stacks.
 
-| Role | Recommendation | Fallback | Notes |
-| --- | --- | --- | --- |
-| **Display / marketing** | **Source Serif 4** (Google Fonts) | `ui-serif, Georgia, serif` | Major marketing H1/H2 and public brand wordmark |
-| **Body / app UI** | **Plus Jakarta Sans** | `ui-sans-serif, sans-serif` | Workbench tables, forms, nav, body |
-| **Mono / IDs** | **Geist Mono** | `ui-monospace, monospace` | Evidence IDs, claim keys, timestamps |
+| Role | Face | Usage |
+| --- | --- | --- |
+| **Display** | Source Serif 4 | Marketing H1/H2 and public/app **brand wordmark only** |
+| **Body / UI** | Plus Jakarta Sans | Workbench titles, tables, forms, nav, body |
+| **Mono** | Geist Mono | Evidence IDs, claim keys, timestamps |
+
+**Rule:** Do not apply display serif to workbench page or section titles. Use `font-display` only for marketing display and brand marks.
 
 ### Type scale
 
 | Use | Size | Weight | Tracking |
 | --- | --- | --- | --- |
-| Marketing hero H1 | `2.25–3rem` display | 600 | `-0.02em` |
-| Brand wordmark (public) | `1.5–1.75rem` display | 600 | `-0.02em` |
-| Workbench page title | `1.5–1.75rem` | 600 | `-0.025em` |
-| Section title | `1.125–1.5rem` | 600 | `-0.015em` |
+| Marketing hero H1 | `2.5–3.25rem` display | 600 | `-0.02em` |
+| Brand wordmark | `1.5–1.75rem` display | 600 | `-0.02em` |
+| Workbench page title | `1.5–1.75rem` sans | 600 | `-0.02em` |
+| Section title | `1.125–1.25rem` sans | 600 | `-0.01em` |
 | Body | `0.875–1rem` | 400 | `0` |
-| Meta / eyebrow | `0.6875rem` | 500 | `0.12–0.14em` uppercase |
+| Meta / eyebrow | `0.6875rem` | 500 | `0.12em` uppercase |
 
 ---
 
@@ -83,63 +74,76 @@ Avoid Inter, Roboto, Arial, and system UI stacks.
 
 | Token | Value | Guidance |
 | --- | --- | --- |
-| Spacing base | `4px` | 4 / 8 / 12 / 16 / 24 / 32 / 48 |
+| Spacing base | `4px` | 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 |
 | Page padding | `16–32px` | `px-4 sm:px-6 lg:px-8` |
-| `--radius` | `10px` | Controls & panels |
-| Border | `1px solid var(--sf-border)` | Prefer border over shadow |
-| Shadow | `0 1px 2px rgb(15 61 46 / 0.06)` | Sheets only — no glow |
+| `--radius` | `8px` | Controls & panels |
+| Border | `1px solid var(--border)` | Prefer border over shadow |
+| Shadow | `0 1px 2px rgb(11 58 44 / 0.05)` | Sheets only — no glow |
 
-**Do not** use `rounded-full` pills for primary CTAs.
+**Do not** use `rounded-full` pills for primary CTAs or status badges.
+
+---
+
+## Components
+
+- **Buttons** — forest primary, outline secondary; focus ring teal; radius md
+- **Inputs** — hairline border, teal focus ring, white/paper fill
+- **Tables** — hairline header, muted hover, horizontal scroll on mobile
+- **Cards** — only for interactive units (`surface-panel`)
+- **Badges** — `rounded-md` (sm); variants: verified / needs-review / unverified / danger
+- **Page headers** — sans title in workbench; eyebrow + description + actions
+- **Empty / loading / error** — `surface-panel` with clear hierarchy
 
 ---
 
 ## Shells
 
-### Marketing (public)
+### Marketing
 
-- Top horizontal nav: Platform, Solutions, Methodology, About, Demo CTA
-- Brand: **SignalForge** in Newsreader as the strongest first-viewport signal
-- Hero budget: brand, one headline, one supporting sentence, one CTA group, one **live product preview**
-- Portfolio disclaimer in footer and where claims could be misread
+- Top nav: Platform, Solutions, Methodology, About + Demo / Start CTAs
+- Brand: **SignalForge** in Source Serif 4 as strongest first-viewport signal
+- Hero budget: brand, one headline, one support line, one CTA group, one live preview
 - No fake logos, testimonials, or invented statistics
 
-### Workbench (app)
+### Workbench
 
-- Left sidebar (desktop): pale mint wash, hairline right border
+- Left sidebar: pale mint wash, hairline right border
 - Active nav: solid forest fill + light text
-- Persistent disclaimer banner + demo-data indicator
-- Cards only for interactive units
+- Serif only on the wordmark; all page titles use Plus Jakarta Sans
+- Persistent disclaimer + demo-data indicator
+- Density for tables; readable evidence cards; provenance chips; mobile sheet nav
 
 ---
 
 ## Motion
 
-Prefer `prefers-reduced-motion: reduce` → opacity-only or off.
+Honor `prefers-reduced-motion: reduce` → opacity-only.
 
-1. **`rise-in`** — fade + translateY `8px` → `0` (~450ms)
-2. **`slide-nav`** — sidebar stagger (~30ms steps)
-3. **`fade-delay`** — secondary band (~550ms, 120ms delay)
+1. **`rise-in`** — fade + translateY `6px` → `0` (~400ms)
+2. **`slide-nav`** — sidebar stagger (~25ms steps)
+3. **`fade-delay`** — secondary band (~500ms, 100ms delay)
 
 ---
 
 ## Implementation map
 
-| Artifact | Action |
+| Artifact | Role |
 | --- | --- |
-| `design-tokens.json` | Canonical token values |
-| `src/app/globals.css` | CSS variables + keyframes |
-| `src/app/layout.tsx` | Load Source Serif 4 + Plus Jakarta Sans (+ mono) |
-| Marketing shell | `src/components/marketing/*` |
-| App shell | `src/components/layout/*` |
+| `design-tokens.json` | Canonical values |
+| `src/app/globals.css` | CSS variables + utilities + keyframes |
+| `src/app/layout.tsx` | Source Serif 4 + Plus Jakarta Sans + Geist Mono |
+| `src/components/marketing/*` | Public shell |
+| `src/components/layout/*` | App shell |
+| `src/components/ui/*` + `shared/*` | Reusable primitives |
 
 ---
 
 ## Non-goals
 
-- Copying shot naming, logo, photography, or 3D art  
+- Copying shot naming, logo, photography, or layouts  
 - Fake logos, testimonials, or vanity metrics  
-- Dark-mode-first chrome; purple/indigo SaaS gradients  
-- Warm cream + terracotta editorial tropes  
+- Purple/indigo SaaS clichés; cream + terracotta editorial tropes  
+- Broadsheet newspaper chrome; glassmorphism overload  
 - Claiming regulatory compliance or production readiness  
 
 ---
@@ -147,9 +151,7 @@ Prefer `prefers-reduced-motion: reduce` → opacity-only or off.
 ## Checklist
 
 - [x] Forest green + scientific teal tokens shared across public + app  
-- [x] Editorial serif for marketing headings; sans for app UI  
-- [x] SignalForge wordmark remains the strongest brand signal  
-- [x] Status chips encode verified / needs-review / unverified / danger  
+- [x] Editorial serif for marketing headlines / brand only; sans for UI  
+- [x] Status chips: verified / needs-review / unverified / danger (no stadium pills)  
 - [x] Reduced-motion honored  
 - [x] No shot assets or branding  
-`}

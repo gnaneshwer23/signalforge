@@ -14,7 +14,7 @@ export default function DecisionRecordsPage() {
         <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
           Decision Records
         </p>
-        <h1 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+        <h1 className="page-title">
           Architecture decisions that changed the product
         </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
@@ -43,7 +43,7 @@ export default function DecisionRecordsPage() {
               <span className="font-mono text-xs text-muted-foreground">
                 {adr.id}
               </span>
-              <h2 className="font-display text-xl font-semibold text-ink">
+              <h2 className="section-title">
                 {adr.title}
               </h2>
               <span className="text-xs uppercase tracking-wide text-muted-foreground">

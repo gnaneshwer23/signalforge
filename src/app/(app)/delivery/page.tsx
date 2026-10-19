@@ -85,10 +85,10 @@ export default function DeliveryPage() {
 
       <section className="space-y-3">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <h2 className="font-display text-xl font-semibold text-ink">Backlog</h2>
+          <h2 className="section-title">Backlog</h2>
           <div className="flex gap-2">
             <select
-              className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
+              className="h-8 rounded-md border border-border bg-card px-2.5 text-sm"
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value as Priority | "")}
             >
@@ -98,7 +98,7 @@ export default function DeliveryPage() {
               <option value="P2">P2</option>
             </select>
             <select
-              className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
+              className="h-8 rounded-md border border-border bg-card px-2.5 text-sm"
               value={statusFilter}
               onChange={(e) =>
                 setStatusFilter(e.target.value as BacklogStatus | "")
@@ -153,7 +153,7 @@ export default function DeliveryPage() {
                   <td className="px-3 py-3">{item.owner}</td>
                   <td className="px-3 py-3">
                     <select
-                      className="h-8 rounded-lg border border-border bg-card px-2 text-sm"
+                      className="h-8 rounded-md border border-border bg-card px-2 text-sm"
                       value={item.status}
                       onChange={(e) => {
                         const result = updateBacklogStatus(
@@ -206,7 +206,7 @@ export default function DeliveryPage() {
             }
           }}
         >
-          <h3 className="font-display text-xl text-ink md:col-span-2">
+          <h3 className="section-title md:col-span-2">
             Create story
           </h3>
           <Input
@@ -244,7 +244,7 @@ export default function DeliveryPage() {
             onChange={(e) => setStory({ ...story, dependency: e.target.value })}
           />
           <select
-            className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
+            className="h-8 rounded-md border border-border bg-card px-2.5 text-sm"
             value={story.priority}
             onChange={(e) =>
               setStory({ ...story, priority: e.target.value as Priority })
@@ -255,7 +255,7 @@ export default function DeliveryPage() {
             <option value="P2">P2</option>
           </select>
           <select
-            className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
+            className="h-8 rounded-md border border-border bg-card px-2.5 text-sm"
             value={story.status}
             onChange={(e) =>
               setStory({ ...story, status: e.target.value as BacklogStatus })
@@ -273,7 +273,7 @@ export default function DeliveryPage() {
       </section>
 
       <section>
-        <h2 className="font-display text-xl font-semibold text-ink">Milestones</h2>
+        <h2 className="section-title">Milestones</h2>
         <ul className="mt-3 space-y-2">
           {state.milestones.map((m) => (
             <li key={m.id} className="surface-panel p-4">
@@ -285,7 +285,7 @@ export default function DeliveryPage() {
                   <span>· depends on {m.dependencies.join(", ")}</span>
                 )}
               </div>
-              <h3 className="mt-1 font-display text-xl text-ink">{m.name}</h3>
+              <h3 className="mt-1 section-title">{m.name}</h3>
               <p className="mt-1 text-sm text-muted-foreground">{m.description}</p>
               <p className="mt-2 text-xs text-muted-foreground">{m.notes}</p>
             </li>
@@ -294,7 +294,7 @@ export default function DeliveryPage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-display text-xl font-semibold text-ink">Change requests</h2>
+        <h2 className="section-title">Change requests</h2>
         <p className="text-sm text-muted-foreground">
           Classify each request as in-scope refinement vs material change.
           Decisions are logged.
@@ -312,7 +312,7 @@ export default function DeliveryPage() {
                   {item.decision.replaceAll("_", " ")}
                 </span>
               </div>
-              <h3 className="mt-2 font-display text-xl text-ink">{item.title}</h3>
+              <h3 className="mt-2 section-title">{item.title}</h3>
               <dl className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
                 <div>
                   <dt className="text-xs text-muted-foreground">Scope</dt>
@@ -389,7 +389,7 @@ export default function DeliveryPage() {
             }
           }}
         >
-          <h3 className="font-display text-xl text-ink md:col-span-2">
+          <h3 className="section-title md:col-span-2">
             Record change request
           </h3>
           <Input
@@ -420,7 +420,7 @@ export default function DeliveryPage() {
             onChange={(e) => setCr({ ...cr, risk: e.target.value })}
           />
           <select
-            className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
+            className="h-8 rounded-md border border-border bg-card px-2.5 text-sm"
             value={cr.classification}
             onChange={(e) =>
               setCr({
@@ -440,7 +440,7 @@ export default function DeliveryPage() {
       </section>
 
       <section>
-        <h2 className="font-display text-xl font-semibold text-ink">Decision log</h2>
+        <h2 className="section-title">Decision log</h2>
         <ul className="mt-3 space-y-2">
           {state.auditEvents
             .filter((a) => a.action === "scope_change_recorded")

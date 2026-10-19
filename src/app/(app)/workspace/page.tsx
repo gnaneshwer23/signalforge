@@ -67,17 +67,17 @@ export default function WorkspacePage() {
   return (
     <div className="space-y-8">
       <section className="animate-rise">
-        <p className="font-display text-[1.65rem] font-semibold tracking-tight text-ink sm:text-3xl">
+        <p className="font-display text-[1.55rem] font-semibold tracking-tight text-ink sm:text-[1.75rem]">
           SignalForge
         </p>
-        <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.14em] text-teal">
+        <p className="meta-label mt-2 text-teal">
           {greetName
             ? `Welcome, ${greetName}`
             : prefs.onboardingCompleted
               ? `${personaLabel} workspace`
               : "Intelligence workspace"}
         </p>
-        <h1 className="mt-2 max-w-2xl font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+        <h1 className="mt-2 max-w-2xl page-title">
           {profile.welcomeTitle}
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-[0.9375rem]">
@@ -98,7 +98,7 @@ export default function WorkspacePage() {
         <div className="mt-5 flex flex-wrap gap-2">
           <Link
             href={profile.primaryCta.href}
-            className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--primary),black_12%)]"
+            className="inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--primary),black_12%)]"
           >
             {profile.primaryCta.label}
             <ArrowRight className="size-3.5" />
@@ -107,14 +107,14 @@ export default function WorkspacePage() {
             <Link
               key={cta.href}
               href={cta.href}
-              className="inline-flex h-8 items-center rounded-lg border border-border bg-secondary px-3 text-sm font-medium text-secondary-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_6%)]"
+              className="inline-flex h-8 items-center rounded-md border border-border bg-secondary px-3 text-sm font-medium text-secondary-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_6%)]"
             >
               {cta.label}
             </Link>
           ))}
           <Link
             href="/onboarding"
-            className="inline-flex h-8 items-center rounded-lg border border-transparent px-3 text-sm font-medium text-accent-signal hover:underline"
+            className="inline-flex h-8 items-center rounded-md border border-transparent px-3 text-sm font-medium text-accent-signal hover:underline"
           >
             Edit / restart onboarding
           </Link>
@@ -128,7 +128,7 @@ export default function WorkspacePage() {
             aria-label="Search signals"
           />
           <select
-            className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
+            className="h-9 rounded-md border border-input bg-card px-3 text-sm text-ink outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40"
             value={area}
             onChange={(e) => setArea(e.target.value)}
             aria-label="Therapeutic area filter"
@@ -158,7 +158,7 @@ export default function WorkspacePage() {
       <section className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-3 lg:col-span-2">
           <div className="flex items-end justify-between gap-2">
-            <h2 className="font-display text-xl font-semibold text-ink">
+            <h2 className="section-title">
               Emerging signals
             </h2>
             <Link
@@ -194,7 +194,7 @@ export default function WorkspacePage() {
                       <span className="text-amber-review">Needs review</span>
                     )}
                   </div>
-                  <h3 className="mt-1.5 font-display text-lg font-semibold text-ink">
+                  <h3 className="mt-1.5 text-base font-semibold tracking-tight text-ink">
                     {signal.title}
                   </h3>
                   <p className="mt-2 text-sm text-muted-foreground">
@@ -207,7 +207,7 @@ export default function WorkspacePage() {
                   <div className="mt-3 flex flex-wrap gap-2">
                     <Link
                       href={`/evidence?signal=${signal.id}`}
-                      className="inline-flex h-7 items-center gap-1 rounded-lg border border-transparent bg-primary px-2.5 text-[0.8rem] font-medium text-primary-foreground hover:bg-[color-mix(in_oklab,var(--primary),black_18%)]"
+                      className="inline-flex h-7 items-center gap-1 rounded-md border border-transparent bg-primary px-2.5 text-[0.8rem] font-medium text-primary-foreground hover:bg-[color-mix(in_oklab,var(--primary),black_18%)]"
                     >
                       View evidence
                       <ArrowRight className="size-3.5" />
@@ -231,7 +231,7 @@ export default function WorkspacePage() {
 
         <div className="space-y-6">
           <div>
-            <h2 className="font-display text-xl font-semibold text-ink">
+            <h2 className="section-title">
               Source distribution
             </h2>
             <p className="mt-1 text-xs text-amber-review">
@@ -241,7 +241,7 @@ export default function WorkspacePage() {
               {Object.entries(sourceDistribution).map(([k, v]) => (
                 <li
                   key={k}
-                  className="flex justify-between rounded-lg border border-border bg-card/80 px-3 py-2"
+                  className="flex justify-between rounded-md border border-border bg-card/80 px-3 py-2"
                 >
                   <span className="capitalize text-muted-foreground">
                     {k.replaceAll("_", " ")}
@@ -252,7 +252,7 @@ export default function WorkspacePage() {
             </ul>
           </div>
           <div>
-            <h2 className="font-display text-xl font-semibold text-ink">
+            <h2 className="section-title">
               Activity
             </h2>
             <ul className="mt-3 space-y-2">
@@ -272,7 +272,7 @@ export default function WorkspacePage() {
             </ul>
           </div>
           <div>
-            <h2 className="font-display text-xl font-semibold text-ink">
+            <h2 className="section-title">
               Monitored assets
             </h2>
             <ul className="mt-3 space-y-2">
@@ -280,7 +280,7 @@ export default function WorkspacePage() {
                 <li key={asset.id}>
                   <Link
                     href={`/landscape/${asset.id}`}
-                    className="block rounded-lg border border-transparent px-2 py-1.5 text-sm hover:border-border hover:bg-card"
+                    className="block rounded-md border border-transparent px-2 py-1.5 text-sm hover:border-border hover:bg-card"
                   >
                     <span className="text-ink">{asset.name}</span>
                     <span className="mt-0.5 block text-xs text-muted-foreground">
@@ -293,7 +293,7 @@ export default function WorkspacePage() {
             </ul>
           </div>
           <div>
-            <h2 className="font-display text-xl font-semibold text-ink">
+            <h2 className="section-title">
               Recent updates
             </h2>
             <ul className="mt-3 space-y-2">
@@ -303,7 +303,7 @@ export default function WorkspacePage() {
                   <li key={ev.id}>
                     <Link
                       href={`/evidence/${ev.id}`}
-                      className="block rounded-lg border border-transparent px-2 py-1.5 text-sm hover:border-border hover:bg-card"
+                      className="block rounded-md border border-transparent px-2 py-1.5 text-sm hover:border-border hover:bg-card"
                     >
                       <span className="text-ink">{ev.title}</span>
                       <span className="mt-0.5 block text-xs text-muted-foreground">

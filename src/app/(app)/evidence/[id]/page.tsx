@@ -76,7 +76,7 @@ export default function EvidenceDetailPage({
         <p className="mt-2 text-xs text-muted-foreground">
           {PROVENANCE_STATUS_DEFINITIONS[provenanceStatus].definition}
         </p>
-        <h1 className="mt-2 font-display text-3xl font-semibold text-ink sm:text-4xl">
+        <h1 className="mt-2 page-title">
           {evidence.title}
         </h1>
         {(source.provenanceKind === "discovery_url" ||
@@ -159,27 +159,27 @@ export default function EvidenceDetailPage({
 
       <section className="grid gap-3 md:grid-cols-2">
         <div className="surface-panel p-4">
-          <h2 className="font-display text-xl text-ink">Summary</h2>
+          <h2 className="section-title">Summary</h2>
           <p className="mt-2 text-sm text-muted-foreground">{evidence.summary}</p>
         </div>
         <div className="surface-panel p-4">
-          <h2 className="font-display text-xl text-ink">Study characteristics</h2>
+          <h2 className="section-title">Study characteristics</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             {evidence.studyCharacteristics}
           </p>
         </div>
         <div className="surface-panel p-4">
-          <h2 className="font-display text-xl text-ink">What this supports</h2>
+          <h2 className="section-title">What this supports</h2>
           <p className="mt-2 text-sm text-muted-foreground">{evidence.supports}</p>
         </div>
         <div className="surface-panel p-4">
-          <h2 className="font-display text-xl text-ink">Does not establish</h2>
+          <h2 className="section-title">Does not establish</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             {evidence.doesNotEstablish}
           </p>
         </div>
         <div className="surface-panel p-4 md:col-span-2">
-          <h2 className="font-display text-xl text-ink">Limitations</h2>
+          <h2 className="section-title">Limitations</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             {evidence.limitations}
           </p>
@@ -187,7 +187,7 @@ export default function EvidenceDetailPage({
       </section>
 
       <section className="surface-panel p-4">
-        <h2 className="font-display text-xl text-ink">Associated assets</h2>
+        <h2 className="section-title">Associated assets</h2>
         <ul className="mt-2 flex flex-wrap gap-2">
           {evidence.assetIds.map((aid) => {
             const asset = getAsset(aid);
@@ -208,7 +208,7 @@ export default function EvidenceDetailPage({
 
       <section className="flex flex-col gap-3 border border-border bg-card/80 p-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="font-display text-xl text-ink">Draft brief & review</h2>
+          <h2 className="section-title">Draft brief & review</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Add or remove without losing provenance. Review state updates are
             audited.
@@ -216,7 +216,7 @@ export default function EvidenceDetailPage({
           <label className="mt-3 block text-xs text-muted-foreground">
             Review state
             <select
-              className="mt-1 block h-8 rounded-lg border border-border bg-background px-2.5 text-sm text-foreground"
+              className="mt-1 block h-8 rounded-md border border-border bg-background px-2.5 text-sm text-foreground"
               value={evidence.reviewState}
               onChange={(e) =>
                 setEvidenceReviewState(evidence.id, e.target.value as ReviewState)

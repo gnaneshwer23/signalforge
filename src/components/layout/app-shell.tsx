@@ -30,14 +30,12 @@ export function AppShellChrome({ children }: { children: React.ReactNode }) {
       <div className="flex flex-1 flex-col lg:flex-row">
         <AppNav />
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="no-print flex flex-col gap-3 border-b border-border bg-card/80 px-4 py-3.5 backdrop-blur-[2px]">
+          <header className="no-print flex flex-col gap-3 border-b border-border bg-card/90 px-4 py-3 backdrop-blur-[2px] sm:px-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div className="space-y-2.5">
+              <div className="space-y-2">
                 <Breadcrumbs />
                 <div>
-                  <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-                    Therapeutic area
-                  </p>
+                  <p className="meta-label">Therapeutic area</p>
                   <p className="text-sm font-medium text-ink">
                     {prefs.therapeuticArea ||
                       "Moderate-to-severe atopic dermatitis"}
@@ -51,7 +49,7 @@ export function AppShellChrome({ children }: { children: React.ReactNode }) {
                 <div className="flex flex-wrap items-center gap-2">
                   <Link
                     href="/onboarding"
-                    className="inline-flex h-8 items-center rounded-lg border border-border bg-secondary px-3 text-sm font-medium text-secondary-foreground hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_6%)]"
+                    className="inline-flex h-8 items-center rounded-md border border-border bg-secondary px-3 text-sm font-medium text-secondary-foreground hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_6%)]"
                   >
                     Edit onboarding
                   </Link>

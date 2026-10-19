@@ -102,7 +102,7 @@ function EvidenceExplorer() {
           className="sm:max-w-xs"
         />
         <select
-          className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
+          className="h-8 rounded-md border border-border bg-card px-2.5 text-sm"
           value={type}
           onChange={(e) => setType(e.target.value as SourceType | "")}
         >
@@ -113,7 +113,7 @@ function EvidenceExplorer() {
           <option value="press_release">Press release</option>
         </select>
         <select
-          className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
+          className="h-8 rounded-md border border-border bg-card px-2.5 text-sm"
           value={review}
           onChange={(e) => setReview(e.target.value as ReviewState | "")}
         >
@@ -124,7 +124,7 @@ function EvidenceExplorer() {
           <option value="reviewed">Reviewed</option>
         </select>
         <select
-          className="h-8 rounded-lg border border-border bg-card px-2.5 text-sm"
+          className="h-8 rounded-md border border-border bg-card px-2.5 text-sm"
           value={provStatus}
           onChange={(e) =>
             setProvStatus(e.target.value as ProvenanceStatus | "")
@@ -170,7 +170,7 @@ function EvidenceExplorer() {
                     {source?.type.replace("_", " ")}
                   </span>
                 </div>
-                <h2 className="mt-2 font-display text-xl text-ink">
+                <h2 className="mt-2 section-title">
                   <Link
                     href={`/evidence/${ev.id}`}
                     className="underline-offset-2 hover:underline"

@@ -7,7 +7,7 @@ export default function OnboardingLayout({
 }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-border bg-paper/90">
+      <header className="border-b border-border bg-paper/92 backdrop-blur-[6px]">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4 sm:px-6">
           <Link href="/">
             <p className="font-display text-xl font-semibold tracking-tight text-ink">
@@ -16,7 +16,7 @@ export default function OnboardingLayout({
           </Link>
           <Link
             href="/workspace"
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Skip to workspace
           </Link>

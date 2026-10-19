@@ -1,12 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "name": "SignalForge — forest green + scientific teal (public + workbench)",
-  "version": "3.0.0",
+  "name": "SignalForge — Chlorophyll Clinical (marketing + workbench)",
+  "version": "4.0.0",
   "reference": {
-    "url": "https://dribbble.com/shots/27696621-Pharma-Biotech-Website-UI-UX-Medical-research-homepage-design",
-    "shotId": "27696621",
-    "bionilNotes": "Deep forest green + scientific teal; warm white / pale mint grounds; amber for attention. Inspiration only — no third-party assets copied.",
-    "note": "Inspiration only. Do not copy shot assets, photography, 3D art, or branding."
+    "urls": [
+      "https://dribbble.com/shots/27696621-Pharma-Biotech-Website-UI-UX-Medical-research-homepage-design",
+      "https://dribbble.com/shots/22558925-Bionil-Pharma-Factory-Landing-page"
+    ],
+    "note": "Inspiration only. Original SignalForge system — do not copy shot assets, photography, layouts, or branding."
   },
   "fonts": {
     "display": {
@@ -14,14 +15,14 @@
       "source": "google",
       "cssVariable": "--font-display",
       "fallbacks": ["ui-serif", "Georgia", "serif"],
-      "usage": "Marketing / editorial major headings and brand wordmark on public pages"
+      "usage": "Marketing display headlines and brand wordmark ONLY — never workbench page/section titles"
     },
     "body": {
       "family": "Plus Jakarta Sans",
       "source": "google",
       "cssVariable": "--font-body",
       "fallbacks": ["ui-sans-serif", "sans-serif"],
-      "usage": "App UI, tables, forms, nav, body copy"
+      "usage": "All UI, tables, forms, nav, workbench titles, body copy"
     },
     "mono": {
       "family": "Geist Mono",
@@ -32,34 +33,36 @@
     "avoid": ["Inter", "Roboto", "Arial", "system-ui"]
   },
   "colors": {
-    "paper": "#F7FAF6",
-    "background": "#E8F2EC",
+    "paper": "#F4F8F5",
+    "background": "#E6F0EA",
     "surface": "#FFFFFF",
-    "surfaceMuted": "#D8E8DE",
-    "mint": "#E8F5EF",
-    "forest": "#0F3D2E",
-    "forestDeep": "#0A2E22",
-    "teal": "#1A7A6D",
-    "tealSoft": "#2A9B8C",
-    "ink": "#14241C",
-    "muted": "#4F655A",
-    "border": "#C5D9CE",
-    "input": "#BDD2C6",
-    "primary": "#0F3D2E",
-    "primaryForeground": "#F7FAF6",
-    "primaryDeep": "#0A2E22",
-    "secondary": "#D4E8DC",
-    "accent": "#C5E4DB",
-    "accentSignal": "#1A7A6D",
-    "ring": "#1A7A6D",
-    "amber": "#B45309",
+    "surfaceMuted": "#D5E6DB",
+    "mint": "#E3F2EB",
+    "mintDeep": "#C8E4D6",
+    "forest": "#0B3A2C",
+    "forestDeep": "#07281E",
+    "forestMid": "#145C45",
+    "teal": "#117A6B",
+    "tealSoft": "#2A9B8A",
+    "ink": "#101F18",
+    "muted": "#4A5E54",
+    "border": "#BFD4C8",
+    "input": "#B5CCBF",
+    "primary": "#0B3A2C",
+    "primaryForeground": "#F4F8F5",
+    "primaryDeep": "#07281E",
+    "secondary": "#D0E6DA",
+    "accent": "#C2E0D6",
+    "accentSignal": "#117A6B",
+    "ring": "#117A6B",
+    "amber": "#A85708",
     "status": {
-      "verified": "#1A7A6D",
-      "needsReview": "#B45309",
-      "unverified": "#4F655A",
-      "danger": "#B42318"
+      "verified": "#117A6B",
+      "needsReview": "#A85708",
+      "unverified": "#4A5E54",
+      "danger": "#A61E14"
     },
-    "chart": ["#1A7A6D", "#0F3D2E", "#B45309", "#3D8B7A", "#A8CFC0"]
+    "chart": ["#117A6B", "#0B3A2C", "#A85708", "#2A9B8A", "#9ECFBC"]
   },
   "cssVariableMap": {
     "--paper": "paper",
@@ -86,15 +89,16 @@
   },
   "spacing": {
     "basePx": 4,
-    "scale": [4, 8, 12, 16, 24, 32, 48],
+    "scale": [4, 8, 12, 16, 24, 32, 48, 64],
     "pagePadding": { "base": 16, "sm": 24, "lg": 32 },
-    "sectionGap": 24
+    "sectionGap": 24,
+    "workbenchDensity": "compact-readable"
   },
   "radius": {
-    "base": "0.625rem",
+    "base": "0.5rem",
     "sm": "0.375rem",
-    "md": "0.625rem",
-    "lg": "0.875rem",
+    "md": "0.5rem",
+    "lg": "0.75rem",
     "avoidFullPill": true
   },
   "border": {
@@ -103,29 +107,29 @@
     "colorToken": "border"
   },
   "shadow": {
-    "panel": "0 1px 2px rgb(15 61 46 / 0.06)",
-    "sheet": "0 10px 28px rgb(15 61 46 / 0.1)",
+    "panel": "0 1px 2px rgb(11 58 44 / 0.05)",
+    "sheet": "0 8px 24px rgb(11 58 44 / 0.08)",
     "glow": "none"
   },
   "motion": [
     {
       "id": "rise-in",
-      "description": "Panel enter: opacity + translateY(8px→0)",
-      "durationMs": 450,
-      "easing": "ease-out"
+      "description": "Panel enter: opacity + translateY(6px→0)",
+      "durationMs": 400,
+      "easing": "cubic-bezier(0.22, 1, 0.36, 1)"
     },
     {
       "id": "slide-nav",
-      "description": "Nav link stagger: opacity + translateX(-6px→0)",
-      "durationMs": 400,
-      "staggerMs": 30,
+      "description": "Nav link stagger: opacity + translateX(-4px→0)",
+      "durationMs": 350,
+      "staggerMs": 25,
       "easing": "ease-out"
     },
     {
       "id": "fade-delay",
       "description": "Secondary band fade-in with delay",
-      "durationMs": 550,
-      "delayMs": 120,
+      "durationMs": 500,
+      "delayMs": 100,
       "easing": "ease-out"
     }
   ],
@@ -133,18 +137,21 @@
     "marketing": {
       "nav": "top-horizontal",
       "brand": "editorial-serif-wordmark",
-      "ctaPrimary": "forest-green"
+      "ctaPrimary": "forest-green",
+      "displayFont": true
     },
     "workbench": {
       "nav": "left-sidebar",
-      "brand": "serif-wordmark-first",
-      "active": "solid-forest-primary"
+      "brand": "serif-wordmark-only",
+      "titles": "geometric-sans",
+      "active": "solid-forest-primary",
+      "density": "data-forward"
     }
   },
   "components": {
     "metrics": {
       "style": "open-tile-border",
-      "valueFont": "display",
+      "valueFont": "body-semibold",
       "label": "uppercase-meta"
     },
     "cards": {
@@ -154,7 +161,8 @@
     "tables": {
       "zebra": false,
       "hover": "surfaceMuted",
-      "header": "hairline-bottom"
+      "header": "hairline-bottom",
+      "mobile": "horizontal-scroll"
     },
     "chips": {
       "radius": "sm",

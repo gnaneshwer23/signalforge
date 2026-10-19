@@ -3,19 +3,19 @@ import Link from "next/link";
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-paper">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1.4fr_1fr_1fr] lg:px-8">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.5fr_1fr_1fr] lg:px-8">
         <div>
-          <p className="font-display text-xl font-semibold text-ink">SignalForge</p>
-          <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
+          <p className="font-display text-xl font-semibold text-ink">
+            SignalForge
+          </p>
+          <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted-foreground">
             Evidence-grounded pharmaceutical competitive intelligence workbench.
             Independent portfolio prototype — not affiliated with any consultancy.
           </p>
         </div>
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-            Explore
-          </p>
-          <ul className="mt-3 space-y-2 text-sm">
+          <p className="meta-label">Explore</p>
+          <ul className="mt-3 space-y-2.5 text-sm">
             <li>
               <Link href="/platform" className="text-ink hover:text-accent-signal">
                 Platform
@@ -39,10 +39,8 @@ export function SiteFooter() {
           </ul>
         </div>
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-            Demo
-          </p>
-          <ul className="mt-3 space-y-2 text-sm">
+          <p className="meta-label">Demo</p>
+          <ul className="mt-3 space-y-2.5 text-sm">
             <li>
               <Link href="/demo" className="text-ink hover:text-accent-signal">
                 Guided demo
