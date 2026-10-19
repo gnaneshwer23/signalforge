@@ -1,0 +1,329 @@
+"use client";
+
+import Link from "next/link";
+import { use, useMemo, useState } from "react";
+import { useStore } from "@/lib/store";
+import { ReviewBadge } from "@/components/shared/status-badges";
+import { ErrorState, LoadingState } from "@/components/shared/empty-state";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { formatDate } from "@/lib/utils";
+
+export default function BriefDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
+  const {
+    getBrief,
+    getClaimsForBrief,
+    getLinksForClaim,
+    getEvidence,
+    getSignal,
+    hydrated,
+    setBriefState,
+    canApproveBrief,
+    state,
+  } = useStore();
+  const brief = getBrief(id);
+  const claims = getClaimsForBrief(id);
+  const [approveOpen, setApproveOpen] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+
+  const gate = useMemo(
+    () => (brief ? canApproveBrief(brief.id) : { ok: false, reason: "Missing" }),
+    [brief, canApproveBrief],
+  );
+
+  if (!hydrated) return <LoadingState />;
+  if (!brief) {
+    return (
+      <ErrorState
+        title="Brief not found"
+        description="This brief id is not in the local workbench state."
+      />
+    );
+  }
+
+  const signal = getSignal(brief.signalId);
+  const auditForBrief = state.auditEvents.filter((a) => a.entityId === brief.id);
+
+  return (
+    <div className="space-y-6 animate-rise">
+      <div className="print-only surface-panel mb-4 p-3 text-xs">
+        Demo warning: SignalForge portfolio prototype with illustrative data. Not
+        a validated PV system. Not affiliated with Atacana Group. Review state:{" "}
+        {brief.state}.
+      </div>
+
+      <div className="no-print">
+        <Link href="/briefs" className="text-sm text-muted-foreground hover:text-foreground">
+          ← Briefs
+        </Link>
+      </div>
+
+      <header className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <div className="flex flex-wrap gap-2">
+            <ReviewBadge state={brief.state} />
+            {!gate.ok && (
+              <span className="rounded-md border border-amber-review bg-amber-review px-2 py-0.5 text-xs text-amber-review">
+                Not fully evidence-supported
+              </span>
+            )}
+          </div>
+          <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+            {brief.title}
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            From signal: {signal?.title || brief.signalId}
+          </p>
+        </div>
+        <div className="no-print flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              setBriefState(brief.id, "needs-review");
+              setMessage("Marked needs-review. Audit event recorded.");
+            }}
+          >
+            Mark needs-review
+          </Button>
+          <Button size="sm" onClick={() => setApproveOpen(true)}>
+            Approve for internal discussion
+          </Button>
+          <Button size="sm" variant="secondary" onClick={() => window.print()}>
+            Print / export
+          </Button>
+        </div>
+      </header>
+
+      {message && (
+        <p className="no-print text-sm text-verified">{message}</p>
+      )}
+
+      <section className="grid gap-3 print-break md:grid-cols-2">
+        {[
+          ["Signal summary", brief.signalSummary],
+          ["Evidence summary", brief.evidenceSummary],
+          ["Implications", brief.implications],
+          ["Uncertainty", brief.uncertainty],
+        ].map(([title, body]) => (
+          <div key={title} className="surface-panel p-4">
+            <h2 className="font-display text-xl text-ink">{title}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{body}</p>
+          </div>
+        ))}
+      </section>
+
+      <section className="grid gap-3 md:grid-cols-3">
+        <div className="surface-panel p-4">
+          <h2 className="font-display text-xl text-ink">Gaps</h2>
+          <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
+            {brief.gaps.map((g) => (
+              <li key={g}>{g}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="surface-panel p-4">
+          <h2 className="font-display text-xl text-ink">Follow-up questions</h2>
+          <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
+            {brief.followUpQuestions.map((g) => (
+              <li key={g}>{g}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="surface-panel p-4">
+          <h2 className="font-display text-xl text-ink">Contradictions</h2>
+          <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
+            {brief.contradictions.length === 0 ? (
+              <li>None recorded</li>
+            ) : (
+              brief.contradictions.map((g) => <li key={g}>{g}</li>)
+            )}
+          </ul>
+        </div>
+      </section>
+
+      <section className="print-break">
+        <h2 className="font-display text-2xl text-ink">Claims</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Facts, interpretations, hypotheses, and actions are distinguished.
+          Citations attach to claim–evidence links.
+        </p>
+        <ul className="mt-3 space-y-3">
+          {claims.length === 0 ? (
+            <li className="surface-panel p-4 text-sm text-muted-foreground">
+              No structured claims on this assembled draft yet. Seeded briefs
+              include claim-level links.
+            </li>
+          ) : (
+            claims.map((claim) => {
+              const links = getLinksForClaim(claim.id);
+              return (
+                <li key={claim.id} className="surface-panel p-4">
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <span className="border border-border px-2 py-0.5 capitalize">
+                      {claim.kind}
+                    </span>
+                    <span className="border border-border px-2 py-0.5">
+                      Confidence: {claim.confidence}
+                    </span>
+                    {claim.supported ? (
+                      <span className="border border-[color-mix(in_oklab,var(--verified)_40%,var(--border))] bg-verified px-2 py-0.5 text-verified">
+                        Supported
+                      </span>
+                    ) : (
+                      <span className="border border-amber-review bg-amber-review px-2 py-0.5 text-amber-review">
+                        Unsupported
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-2 text-sm text-ink">{claim.text}</p>
+                  {!claim.supported && claim.unsupportedReason && (
+                    <p className="mt-2 text-xs text-amber-review">
+                      {claim.unsupportedReason}
+                    </p>
+                  )}
+                  <div className="mt-3 grid gap-2 text-xs text-muted-foreground sm:grid-cols-2">
+                    <p>
+                      <strong className="text-foreground">Quality:</strong>{" "}
+                      {claim.confidenceRationale.quality}
+                    </p>
+                    <p>
+                      <strong className="text-foreground">Relevance:</strong>{" "}
+                      {claim.confidenceRationale.relevance}
+                    </p>
+                    <p>
+                      <strong className="text-foreground">Consistency:</strong>{" "}
+                      {claim.confidenceRationale.consistency}
+                    </p>
+                    <p>
+                      <strong className="text-foreground">Completeness:</strong>{" "}
+                      {claim.confidenceRationale.completeness}
+                    </p>
+                  </div>
+                  <div className="mt-3">
+                    <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                      Evidence links / citations
+                    </p>
+                    {links.length === 0 ? (
+                      <p className="mt-1 text-xs text-amber-review">
+                        No citation links — claim cannot be treated as
+                        evidence-supported.
+                      </p>
+                    ) : (
+                      <ul className="mt-1 space-y-1">
+                        {links.map((link) => {
+                          const ev = getEvidence(link.evidenceId);
+                          return (
+                            <li key={link.id} className="text-sm">
+                              <Link
+                                href={`/evidence/${link.evidenceId}`}
+                                className="text-ink underline-offset-2 hover:underline"
+                              >
+                                {ev?.title || link.evidenceId}
+                              </Link>
+                              <span className="block text-xs text-muted-foreground">
+                                {link.citationNote}: “{link.excerpt}”
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </div>
+                </li>
+              );
+            })
+          )}
+        </ul>
+      </section>
+
+      <section className="print-break">
+        <h2 className="font-display text-2xl text-ink">Linked evidence</h2>
+        <ul className="mt-2 space-y-1">
+          {brief.evidenceIds.map((eid) => {
+            const ev = getEvidence(eid);
+            return (
+              <li key={eid}>
+                <Link
+                  href={`/evidence/${eid}`}
+                  className="text-sm underline-offset-2 hover:underline"
+                >
+                  {ev?.title || eid}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
+      <section className="no-print surface-panel p-4">
+        <h2 className="font-display text-xl text-ink">Audit log</h2>
+        <ul className="mt-2 space-y-2 text-sm">
+          {auditForBrief.length === 0 ? (
+            <li className="text-muted-foreground">No audit events yet.</li>
+          ) : (
+            auditForBrief.map((a) => (
+              <li key={a.id} className="border-b border-border/60 pb-2">
+                <span className="text-xs text-muted-foreground">
+                  {formatDate(a.timestamp)} · {a.actor}
+                </span>
+                <p>
+                  {a.action}: {a.detail}
+                </p>
+              </li>
+            ))
+          )}
+        </ul>
+      </section>
+
+      <AlertDialog open={approveOpen} onOpenChange={setApproveOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Approve for internal discussion?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {gate.ok
+                ? "This confirms the brief is suitable for internal discussion only — not external publication. An audit event will be recorded."
+                : gate.reason}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={!gate.ok}
+              onClick={() => {
+                const result = setBriefState(
+                  brief.id,
+                  "approved-for-internal-discussion",
+                );
+                setMessage(
+                  result.ok
+                    ? "Approved for internal discussion. Audit recorded."
+                    : result.reason || "Approval blocked.",
+                );
+                setApproveOpen(false);
+              }}
+            >
+              Confirm approval
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
