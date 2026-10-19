@@ -1,0 +1,216 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Source {
+  id String @id
+  type String
+  title String
+  url String?
+  identifier String?
+  publisher String?
+  publicationDate String?
+  retrievalDate String
+  verification String
+  evidence EvidenceRecord[]
+}
+
+model Asset {
+  id String @id
+  name String
+  organization String
+  mechanismOfAction String
+  indication String
+  therapeuticArea String
+  phase String
+  sourceDate String
+  verification String
+  notes String
+  linkedEvidenceIds String
+  isPipelineFictional Boolean @default(false)
+}
+
+model EvidenceRecord {
+  id String @id
+  sourceId String
+  source Source @relation(fields: [sourceId], references: [id])
+  assetIds String
+  title String
+  summary String
+  studyCharacteristics String
+  limitations String
+  supports String
+  doesNotEstablish String
+  reviewState String
+  therapeuticArea String
+  tags String
+  excerpt String
+  keywords String
+  claimLinks ClaimEvidenceLink[]
+}
+
+model Signal {
+  id String @id
+  title String
+  summary String
+  assetIds String
+  evidenceIds String
+  therapeuticArea String
+  urgency String
+  reviewNeeded Boolean
+  emerging Boolean
+  updatedAt String
+  implications String
+  uncertainty String
+  gaps String
+  followUpQuestions String
+  briefs Brief[]
+}
+
+model Brief {
+  id String @id
+  title String
+  signalId String
+  signal Signal @relation(fields: [signalId], references: [id])
+  state String
+  evidenceIds String
+  claimIds String
+  signalSummary String
+  evidenceSummary String
+  implications String
+  uncertainty String
+  gaps String
+  followUpQuestions String
+  contradictions String
+  limitations String
+  createdAt String
+  updatedAt String
+  approvedAt String?
+  approvedBy String?
+  claims Claim[]
+}
+
+model Claim {
+  id String @id
+  briefId String
+  brief Brief @relation(fields: [briefId], references: [id], onDelete: Cascade)
+  text String
+  kind String
+  supported Boolean
+  confidence String
+  quality String
+  relevance String
+  consistency String
+  completeness String
+  evidenceLinkIds String
+  unsupportedReason String?
+  evidenceLinks ClaimEvidenceLink[]
+}
+
+model ClaimEvidenceLink {
+  id String @id
+  claimId String
+  claim Claim @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  evidenceId String
+  evidence EvidenceRecord @relation(fields: [evidenceId], references: [id])
+  citationNote String
+  excerpt String
+}
+
+model EvaluationCase {
+  id String @id
+  category String
+  title String
+  description String
+  expected String
+  observed String
+  result String
+  severity String
+  nextAction String
+  failureReason String?
+  remediation String?
+  lastRunAt String?
+}
+
+model AuditEvent {
+  id String @id
+  timestamp String
+  actor String
+  action String
+  entityType String
+  entityId String
+  detail String
+}
+
+model UsageEvent {
+  id String @id
+  type String
+  timestamp String
+  detail String
+  entityId String?
+}
+
+model BacklogItem {
+  id String @id
+  storyId String
+  description String
+  priority String
+  acceptanceCriteria String
+  estimate String
+  dependency String?
+  owner String
+  status String
+  createdAt String
+}
+
+model Milestone {
+  id String @id
+  name String
+  description String
+  targetDate String
+  status String
+  dependencies String
+  notes String
+}
+
+model ChangeRequest {
+  id String @id
+  title String
+  scope String
+  costImpact String
+  timelineImpact String
+  risk String
+  classification String
+  decision String
+  decisionNotes String?
+  createdAt String
+  decidedAt String?
+}
+
+model SafetyFlag {
+  id String @id
+  label String
+  fictional Boolean @default(true)
+  narrative String
+  extractedFields String
+  missingFields String
+  uncertaintyNotes String
+  routedToQueue Boolean @default(false)
+  queueStatus String
+  createdAt String
+}
+
+model AppMeta {
+  id String @id @default("default")
+  draftBriefEvidenceIds String
+  activeDraftBriefId String?
+  evaluationTargets String
+  lastEvaluationRunAt String?
+  walkthroughDismissed Boolean @default(false)
+  seededAt String
+}

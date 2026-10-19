@@ -25,8 +25,6 @@ import type {
   UsageEventType,
 } from "@/lib/types";
 
-const STORAGE_KEY = "signalforge-workbench-v1";
-
 type StoreContextValue = {
   state: StoreState;
   hydrated: boolean;
@@ -91,24 +89,44 @@ function nowIso() {
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<StoreState>(() => createInitialState());
   const [hydrated, setHydrated] = useState(false);
+  const [persistReady, setPersistReady] = useState(false);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as StoreState;
-        setState(parsed);
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/state", { cache: "no-store" });
+        if (res.ok) {
+          const remote = (await res.json()) as StoreState;
+          if (!cancelled) setState(remote);
+        }
+      } catch {
+        // Fall back to in-memory seed if API unavailable
+      } finally {
+        if (!cancelled) {
+          setHydrated(true);
+          setPersistReady(true);
+        }
       }
-    } catch {
-      // ignore corrupt storage
-    }
-    setHydrated(true);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
-    if (!hydrated) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [state, hydrated]);
+    if (!hydrated || !persistReady) return;
+    const timer = window.setTimeout(() => {
+      void fetch("/api/state", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(state),
+      }).catch(() => {
+        // Persistence best-effort
+      });
+    }, 400);
+    return () => window.clearTimeout(timer);
+  }, [state, hydrated, persistReady]);
 
   const appendAudit = useCallback(
     (
@@ -168,9 +186,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   );
 
   const resetDemo = useCallback(() => {
-    const fresh = createInitialState();
-    setState(fresh);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(fresh));
+    void (async () => {
+      try {
+        const res = await fetch("/api/state/reset", { method: "POST" });
+        if (res.ok) {
+          const fresh = (await res.json()) as StoreState;
+          setState(fresh);
+          return;
+        }
+      } catch {
+        // fall through
+      }
+      setState(createInitialState());
+    })();
   }, []);
 
   const dismissWalkthrough = useCallback(() => {
